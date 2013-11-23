@@ -40,9 +40,9 @@ public class FragmentCalender extends Fragment {
 	private void changeTextToDay(int year, int month, int dayOfMonth)
 	{		
 		String date = Integer.toString(year) + "/" + Integer.toString(month) +"/"+ Integer.toString(dayOfMonth);  
-		TextView currentDateText = (TextView) getActivity().findViewById(R.id.textView1);
+		TextView currentDateText = (TextView) getActivity().findViewById(R.id.newUsernameTextView);
 		currentDateText.setText(date);
-		TextView remindersText = (TextView) getActivity().findViewById(R.id.textView2);
+		TextView remindersText = (TextView) getActivity().findViewById(R.id.newPasswordTextView);
 		remindersText.setText("Reminders of : " + date);
 	}
 	

@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">beeProject</string>
-    <string name="title_item_detail">Item Detail</string>
+    <string name="app_name">Beekeeper Application</string>
+    <string name="title_item_detail"></string>
     <string name="addYard">Add Yard</string>
     <string name="addHive">Add Hive</string>
+    <string name="beeAppTitle">Beekeeper Application</string>
+    <string name="username">Username/E-mail:</string>
+    <string name="password">Password:</string>
+    <string name="loginButton">Login</string>
+    <string name="createAccount">Create Account</string>
+    <string name="newAccountString">New Account</string>
+    <string name="cancelCreateAccount">Cancel</string>
 
 </resources>
