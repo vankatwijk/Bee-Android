@@ -35,9 +35,8 @@ public class MainActivity extends FragmentActivity implements
 				
 			}else if(id == "2"){
 
-				FragmentWeather fragment = new FragmentWeather();				
-				getSupportFragmentManager().beginTransaction().replace(R.id.item_detail_container, fragment).commit();	
-					
+				Intent intent = new Intent(getApplicationContext(), WeatherActivity.class);
+				startActivity(intent);
 		        
 			}else if(id == "3"){
 

@@ -1,0 +1,104 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+     >
+     
+        <!--  Image weather condition -->
+
+    <ImageView
+        android:id="@+id/forCondIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="weather icon" />
+
+    <TextView
+        android:id="@+id/skydescForecast"
+        style="@style/tempStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/temp"
+        android:layout_below="@+id/forCondIcon"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="27dp" />
+
+    <TextView
+        android:id="@+id/tempForecast"
+        style="@style/tempStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/forCondIcon"
+        android:layout_below="@+id/skydescForecast"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/tempForecastTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tempForecast"
+        android:layout_alignBottom="@+id/tempForecast"
+        android:text="@string/tempForecast" />
+
+    <TextView
+        android:id="@+id/dayforecastTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/skydescForecast"
+        android:layout_alignBottom="@+id/skydescForecast"
+        android:layout_alignRight="@+id/tempForecastTextView"
+        android:text="@string/forecastTextView" />
+
+    <TextView
+        android:id="@+id/forecastPresure"
+        style="@style/tempStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tempForecast"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/tempForecastPresure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/forecastPresure"
+        android:layout_alignRight="@+id/tempForecastTextView"
+        android:text="@string/presureTextView" />
+
+    <TextView
+        android:id="@+id/forecastHumidity"
+        style="@style/tempStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/forecastPresure"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/tempForecastHumidity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/forecastHumidity"
+        android:layout_alignRight="@+id/tempForecastPresure"
+        android:text="@string/humidityTextView" />
+
+    <TextView
+        android:id="@+id/forecastWind"
+        style="@style/tempStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/forecastHumidity"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/tempForecastWind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/forecastWind"
+        android:layout_alignRight="@+id/tempForecastHumidity"
+        android:text="@string/windTextView" />
+
+</RelativeLayout>

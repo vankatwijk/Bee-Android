@@ -12,5 +12,10 @@
     <string name="createAccount">Create Account</string>
     <string name="newAccountString">New Account</string>
     <string name="cancelCreateAccount">Cancel</string>
+    <string name="forecastTextView">Forecast:</string>
+    <string name="tempForecast">Temperature:</string>
+    <string name="presureTextView">Presure:</string>
+    <string name="humidityTextView">Humidity:</string>
+    <string name="windTextView">"Wind: "</string>
 
 </resources>
