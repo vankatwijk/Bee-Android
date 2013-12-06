@@ -2,10 +2,12 @@ package bee.happy.inholland.nl.servlet;
 
 public class BeeServletRequestAddCommand implements BeeServletRequestCommand{
 	DBCommandReceiver receiver;
+	
+	private final ActionType actionType = ActionType.ADD;
 
 	@Override
 	public ActionType getType() {
-		return BeeServletRequestCommand.ActionType.ADD;
+		return actionType;
 	}
 
 	@Override
