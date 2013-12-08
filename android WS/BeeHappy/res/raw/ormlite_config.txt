@@ -1,0 +1,45 @@
+#
+# generated on 2013/12/07 04:45:28
+#
+# --table-start--
+dataClass=com.example.beeproject.global.classes.YardObject
+tableName=yards
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=yardName
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=location
+# --field-end--
+# --field-start--
+fieldName=userID
+foreign=true
+foreignAutoCreate=true
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.example.beeproject.global.classes.UserObject
+tableName=users
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=username
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=password
+canBeNull=false
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################

@@ -5,13 +5,13 @@
     android:orientation="vertical" >
 
     <Button
-        android:id="@+id/loginButton"
+        android:id="@+id/addYard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/addYard" />
 
     <ListView
-        android:id="@android:id/list"
+        android:id="@+id/yardListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
     </ListView>

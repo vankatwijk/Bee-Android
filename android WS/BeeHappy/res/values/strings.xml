@@ -17,5 +17,12 @@
     <string name="presureTextView">Presure:</string>
     <string name="humidityTextView">Humidity:</string>
     <string name="windTextView">"Wind: "</string>
+    <string name="yardNameString">"Yard Name: "</string>
+    <string name="yardLocationString">Yard Location:</string>
+    <string name="editYardTitleString">Edit Yard</string>
+    <string name="editYardNameString">Change Yard Name:</string>
+    <string name="editYardLocationString">Change Yard Location:</string>
+    <string name="saveButton">Save</string>
+    <string name="cancelButton">Cancel</string>
 
 </resources>

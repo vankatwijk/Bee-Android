@@ -1,15 +1,15 @@
 package com.example.beeproject;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+
 import com.example.beeproject.calendar.FragmentCalender;
 import com.example.beeproject.diseases.FragmentDiseases;
 import com.example.beeproject.profile.FragmentProfileInfo;
 import com.example.beeproject.statistics.FragmentStatistics;
 import com.example.beeproject.weather.WeatherActivity;
 import com.example.beeproject.yards.FragmentYardList;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 
 
 public class MainActivity extends FragmentActivity implements

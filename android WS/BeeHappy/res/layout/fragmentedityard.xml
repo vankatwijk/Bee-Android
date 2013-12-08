@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/editYardTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="52dp"
+        android:text="@string/editYardTitleString"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/editYardNameTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/editYardTitle"
+        android:layout_marginLeft="29dp"
+        android:layout_marginTop="52dp"
+        android:text="@string/editYardNameString" />
+
+    <TextView
+        android:id="@+id/editYardLocationTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/editYardNameTV"
+        android:layout_below="@+id/editYardNameTV"
+        android:layout_marginTop="22dp"
+        android:text="@string/editYardLocationString" />
+
+    <EditText
+        android:id="@+id/editYardName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/editYardNameTV"
+        android:layout_marginLeft="18dp"
+        android:layout_toRightOf="@+id/editYardNameTV"
+        android:ems="10"
+        android:inputType="text" >
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/editYardLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/editYardLocationTV"
+        android:layout_alignLeft="@+id/editYardName"
+        android:ems="10"
+        android:inputType="text" />
+
+    <Button
+        android:id="@+id/saveEditYardButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/editYardLocationTV"
+        android:layout_below="@+id/editYardLocationTV"
+        android:layout_marginTop="42dp"
+        android:text="@string/saveButton" />
+
+    <Button
+        android:id="@+id/cancelEditYardButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/saveEditYardButton"
+        android:layout_alignBottom="@+id/saveEditYardButton"
+        android:layout_toRightOf="@+id/saveEditYardButton"
+        android:text="@string/cancelButton" />
+
+</RelativeLayout>

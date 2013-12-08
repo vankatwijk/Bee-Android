@@ -1,5 +1,8 @@
 package com.example.beeproject.login;
 
+import java.sql.SQLException;
+import java.util.List;
+
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -9,11 +12,15 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Base64;
 import android.widget.Toast;
 
-import com.example.beeproject.DatabaseHandler;
 import com.example.beeproject.MainActivity;
 import com.example.beeproject.R;
+import com.example.beeproject.global.classes.DatabaseHelper;
+import com.example.beeproject.global.classes.DatabaseManager;
+import com.example.beeproject.global.classes.GlobalVar;
+import com.example.beeproject.global.classes.UserObject;
 import com.example.beeproject.login.FragmentCreateAccount.OnClickCreateButton;
 import com.example.beeproject.login.FragmentLogin.OnClickLoginButton;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 public class LoginActivity extends FragmentActivity implements OnClickLoginButton, OnClickCreateButton{
 
@@ -36,7 +43,7 @@ public class LoginActivity extends FragmentActivity implements OnClickLoginButto
 	//in the database--if true login the user
 	@Override
 	public void loginToApp(String username, String password) {
-		DatabaseHandler db = new DatabaseHandler(this);
+		
 		
 		String encodedPassowrd = null;
 		try {
@@ -46,19 +53,44 @@ public class LoginActivity extends FragmentActivity implements OnClickLoginButto
 			e.printStackTrace();
 		}
 		
-		Boolean login = db.checkUser(username, encodedPassowrd);
+		DatabaseManager dbManager = new DatabaseManager();
+		DatabaseHelper db = dbManager.getHelper(getApplicationContext());
 		
-		if(login == true){
-			Toast.makeText(getApplicationContext(), "Login Successful!",
-					   Toast.LENGTH_LONG).show();
-			Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-			startActivity(intent);
+		
+		
+		List<UserObject> user;
+		try {
+			RuntimeExceptionDao<UserObject, Integer> userDao = db.getUserRunDao();
+			user = userDao.query(
+			      userDao.queryBuilder().where()
+			         .eq("username", username)
+			         .and()
+			         .eq("password", encodedPassowrd)
+			         .prepare());
+			
+			if(user.size() == 1){
+				Toast.makeText(getApplicationContext(), "Login Successful!",
+						   Toast.LENGTH_LONG).show();
+				
+				UserObject userLoged = user.get(0);
+				
+				int userID = userLoged.getId();
+				
+				GlobalVar.getInstance().setUserID(userID);
+				Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+				startActivity(intent);
+			}
+			else
+			{
+				Toast.makeText(getApplicationContext(), "Incorrect Username or Password!",
+						   Toast.LENGTH_LONG).show();
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		else
-		{
-			Toast.makeText(getApplicationContext(), "Incorrect Username or Password!",
-					   Toast.LENGTH_LONG).show();
-		}
+		
+		
 		
 	}
 
@@ -67,7 +99,6 @@ public class LoginActivity extends FragmentActivity implements OnClickLoginButto
 	@Override
 	public void createAccount(String username, String password) {
 
-		DatabaseHandler db = new DatabaseHandler(this);
 		
 		String encodedPassowrd = null;
 		try {
@@ -77,20 +108,42 @@ public class LoginActivity extends FragmentActivity implements OnClickLoginButto
 			e.printStackTrace();
 		}
 		
-		Boolean checkInsertion = db.addUser(username, encodedPassowrd);
+		DatabaseManager dbManager = new DatabaseManager();
+		DatabaseHelper db = dbManager.getHelper(getApplicationContext());
 		
-		if(checkInsertion == true){
-			Toast.makeText(getApplicationContext(), "Account Created!",
-					   Toast.LENGTH_LONG).show();
+		RuntimeExceptionDao<UserObject, Integer> userDao = db.getUserRunDao();
+		
+		UserObject user = new UserObject(username, encodedPassowrd);
+		
+		List<UserObject> checkuser;
+		try {
+			checkuser = userDao.query(
+				      userDao.queryBuilder().where()
+				         .eq("username", username)
+				         .and()
+				         .prepare());
 			
-			FragmentLogin fragmentCreateAccount = new FragmentLogin();
-			getSupportFragmentManager().beginTransaction().replace(R.id.frame_login_swap, fragmentCreateAccount).commit();
+			if(checkuser.size() == 0){
+				
+				userDao.create(user);
+			
+				Toast.makeText(getApplicationContext(), "Account Created!",
+						   Toast.LENGTH_LONG).show();
+				
+				FragmentLogin fragmentCreateAccount = new FragmentLogin();
+				getSupportFragmentManager().beginTransaction().replace(R.id.frame_login_swap, fragmentCreateAccount).commit();
+			}
+			else
+			{
+				Toast.makeText(getApplicationContext(), "Account exists already! Choose another username!",
+						   Toast.LENGTH_LONG).show();
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		else
-		{
-			Toast.makeText(getApplicationContext(), "Account exists already! Choose another username!",
-					   Toast.LENGTH_LONG).show();
-		}
+		
+		
 		
 	}
 	

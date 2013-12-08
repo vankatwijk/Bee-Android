@@ -5,7 +5,7 @@
     android:orientation="vertical" >
 
     <Button
-        android:id="@+id/loginButton"
+        android:id="@+id/addYard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/addHive" />

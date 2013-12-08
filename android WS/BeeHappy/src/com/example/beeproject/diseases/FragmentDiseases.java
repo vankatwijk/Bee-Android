@@ -11,10 +11,10 @@ import com.example.beeproject.R;
 
 public class FragmentDiseases extends Fragment {
 
-
+	
 	public FragmentDiseases() {
 	}
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -27,7 +27,8 @@ public class FragmentDiseases extends Fragment {
 		
 		View rootView = inflater.inflate(R.layout.fragmentdiseases,
 				container, false);
-
+		
+		
 		return rootView;
 	}
 	

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/yardNameTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="41dp"
+        android:layout_marginTop="80dp"
+        android:text="@string/yardNameString" />
+
+    <TextView
+        android:id="@+id/yardLocationTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/yardNameTV"
+        android:layout_below="@+id/yardNameTV"
+        android:layout_marginTop="28dp"
+        android:text="@string/yardLocationString" />
+
+    <EditText
+        android:id="@+id/yardName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/yardLocationTV"
+        android:layout_marginLeft="22dp"
+        android:layout_toRightOf="@+id/yardNameTV"
+        android:ems="10"
+        android:inputType="text" >
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/yardLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/yardLocationTV"
+        android:layout_alignLeft="@+id/yardName"
+        android:ems="10"
+        android:inputType="text" />
+
+    <Button
+        android:id="@+id/addYardButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/addYard" />
+
+</RelativeLayout>
