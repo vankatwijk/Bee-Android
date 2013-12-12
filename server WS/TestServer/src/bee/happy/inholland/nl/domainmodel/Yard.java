@@ -5,7 +5,7 @@ import com.j256.ormlite.table.DatabaseTable;
 
 /**
  * Yard Model Object
- * <p>Attribute of yard and related behaviour
+ * <p>Attributes of yard and related behavior
  * <p>Objects of this class can be persisted to a database using ORMLite
  * @author rezolya
  * @version 1.0
@@ -39,6 +39,13 @@ public class Yard {
 	 * @param longitude
 	 */
 	public Yard(String name, double latitude, double longitude) {
+		this.name = name;
+		this.latitude = latitude;
+		this.longitude = longitude;
+	}
+	
+	public Yard(int id, String name, double latitude, double longitude) {
+		this.id = id;
 		this.name = name;
 		this.latitude = latitude;
 		this.longitude = longitude;

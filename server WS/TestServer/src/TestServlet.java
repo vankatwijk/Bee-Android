@@ -61,7 +61,6 @@ public class TestServlet extends HttpServlet {
 		 System.out.println("gsonResponse: " + mgson);
 		 out.println(mgson);
 		 
-		 
 
         //TODO: get the connection string from config file
         String databaseUrl = "jdbc:postgresql://localhost:5432/BeeHappy";

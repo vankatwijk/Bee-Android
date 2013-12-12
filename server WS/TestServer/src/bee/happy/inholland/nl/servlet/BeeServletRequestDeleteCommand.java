@@ -1,9 +1,8 @@
 package bee.happy.inholland.nl.servlet;
 
-import bee.happy.inholland.nl.servlet.BeeServletRequestCommand.ActionType;
 
 public class BeeServletRequestDeleteCommand {
-	DBCommandReceiver receiver;
+	/*DBCommandReceiver receiver;
 
 	public ActionType getType() {
 		return BeeServletRequestCommand.ActionType.DELETE;
@@ -12,5 +11,5 @@ public class BeeServletRequestDeleteCommand {
 	public void execute() {
 		receiver.delete();
 	}
-	
+	*/
 }

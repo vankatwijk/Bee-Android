@@ -1,16 +1,16 @@
 package bee.happy.inholland.nl.commands;
 
-public class AddCommand implements Command{
-	public final CommandType type = CommandType.ADD;
+public class UpdateCommand implements BeeCommand{
+	private final BeeCommandType type = BeeCommandType.UPDATE;
 	private String className;
-	private String objectJson;
-
-	public AddCommand(String className, String objectJson) {
+	private String objectJson; //updated object to be updated in the DB
+ 
+	public UpdateCommand(String className, String objectJson) {
 		super();
 		this.className = className;
 		this.objectJson = objectJson;
 	}
-
+	
 	public String getClassName() {
 		return className;
 	}
@@ -30,13 +30,14 @@ public class AddCommand implements Command{
 		this.objectJson = objectJson;
 	}
 
-
+	
 	@Override
-	public CommandType getType() {
+	public BeeCommandType getCommandType() {
 		return type;
 	}
 	
 	public String toString(){
-		return "Add command: [type = "+type+", className = '"+className+"', objectJson = "+objectJson+"]";
+		return "Update command: [type = "+type+", className = '"+className+"', objectJson = "+objectJson+"]";
 	}
+
 }

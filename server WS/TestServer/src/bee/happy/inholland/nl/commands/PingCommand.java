@@ -1,14 +1,14 @@
 package bee.happy.inholland.nl.commands;
 
-public class PingCommand implements Command{
-	public final CommandType type = CommandType.PING;
+public class PingCommand implements BeeCommand{
+	public final BeeCommandType type = BeeCommandType.PING;
 	
 	public PingCommand() {
 		super();
 	}
 	
 	@Override
-	public CommandType getType() {
+	public BeeCommandType getCommandType() {
 		return type;
 	}
 	
