@@ -46,46 +46,8 @@ public class CommandsServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		 PrintWriter responseWriter = response.getWriter();
-		 //testYardCRUD(responseWriter);
+		 testYardCRUD(responseWriter);
 		 testPing(responseWriter);
-		 
-		/*DBCommandExecuter dbCommandExecuter = new DBCommandExecuter();
-		 dbCommandExecuter.selectAll();
-		 
-		 Yard myYard1 = new Yard("Yard 1", 10, 10);
-		 Yard myYard2 = new Yard(3, "Updated Yard 3", 15, 10);
-
- ArrayList<BeeCommand> beeCommandList = new ArrayList<BeeCommand>();
-		 //beeCommandList.add(new CreateCommand(Yard.class.getName(), gson.toJson(myYard1, Yard.class)));
-		 //beeCommandList.add(new CreateCommand(Yard.class.getName(), gson.toJson(myYard2, Yard.class)));
-		beeCommandList.add(new UpdateCommand(Yard.class.getName(), gson.toJson(myYard2, Yard.class)));
-		 beeCommandList.add(new DeleteCommand(Yard.class.getName(), gson.toJson(myYard2, Yard.class)));
-
-		 ArrayList<String> jsonCommandsList = new ArrayList<String>();
-		 
-		 responseWriter.println("Created commands: \n");
-		 for(BeeCommand com :beeCommandList){
-			 responseWriter.println(com);
-			 jsonCommandsList.add(gson.toJson(com, BeeCommand.class));
-		 }
-
-		 ArrayList<BeeCommand> beeCommandListFromJson = new ArrayList<BeeCommand>();
-		 
-		 responseWriter.println("\nJSONS: \n");
-		 for(String jsonstring : jsonCommandsList){
-			 responseWriter.println(jsonstring);
-			 beeCommandListFromJson.add(gson.fromJson(jsonstring, BeeCommand.class));
-		 }
-
-		 responseWriter.println("\nExecuting: \n");
-		 CommandExecuter commandExecuter = new CommandExecuter();
-		 for(BeeCommand com :beeCommandListFromJson){
-			 responseWriter.println(com);
-			 commandExecuter.execute(com);
-		 }
-		 
-		 
-		 dbCommandExecuter.selectAll();*/
 	}
 
 	/**
@@ -102,8 +64,8 @@ public class CommandsServlet extends HttpServlet {
 		dbCommandExecuter.selectAll();
 		 
 		Yard newYard = new Yard("New Yard", 1, 1);
-		Yard updatedYard = new Yard(37, "Updated Yard", 15, 10);
-		Yard deletedYard = new Yard(39, " ", 15, 10);
+		Yard updatedYard = new Yard(5, "Updated Yard", 15, 10);
+		Yard deletedYard = new Yard(38, " ", 15, 10);
 
 		//create commands
 		ArrayList<BeeCommand> beeCommandList = new ArrayList<BeeCommand>();
@@ -113,6 +75,7 @@ public class CommandsServlet extends HttpServlet {
 		
 		ArrayList<BeeCommandResult> resultList = testExecuting(responseWriter, beeCommandList);
 		testCommandsToJsonAndBack(responseWriter, beeCommandList);
+		testCommandResultsToJsonAndBack(responseWriter, resultList);
 		
 
 		System.out.println("\n after executing commands:");
@@ -161,7 +124,7 @@ public class CommandsServlet extends HttpServlet {
 		}
 	
 		//print commands, decoded from json
-		responseWriter.println("Commands from JSON: \n");
+		responseWriter.println("\nCommands from JSON: \n");
 		for(BeeCommand com :beeCommandListFromJson){
 			responseWriter.println(com);
 		}
@@ -191,7 +154,7 @@ public class CommandsServlet extends HttpServlet {
 		}
 	
 		//print commands, decoded from json
-		responseWriter.println("Results from JSON: \n");
+		responseWriter.println("\nResults from JSON: \n");
 		for(BeeCommandResult com : listFromJson){
 			responseWriter.println(com);
 		}

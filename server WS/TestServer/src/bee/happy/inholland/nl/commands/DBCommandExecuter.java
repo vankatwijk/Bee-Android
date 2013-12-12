@@ -14,7 +14,7 @@ import com.j256.ormlite.support.ConnectionSource;
 
 public class DBCommandExecuter {
 	//TODO: get the connection string from config file
-    final String databaseUrl = "jdbc:postgresql://localhost:5432/BeeHappy1";
+    final String databaseUrl = "jdbc:postgresql://localhost:5432/BeeHappy";
 	ConnectionSource connectionSource; //connection source to our database
 	Gson gson;
 	
@@ -47,10 +47,20 @@ public class DBCommandExecuter {
 			
 			// instantiate the dao
 			Dao<? super Object, Integer> objectClassDao = DaoManager.createDao(connectionSource, objectClass);
-					
+			
+			//create object in DB
 			int nInsertedRows = objectClassDao.create(objectClass.cast(object));
-			System.out.println("nInsertedRows=" + nInsertedRows);
-			System.out.println("inserted object: " + object);
+
+			if(nInsertedRows==1){
+				String objectJson = gson.toJson(object);
+				//object was successfuly added to DB
+				result = new CreateCommandResult(command.getClassName(), objectJson);
+			} else if(nInsertedRows == 0){
+				throw new Exception(object + " could not be added in DB");
+			}
+			else{
+				throw new Exception("Something went wrong...");
+			}
 			
 		} catch (SQLException e) {
 			result = errorResultFromException(e, command.getCommandType());
@@ -76,8 +86,19 @@ public class DBCommandExecuter {
 			
 			// instantiate the dao
 			Dao<? super Object, Integer> objectClassDao = DaoManager.createDao(connectionSource, objectClass);
-			objectClassDao.update(object);			
 			
+			//update the object in DB
+			int nUpdatedRows = objectClassDao.update(object);			
+			if(nUpdatedRows==1){
+				String objectJson = gson.toJson(object);
+				//object was successfuly updated
+				result = new UpdateCommandResult(command.getClassName(), objectJson);
+			} else if(nUpdatedRows == 0){
+				throw new Exception(object + " not found in DB");
+			}
+			else{
+				throw new Exception("Something went wrong...");
+			}
 			
 		} catch (SQLException e) {
 			result = errorResultFromException(e, command.getCommandType());
@@ -101,7 +122,19 @@ public class DBCommandExecuter {
 			System.out.println("object to be deleted: " + object);
 			// instantiate the dao
 			Dao<? super Object, Integer> objectClassDao = DaoManager.createDao(connectionSource, objectClass);
-			objectClassDao.delete(object);	
+			
+			//delete the object in DB
+			int nDeletedRows = objectClassDao.delete(object);	
+			if(nDeletedRows==1){
+				String objectJson = gson.toJson(object);
+				//object was successfuly deleted
+				result = new DeleteCommandResult(command.getClassName(), objectJson);
+			} else if(nDeletedRows == 0){
+				throw new Exception(object + " not found in DB");
+			}
+			else{
+				throw new Exception("Something went wrong...");
+			}
 			
 		} catch (SQLException e) {
 			result = errorResultFromException(e, command.getCommandType());

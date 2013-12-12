@@ -4,7 +4,7 @@ public class CreateCommandResult  implements BeeCommandResult{
 	private final BeeCommandResultType resultType = BeeCommandResultType.SUCCESS; //result is success. If creating new object in DB was not successful, an ErrorResult must be generated
 	private final BeeCommandType commandType = BeeCommandType.CREATE;
 	private String className; //name of class of created object
-	private String objectJson; //created object saved in the DB
+	private String objectJson; //created object saved in the DB with id set to newly generated
 
 	public CreateCommandResult(String className, String objectJson) {
 		this.className = className;

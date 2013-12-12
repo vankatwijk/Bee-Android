@@ -85,7 +85,7 @@
   <enumeration id="10" language="java" name="bee.happy.inholland.nl.commands.BeeCommandResultType" project="TestServer" 
     file="/TestServer/src/bee/happy/inholland/nl/commands/BeeCommandResultType.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="884" y="667"/>    
+    <position height="-1" width="-1" x="875" y="858"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -94,7 +94,7 @@
   </enumeration>  
   <interface id="11" language="java" name="bee.happy.inholland.nl.commands.BeeCommandResult" project="TestServer" 
     file="/TestServer/src/bee/happy/inholland/nl/commands/BeeCommandResult.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="620" y="718"/>    
+    <position height="-1" width="-1" x="611" y="909"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -103,7 +103,7 @@
   </interface>  
   <class id="12" language="java" name="bee.happy.inholland.nl.commands.PingCommandResult" project="TestServer" 
     file="/TestServer/src/bee/happy/inholland/nl/commands/PingCommandResult.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1145" y="860"/>    
+    <position height="-1" width="-1" x="1136" y="1051"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -112,117 +112,175 @@
   </class>  
   <class id="13" language="java" name="bee.happy.inholland.nl.commands.ErrorResult" project="TestServer" 
     file="/TestServer/src/bee/happy/inholland/nl/commands/ErrorResult.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="273" y="881"/>    
+    <position height="-1" width="-1" x="264" y="1072"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <association id="14">    
+  <class id="14" language="java" name="bee.happy.inholland.nl.commands.DeleteCommandResult" project="TestServer" 
+    file="/TestServer/src/bee/happy/inholland/nl/commands/DeleteCommandResult.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="551" y="1153"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="15" language="java" name="bee.happy.inholland.nl.commands.UpdateCommandResult" project="TestServer" 
+    file="/TestServer/src/bee/happy/inholland/nl/commands/UpdateCommandResult.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="839" y="1152"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <association id="16">    
     <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="15" name="type"/>      
-      <multiplicity id="16" minimum="0" maximum="1"/>    
+      <attribute id="17" name="type"/>      
+      <multiplicity id="18" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="1" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="17">    
+  <association id="19">    
     <end type="SOURCE" refId="12" navigable="false">      
-      <attribute id="18" name="resultType"/>      
-      <multiplicity id="19" minimum="0" maximum="1"/>    
+      <attribute id="20" name="resultType"/>      
+      <multiplicity id="21" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="10" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="20">    
+  <association id="22">    
     <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="21" name="type"/>      
-      <multiplicity id="22" minimum="0" maximum="1"/>    
+      <attribute id="23" name="type"/>      
+      <multiplicity id="24" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="1" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="23">    
+  <association id="25">    
     <end type="SOURCE" refId="13" navigable="false">      
-      <attribute id="24" name="commandType"/>      
-      <multiplicity id="25" minimum="0" maximum="1"/>    
+      <attribute id="26" name="commandType"/>      
+      <multiplicity id="27" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="1" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="26">    
+  <association id="28">    
+    <end type="SOURCE" refId="15" navigable="false">      
+      <attribute id="29" name="commandType"/>      
+      <multiplicity id="30" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="31">    
     <end type="SOURCE" refId="4" navigable="false">      
-      <attribute id="27" name="type"/>      
-      <multiplicity id="28" minimum="0" maximum="1"/>    
+      <attribute id="32" name="type"/>      
+      <multiplicity id="33" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="1" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <realization id="29">    
+  <realization id="34">    
     <end type="SOURCE" refId="9"/>    
     <end type="TARGET" refId="2"/>  
   </realization>  
-  <association id="30">    
-    <end type="SOURCE" refId="13" navigable="false">      
-      <attribute id="31" name="resultType"/>      
-      <multiplicity id="32" minimum="0" maximum="1"/>    
+  <association id="35">    
+    <end type="SOURCE" refId="15" navigable="false">      
+      <attribute id="36" name="resultType"/>      
+      <multiplicity id="37" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="10" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <dependency id="33">    
+  <association id="38">    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="39" name="resultType"/>      
+      <multiplicity id="40" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="10" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="41">    
     <end type="SOURCE" refId="5"/>    
     <end type="TARGET" refId="11"/>  
   </dependency>  
-  <dependency id="34">    
+  <association id="42">    
+    <end type="SOURCE" refId="14" navigable="false">      
+      <attribute id="43" name="resultType"/>      
+      <multiplicity id="44" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="10" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="45">    
     <end type="SOURCE" refId="11"/>    
     <end type="TARGET" refId="1"/>  
   </dependency>  
-  <realization id="35">    
+  <realization id="46">    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="11"/>  
+  </realization>  
+  <realization id="47">    
     <end type="SOURCE" refId="13"/>    
     <end type="TARGET" refId="11"/>  
   </realization>  
-  <realization id="36">    
+  <realization id="48">    
     <end type="SOURCE" refId="12"/>    
     <end type="TARGET" refId="11"/>  
   </realization>  
-  <dependency id="37">    
+  <dependency id="49">    
     <end type="SOURCE" refId="6"/>    
     <end type="TARGET" refId="11"/>  
   </dependency>  
-  <realization id="38">    
+  <association id="50">    
+    <end type="SOURCE" refId="14" navigable="false">      
+      <attribute id="51" name="commandType"/>      
+      <multiplicity id="52" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="53">    
     <end type="SOURCE" refId="4"/>    
     <end type="TARGET" refId="2"/>  
   </realization>  
-  <dependency id="39">    
+  <realization id="54">    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="11"/>  
+  </realization>  
+  <dependency id="55">    
     <end type="SOURCE" refId="11"/>    
     <end type="TARGET" refId="10"/>  
   </dependency>  
-  <realization id="40">    
+  <realization id="56">    
     <end type="SOURCE" refId="8"/>    
     <end type="TARGET" refId="2"/>  
   </realization>  
-  <association id="41">    
+  <association id="57">    
     <end type="SOURCE" refId="12" navigable="false">      
-      <attribute id="42" name="commandType"/>      
-      <multiplicity id="43" minimum="0" maximum="1"/>    
+      <attribute id="58" name="commandType"/>      
+      <multiplicity id="59" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="1" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="44">    
-    <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="45" name="type"/>      
-      <multiplicity id="46" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <realization id="47">    
+  <realization id="60">    
     <end type="SOURCE" refId="7"/>    
     <end type="TARGET" refId="2"/>  
   </realization>  
+  <association id="61">    
+    <end type="SOURCE" refId="9" navigable="false">      
+      <attribute id="62" name="type"/>      
+      <multiplicity id="63" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    
