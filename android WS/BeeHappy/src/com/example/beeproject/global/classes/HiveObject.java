@@ -1,38 +1,39 @@
 package com.example.beeproject.global.classes;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "hives")
 public class HiveObject {
 	
+	@DatabaseField(generatedId = true)
 	private int id;
+	
+	@DatabaseField(canBeNull = false)
 	private String hiveName;
-	private int yardId;
-	private int queenId;
-	private int nrOfFrames;
-	private int occupiedFrames;
-	private int eggs;
-	private int larve;
-	private int pupae;
-	private int nrOfMites;
+	
+	@DatabaseField(canBeNull = true, foreign = true, foreignAutoCreate = true)
+	private YardObject yardID;
+	
+	@DatabaseField(canBeNull = false)
+	private boolean synced;
+	
 	
 	public HiveObject(){
 	}
 	
-	public HiveObject(int id, String hiveName, int yardId, int queenId, int nrOfFrames, int occupiedFrames, int eggs, int larve, int pupae, int nrOfMites){
-		this.id = id;
+	
+
+	public HiveObject(String hiveName, YardObject yardId, boolean synced){
 		this.hiveName = hiveName;
-		this.yardId = yardId;
-		this.queenId = queenId;
-		this.nrOfFrames = nrOfFrames;
-		this.occupiedFrames = occupiedFrames;
-		this.eggs = eggs;
-		this.larve = larve;
-		this.pupae = pupae;
-		this.nrOfMites = nrOfMites;
+		this.yardID = yardId;
+		this.synced = synced;
 	}
 
 	public int getId() {
 		return id;
 	}
-
+	
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -45,70 +46,21 @@ public class HiveObject {
 		this.hiveName = hiveName;
 	}
 
-	public int getYardId() {
-		return yardId;
+	public YardObject getYardId() {
+		return yardID;
 	}
 
-	public void setYardId(int yardId) {
-		this.yardId = yardId;
+	public void setYardId(YardObject yardId) {
+		this.yardID = yardId;
 	}
 
-	public int getQueenId() {
-		return queenId;
+	public boolean isSynced() {
+		return synced;
 	}
 
-	public void setQueenId(int queenId) {
-		this.queenId = queenId;
+	public void setSynced(boolean synced) {
+		this.synced = synced;
 	}
-
-	public int getNrOfFrames() {
-		return nrOfFrames;
-	}
-
-	public void setNrOfFrames(int nrOfFrames) {
-		this.nrOfFrames = nrOfFrames;
-	}
-
-	public int getOccupiedFrames() {
-		return occupiedFrames;
-	}
-
-	public void setOccupiedFrames(int occupiedFrames) {
-		this.occupiedFrames = occupiedFrames;
-	}
-
-	public int getEggs() {
-		return eggs;
-	}
-
-	public void setEggs(int eggs) {
-		this.eggs = eggs;
-	}
-
-	public int getLarve() {
-		return larve;
-	}
-
-	public void setLarve(int larve) {
-		this.larve = larve;
-	}
-
-	public int getPupae() {
-		return pupae;
-	}
-
-	public void setPupae(int pupae) {
-		this.pupae = pupae;
-	}
-
-	public int getNrOfMites() {
-		return nrOfMites;
-	}
-
-	public void setNrOfMites(int nrOfMites) {
-		this.nrOfMites = nrOfMites;
-	}
-	
 
 
 }

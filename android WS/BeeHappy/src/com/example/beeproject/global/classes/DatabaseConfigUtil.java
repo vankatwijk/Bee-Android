@@ -14,11 +14,11 @@ import com.j256.ormlite.android.apptools.OrmLiteConfigUtil;
 public class DatabaseConfigUtil extends OrmLiteConfigUtil {
 		
 	private static final Class<?>[] classes = new Class[] {
-	    YardObject.class, UserObject.class, HiveObject.class
+	    YardObject.class, UserObject.class, HiveObject.class, CheckFormObject.class
 	  };
 		
         public static void main(String[] args) throws SQLException, IOException {
-        	System.out.println("bla");
+ 
                 writeConfigFile(new File("D:/Programming/Android/BeeHappy/res/raw/ormlite_config.txt"), classes);
         }
 }

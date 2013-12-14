@@ -18,14 +18,18 @@ public class YardObject {
 	
     @DatabaseField(canBeNull = true, foreign = true, foreignAutoCreate = true) 
 	private UserObject userID;
+    
+    @DatabaseField(canBeNull = false)
+	private boolean synced;
 	
 	public YardObject() {
     }
 	
-	public YardObject(String yardName, String location, UserObject userID) {
+	public YardObject(String yardName, String location, UserObject userID, boolean synced) {
 		this.yardName = yardName;
 		this.location = location;
 		this.userID = userID;
+		this.synced = synced;
 	}
 
 	public int getId() {
@@ -52,12 +56,16 @@ public class YardObject {
 	public UserObject getUserID() {
 		return userID;
 	}
-		
-	public String toString(){
-		return "Yard:{id: " + getId() + ", name: "+getYardName() + 
-				", location: "+getLocation() + ", userID: " + getUserID() + "}";
-		
+
+	public boolean isSynced() {
+		return synced;
 	}
+
+	public void setSynced(boolean synced) {
+		this.synced = synced;
+	}
+		
+	
 	
 }
 

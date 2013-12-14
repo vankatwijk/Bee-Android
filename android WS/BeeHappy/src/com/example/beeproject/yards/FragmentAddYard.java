@@ -74,7 +74,7 @@ public class FragmentAddYard extends Fragment {
 						check = true;
 					
 					if(check == true){
-						YardObject yard = new YardObject(yardName, yardLocation, userID);
+						YardObject yard = new YardObject(yardName, yardLocation, userID, false);
 						
 						yardDao.create(yard);
 						

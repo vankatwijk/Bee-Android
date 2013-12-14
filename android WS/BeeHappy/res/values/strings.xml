@@ -24,5 +24,23 @@
     <string name="editYardLocationString">Change Yard Location:</string>
     <string name="saveButton">Save</string>
     <string name="cancelButton">Cancel</string>
+    <string name="hiveNameString">Hive Name:</string>
+    <string name="queenString">Queen:</string>
+    <string name="qDateBornString">Date Born:</string>
+    <string name="qWingsClipedString">Wings Clipped:</string>
+    <string name="qRaceString">Race:</string>
+    <string name="nrOfFramesString">Number of Frames:</string>
+    <string name="ocupiedFramesString">Ocupied Frames:</string>
+    <string name="eggsString">Eggs:</string>
+    <string name="larveString">Larve:</string>
+    <string name="pupaeString">Pupae:</string>
+    <string name="nrOfMitesString">Number of Mites:</string>
+    <string name="addHiveString">Add Hive</string>
+    <string name="nrOfLayersString">Number of Layers:</string>
+    <string name="honeyCombsString">Honey Combs:</string>
+    <string name="commentsString">Comments:</string>
+    <string name="hasDiseaseString">Disease Status:</string>
+    <string name="checkDiseaseString">Check Disease</string>
+    <string name="saveFormString">Save Form</string>
 
 </resources>

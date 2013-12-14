@@ -33,6 +33,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	
 	private Dao<HiveObject, Integer> hiveDao = null;
 	private RuntimeExceptionDao<HiveObject, Integer> hiveRuntimeDao = null;
+	
+	private Dao<CheckFormObject, Integer> checkFormDao = null;
+	private RuntimeExceptionDao<CheckFormObject, Integer> checkFormRuntimeDao = null;
 
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
@@ -47,8 +50,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		try {
 			Log.i(DatabaseHelper.class.getName(), "onCreate");
 			TableUtils.createTable(connectionSource, YardObject.class);
-			//TableUtils.createTable(connectionSource, HiveObject.class);
+			TableUtils.createTable(connectionSource, HiveObject.class);
 			TableUtils.createTable(connectionSource, UserObject.class);
+			TableUtils.createTable(connectionSource, CheckFormObject.class);
 		} catch (SQLException e) {
 			Log.e(DatabaseHelper.class.getName(), "Can't create database", e);
 			throw new RuntimeException(e);
@@ -67,8 +71,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		try {
 			Log.i(DatabaseHelper.class.getName(), "onUpgrade");
 			TableUtils.dropTable(connectionSource, YardObject.class, true);
-			//TableUtils.dropTable(connectionSource, HiveObject.class, true);
+			TableUtils.dropTable(connectionSource, HiveObject.class, true);
 			TableUtils.dropTable(connectionSource, UserObject.class, true);
+			TableUtils.dropTable(connectionSource, CheckFormObject.class, true);
 			// after we drop the old databases, we create the new ones
 			onCreate(db, connectionSource);
 		} catch (SQLException e) {
@@ -119,6 +124,21 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			hiveRuntimeDao = getRuntimeExceptionDao(HiveObject.class);
 		}
 		return hiveRuntimeDao;
+	}
+	
+	//checkform
+	public Dao<CheckFormObject, Integer> getCheckFormDao() throws SQLException {
+		if (checkFormDao == null) {
+			checkFormDao = getDao(CheckFormObject.class);
+		}
+		return checkFormDao;
+	}
+	
+	public RuntimeExceptionDao<CheckFormObject, Integer> getCheckFormRunDao() {
+		if (checkFormRuntimeDao == null) {
+			checkFormRuntimeDao = getRuntimeExceptionDao(CheckFormObject.class);
+		}
+		return checkFormRuntimeDao;
 	}
 	
 	/**
