@@ -1,5 +1,5 @@
 #
-# generated on 2013/12/14 10:14:02
+# generated on 2013/12/16 01:49:11
 #
 # --table-start--
 dataClass=com.example.beeproject.global.classes.YardObject
@@ -138,6 +138,33 @@ fieldName=comments
 # --field-end--
 # --field-start--
 fieldName=synced
+canBeNull=false
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.example.beeproject.global.classes.DiseaseObject
+tableName=diseases
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=diseaseName
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=description
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=treatment
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=contagious
 canBeNull=false
 # --field-end--
 # --table-fields-end--

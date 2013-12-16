@@ -36,6 +36,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	
 	private Dao<CheckFormObject, Integer> checkFormDao = null;
 	private RuntimeExceptionDao<CheckFormObject, Integer> checkFormRuntimeDao = null;
+	
+	private Dao<DiseaseObject, Integer> diseaseDao = null;
+	private RuntimeExceptionDao<DiseaseObject, Integer> diseaseRuntimeDao = null;
 
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
@@ -53,6 +56,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.createTable(connectionSource, HiveObject.class);
 			TableUtils.createTable(connectionSource, UserObject.class);
 			TableUtils.createTable(connectionSource, CheckFormObject.class);
+			TableUtils.createTable(connectionSource, DiseaseObject.class);
 		} catch (SQLException e) {
 			Log.e(DatabaseHelper.class.getName(), "Can't create database", e);
 			throw new RuntimeException(e);
@@ -74,6 +78,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.dropTable(connectionSource, HiveObject.class, true);
 			TableUtils.dropTable(connectionSource, UserObject.class, true);
 			TableUtils.dropTable(connectionSource, CheckFormObject.class, true);
+			TableUtils.dropTable(connectionSource, DiseaseObject.class, true);
 			// after we drop the old databases, we create the new ones
 			onCreate(db, connectionSource);
 		} catch (SQLException e) {
@@ -141,6 +146,21 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		return checkFormRuntimeDao;
 	}
 	
+	//disease
+	public Dao<DiseaseObject, Integer> getDiseaseDao() throws SQLException {
+		if (diseaseDao == null) {
+			diseaseDao = getDao(DiseaseObject.class);
+		}
+		return diseaseDao;
+	}
+	
+	public RuntimeExceptionDao<DiseaseObject, Integer> getDiseaseRunDao() {
+		if (diseaseRuntimeDao == null) {
+			diseaseRuntimeDao = getRuntimeExceptionDao(DiseaseObject.class);
+		}
+		return diseaseRuntimeDao;
+	}
+	
 	/**
 	 * Close the database connections and clear any cached DAOs.
 	 */
@@ -150,5 +170,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		yardRuntimeDao = null;
 		hiveRuntimeDao = null;
 		userRuntimeDao = null;
+		diseaseRuntimeDao = null;
 	}
 }
