@@ -7,24 +7,21 @@ import android.content.Context;
 import android.net.Uri;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
+import android.util.Log;
 
-public class Calendar {	
-	private Uri CAL_URI = CalendarContract.Calendars.CONTENT_URI;
-	private String accountName = null;
-	private String calendarName = null;
+public final class CalendarContentResolver {	
+	private final static String tag = "Calendar";
+	private static Uri CAL_URI = CalendarContract.Calendars.CONTENT_URI;
 	
-	public Uri getCAL_URI() {
+	public static Uri getCAL_URI() {
 		return CAL_URI;
 	}
 
-	public void setCAL_URI(Uri cAL_URI) {
-		CAL_URI = cAL_URI;
+	public static void setCAL_URI(Uri calUri) {
+		CAL_URI = calUri;
 	}
 	
-	public Calendar(String accountName, String calendarName) {
-		
-	}
-	public ContentValues buildNewCalContentValues() {
+	public static ContentValues buildNewCalContentValues(String accountName, String calendarName) {
 	    final ContentValues cv = new ContentValues();
 	    cv.put(Calendars.ACCOUNT_NAME, accountName);
 	    cv.put(Calendars.ACCOUNT_TYPE, CalendarContract.ACCOUNT_TYPE_LOCAL);
@@ -39,7 +36,7 @@ public class Calendar {
 	    return cv;
 	}
 	
-	public Uri buildCalUri() {
+	public static Uri buildCalUri(String accountName) {
 	    return getCAL_URI()
 	            .buildUpon()
 	            .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
@@ -49,18 +46,28 @@ public class Calendar {
 	            .build();
 	}
 	
-	public void createCalendar(Context ctx) {
-	    ContentResolver cr = ctx.getContentResolver();
-	    final ContentValues cv = buildNewCalContentValues();
-	    Uri calUri = buildCalUri();
-	    cr.insert(calUri, cv);
+	public static Uri buildCalUri(String accountName, String calendarName) {
+	    return getCAL_URI()
+	            .buildUpon()
+	            .appendQueryParameter(Calendars.ACCOUNT_NAME, accountName)
+				.appendQueryParameter(Calendars.NAME, calendarName)
+	            .appendQueryParameter(Calendars.ACCOUNT_TYPE,
+	                        CalendarContract.ACCOUNT_TYPE_LOCAL)
+				.build();
 	}
 	
-	public void deleteCalendar(Context ctx) {
+	public static Uri create(Context ctx, String accountName, String calendarName) {
+	    ContentResolver cr = ctx.getContentResolver();
+	    final ContentValues cv = buildNewCalContentValues(accountName, calendarName);
+	    Uri calUri = buildCalUri(accountName);
+	    Log.i(tag, calUri.toString());
+	    return cr.insert(calUri, cv);
+	}
+	
+	public static int delete(Context ctx, String accountName, String calendarName) {
 		ContentResolver cr = ctx.getContentResolver();
-		Uri newUri = cr.insert(buildCalUri(), cv);
-		long CAL_ID = Long.parseLong(newUri.getLastPathSegment());
-		Uri calUri = ContentUris.withAppendedId(buildCalUri(), CAL_ID);
-		cr.delete(calUri, null, null);
+		Uri calUri = buildCalUri(accountName, calendarName);
+		Log.i(tag, calUri.toString());
+		return cr.delete(calUri, null, null);
 	}
 }

@@ -4,28 +4,27 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <CalendarView
-        android:id="@+id/calendarView1"
-        android:layout_width="match_parent"
-        android:layout_height="284dp" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/dateText"
+        <Button
+            android:id="@+id/buttonCreateCalendar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView" />
-        
-        <TextView
-	        android:id="@+id/reminderText"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="TextView" />
-
+            android:text="CreateCalendar" />
+		<Button
+            android:id="@+id/buttonDeleteCalendar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DeleteCalendar" />
+		
+		<Button
+            android:id="@+id/buttonFakeDeleteCalendar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="FakeDeleteCalendar" />
     </LinearLayout>
 
 

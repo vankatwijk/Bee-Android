@@ -2,12 +2,12 @@ package com.example.beeproject.calendar;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.CalendarView;
-import android.widget.CalendarView.OnDateChangeListener;
-import android.widget.TextView;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.beeproject.R;
@@ -16,7 +16,10 @@ import com.example.beeproject.R;
 public class FragmentCalender extends Fragment {
 	public FragmentCalender() {
 	}
-
+	
+	private String accountName = "test";
+	private String calendarName = "test2";
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -25,28 +28,8 @@ public class FragmentCalender extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		// replace this with a custom calendar view as this only shows a calendar. 
-		// it is not possible to change colours of the day with this.
-		CalendarView calendarView = (CalendarView) getActivity().findViewById(R.id.calendarView1);
-		calendarView.setOnDateChangeListener(new OnDateChangeListener()
-		{
-			@Override
-			public void onSelectedDayChange(CalendarView view, int year, int month,
-					int dayOfMonth) {
-				Toast.makeText(getActivity(), dayOfMonth+"/"+month+"/"+year, Toast.LENGTH_LONG).show();
-				changeTextToDay(year,month,dayOfMonth);
-			}					
-		});
 	}
 	
-	private void changeTextToDay(int year, int month, int dayOfMonth)
-	{		
-		String date = Integer.toString(year) + "/" + Integer.toString(month) +"/"+ Integer.toString(dayOfMonth);  
-		TextView currentDateText = (TextView) getActivity().findViewById(R.id.dateText);
-		currentDateText.setText(date);
-		TextView remindersText = (TextView) getActivity().findViewById(R.id.reminderText);
-		remindersText.setText("Reminders of : " + date);
-	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,8 +37,47 @@ public class FragmentCalender extends Fragment {
 		
 		View rootView = inflater.inflate(R.layout.fragmentcalender,
 				container, false);
+		Button createCalendar = (Button) rootView.findViewById(R.id.buttonCreateCalendar);
+		Button deleteCalendar = (Button) rootView.findViewById(R.id.buttonDeleteCalendar);
+		Button fakeDeleteCalendar = (Button) rootView.findViewById(R.id.buttonFakeDeleteCalendar);
+		
+		createCalendar.setOnClickListener(new OnClickListener() {	
+			
+			@Override
+			public void onClick(View v) {
+				CalendarContentResolver.create(getActivity().getApplicationContext(), accountName, calendarName);
+				Toast.makeText(getActivity(), "Created", Toast.LENGTH_SHORT).show();
+			}
+		});
+		
+		deleteCalendar.setOnClickListener(new OnClickListener() {
 
+			@Override
+			public void onClick(View v) {
+				int rows = CalendarContentResolver.delete(getActivity(), accountName, calendarName);
+				Log.i("rows", Integer.toString(rows));
+				if (rows > 0)
+					Toast.makeText(getActivity(), "Deleted", Toast.LENGTH_SHORT).show();
+				else
+					Toast.makeText(getActivity(), "No Deleted", Toast.LENGTH_SHORT).show();
+			}
+			
+		});
+		
+		fakeDeleteCalendar.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				int rows = CalendarContentResolver.delete(getActivity(), accountName, calendarName + "1");
+				Log.i("rows", Integer.toString(rows));
+				if (rows > 0)
+					Toast.makeText(getActivity(), "Deleted", Toast.LENGTH_SHORT).show();
+				else
+					Toast.makeText(getActivity(), "No Deleted", Toast.LENGTH_SHORT).show();
+			}
+			
+		});
+		
 		return rootView;
-	}
-	
+	}	
 }
