@@ -3,9 +3,16 @@ package com.example.beeproject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import com.example.beeproject.calendar.FragmentCalender;
 import com.example.beeproject.diseases.FragmentDiseases;
+import com.example.beeproject.global.classes.GlobalVar;
+import com.example.beeproject.login.FragmentLogin;
+import com.example.beeproject.login.LoginActivity;
 import com.example.beeproject.profile.FragmentProfileInfo;
 import com.example.beeproject.statistics.FragmentStatistics;
 import com.example.beeproject.weather.WeatherActivity;
@@ -31,7 +38,31 @@ public class MainActivity extends FragmentActivity implements
 		}
 
 	}
-
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+	public void LogoutOfActivity(MenuItem v){
+		
+		//set username and password to null in shared prefs
+		getSharedPreferences(GlobalVar.USERPREFS,MODE_PRIVATE)
+        .edit()
+        .putString(GlobalVar.PREFS_login_username, null)
+        .putString(GlobalVar.PREFS_login_encodePassword, null)
+        .commit();
+		//display a logout message
+		Toast.makeText(getApplicationContext(), "You have been logged out !",
+				   Toast.LENGTH_LONG).show();
+		
+		//switch to the login activity
+		Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+		startActivity(intent);
+	
+		
+	}
+	
 	@Override
 	public void onItemSelected(String id) {
 		status = id;
