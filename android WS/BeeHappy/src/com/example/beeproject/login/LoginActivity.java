@@ -7,6 +7,7 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Base64;
@@ -29,8 +30,16 @@ public class LoginActivity extends FragmentActivity implements OnClickLoginButto
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		
-		FragmentLogin fragmentLogin = new FragmentLogin();
-		getSupportFragmentManager().beginTransaction().replace(R.id.frame_login_swap, fragmentLogin).commit();
+		SharedPreferences pref = getSharedPreferences(GlobalVar.USERPREFS,MODE_PRIVATE);   
+		String username = pref.getString(GlobalVar.PREFS_login_username, null);
+		String encodePassword = pref.getString(GlobalVar.PREFS_login_encodePassword, null);
+		
+		if (username == null || encodePassword == null) {
+			FragmentLogin fragmentLogin = new FragmentLogin();
+			getSupportFragmentManager().beginTransaction().replace(R.id.frame_login_swap, fragmentLogin).commit();	
+		}else{	
+			loginToAppWithSharedPref(username, encodePassword);		
+		}	
 	}
 
 	@Override
@@ -43,8 +52,6 @@ public class LoginActivity extends FragmentActivity implements OnClickLoginButto
 	//in the database--if true login the user
 	@Override
 	public void loginToApp(String username, String password) {
-		
-		
 		String encodedPassowrd = null;
 		try {
 			encodedPassowrd = encodePassword(password);
@@ -52,6 +59,8 @@ public class LoginActivity extends FragmentActivity implements OnClickLoginButto
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		
 		
 		DatabaseManager dbManager = new DatabaseManager();
 		DatabaseHelper db = dbManager.getHelper(getApplicationContext());
@@ -77,8 +86,19 @@ public class LoginActivity extends FragmentActivity implements OnClickLoginButto
 				int userID = userLoged.getId();
 				
 				GlobalVar.getInstance().setUserID(userID);
+				
+				//save the username and password to a shared preference folder
+				getSharedPreferences(GlobalVar.USERPREFS,MODE_PRIVATE)
+		        .edit()
+		        .putString(GlobalVar.PREFS_login_username, username)
+		        .putString(GlobalVar.PREFS_login_encodePassword, encodedPassowrd)
+		        .commit();
+				//switch to main activity if username and password are correct
+								
 				Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 				startActivity(intent);
+				
+				
 			}
 			else
 			{
@@ -93,7 +113,59 @@ public class LoginActivity extends FragmentActivity implements OnClickLoginButto
 		
 		
 	}
-
+	//Gets the username and password and checks if they are correct with the entries
+	//in the database--if true login the user
+	public void loginToAppWithSharedPref(String username, String encodePassword) {
+		
+		String encodedPassowrd = encodePassword;
+		
+		DatabaseManager dbManager = new DatabaseManager();
+		DatabaseHelper db = dbManager.getHelper(getApplicationContext());
+		
+		
+		List<UserObject> user;
+		try {
+			RuntimeExceptionDao<UserObject, Integer> userDao = db.getUserRunDao();
+			user = userDao.query(
+			      userDao.queryBuilder().where()
+			         .eq("username", username)
+			         .and()
+			         .eq("password", encodedPassowrd)
+			         .prepare());
+	
+			if(user.size() == 1){
+				Toast.makeText(getApplicationContext(), "Login Successful!",
+						   Toast.LENGTH_LONG).show();
+				
+				UserObject userLoged = user.get(0);
+				
+				int userID = userLoged.getId();
+				
+				GlobalVar.getInstance().setUserID(userID);
+				
+				//switch to main activity if username and password are correct
+								
+				Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+				startActivity(intent);
+					
+			}
+			else
+			{
+				Toast.makeText(getApplicationContext(), "Something has gone wrong ,Please login manually",
+						   Toast.LENGTH_LONG).show();
+				
+				FragmentLogin fragmentLogin = new FragmentLogin();
+				getSupportFragmentManager().beginTransaction().replace(R.id.frame_login_swap, fragmentLogin).commit();	
+				
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+	}
 	//Gets the username and password and creates a new account while checking if
 	//the username exists already
 	@Override

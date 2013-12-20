@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/action_formula"
+        android:orderInCategory="1"
+        android:icon="@drawable/ic_action_logout"
+        android:title="Logout"
+        android:layout_width="46dp"
+        android:layout_height="56dp"
+        android:onClick="LogoutOfActivity"
+        android:showAsAction="ifRoom"/>
+
+
+</menu>
