@@ -4,6 +4,10 @@ public class GlobalVar {
 
 	private static GlobalVar mInstance= null;
 	
+	public static final String USERPREFS = "UserPrefs";
+	public static String PREFS_login_username = "username";
+	public static String PREFS_login_encodePassword = "password";
+	
 	private int userID;
 	
 	public GlobalVar(){
