@@ -11,7 +11,7 @@ import com.j256.ormlite.table.DatabaseTable;
  * @version 1.0
  */
 @DatabaseTable(tableName = "yards")
-public class Yard {
+public class Yard implements BeeObjectInterface {
 	@DatabaseField(generatedId = true)
     private int id;
 	
