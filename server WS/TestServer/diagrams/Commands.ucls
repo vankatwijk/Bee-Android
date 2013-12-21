@@ -137,8 +137,9 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="16" language="java" name="bee.happy.inholland.nl.commands.SelectCommandResult" project="TestServer" 
-    file="/TestServer/src/bee/happy/inholland/nl/commands/SelectCommandResult.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="16" language="java" name="bee.happy.inholland.nl.commands.SelectCommandResult" project="BeeHappyServer" 
+    file="/BeeHappyServer/src/bee/happy/inholland/nl/commands/SelectCommandResult.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1423" y="1078"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
