@@ -1,7 +1,7 @@
 package bee.happy.inholland.nl.commands;
 
 public class EmptyResult  implements BeeCommandResult{
-	private final BeeCommandResultType resultType = BeeCommandResultType.ERROR;
+	private final BeeCommandResultType resultType = BeeCommandResultType.EMPTY;
 	private BeeCommandType commandType;
 	private String className; //name of class of deleted object
 	
