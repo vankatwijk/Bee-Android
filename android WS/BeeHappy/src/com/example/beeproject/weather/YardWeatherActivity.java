@@ -1,10 +1,6 @@
 package com.example.beeproject.weather;
 
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.json.JSONException;
 
 import android.content.Intent;
@@ -13,23 +9,16 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
+import android.support.v4.view.ViewPager;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.beeproject.R;
-import com.example.beeproject.global.classes.DatabaseHelper;
-import com.example.beeproject.global.classes.DatabaseManager;
-import com.example.beeproject.global.classes.YardObject;
 import com.example.beeproject.weather.classes.Weather;
-import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.example.beeproject.weather.classes.WeatherForecast;
 
 
-public class WeatherActivity extends FragmentActivity {
+public class YardWeatherActivity extends FragmentActivity {
 
 	private TextView cityText;
     private TextView condDescr;
@@ -41,16 +30,20 @@ public class WeatherActivity extends FragmentActivity {
     private TextView hum;
     private ImageView imgView;
     
-    GPSTracker gps;
-    String lat = "";
-    String lon = "";
+    private ViewPager pager;
     
-    ArrayAdapter<String> aa;
+    
+    private static String forecastDaysNum = "5";
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_weather);
+            setContentView(R.layout.activity_yard_weather);
+            
+            Intent intent = getIntent();
+            
+            String city = intent.getStringExtra("location");
+            String lang = "en";
             
             cityText = (TextView) findViewById(R.id.cityText);
             condDescr = (TextView) findViewById(R.id.condDescr);
@@ -60,69 +53,13 @@ public class WeatherActivity extends FragmentActivity {
             windSpeed = (TextView) findViewById(R.id.windSpeed);
             windDeg = (TextView) findViewById(R.id.windDeg);
             imgView = (ImageView) findViewById(R.id.condIcon);
+            pager = (ViewPager) findViewById(R.id.pager);
+                   
+            JSONWeatherTask task = new JSONWeatherTask();         
+            task.execute(new String[]{city,lang});
             
-            gps = new GPSTracker(this);
-            
-            // check if GPS enabled     
-            if(gps.canGetLocation()){
-                 
-                double latitude = gps.getLatitude();
-                double longitude = gps.getLongitude();
-                 
-                lat = Integer.toString((int) latitude);
-                lon = Integer.toString((int) longitude);
-                
-                JSONWeatherTask task = new JSONWeatherTask();
-                task.execute(new String[]{lat,lon});
-                // \n is for new line
-            }else{
-                // can't get location
-                // GPS or Network is not enabled
-                // Ask user to enable GPS/network in settings
-                gps.showSettingsAlert();
-            }
-            
-            ListView locationList = (ListView)findViewById(R.id.locationsList);
-            DatabaseManager dbManager = new DatabaseManager();
-			DatabaseHelper db = dbManager.getHelper(getApplicationContext());
-			
-			RuntimeExceptionDao<YardObject, Integer> yardDao = db.getYardRunDao();
-            
-            List<YardObject> yardLocations;
-            ArrayList<String> locationsList = new ArrayList<String>();
-            
-            try {
-				yardLocations = yardDao.queryBuilder()
-				.distinct().selectColumns("location").query();
-				
-				
-				for(int i = 0; i < yardLocations.size(); i++){
-					locationsList.add(yardLocations.get(i).getLocation());
-				}
-				
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-            
-            aa = new ArrayAdapter<String>(getBaseContext(),
-					android.R.layout.simple_list_item_1,
-					locationsList);
-            locationList.setAdapter(aa);
-            
-            locationList.setOnItemClickListener(new OnItemClickListener() {
-
-				@Override
-				public void onItemClick(AdapterView<?> arg0, View arg1,
-						int arg2, long arg3) {
-					TextView loc = (TextView) arg1;
-					String location = loc.getText().toString();
-					
-					Intent intent = new Intent(getBaseContext(), YardWeatherActivity.class);
-					intent.putExtra("location", location);
-					startActivity(intent);
-				}
-			});
+            JSONForecastWeatherTask task1 = new JSONForecastWeatherTask();
+            task1.execute(new String[]{city,lang, forecastDaysNum});
     }
 
     
@@ -131,8 +68,8 @@ public class WeatherActivity extends FragmentActivity {
             @Override
             protected Weather doInBackground(String... params) {
                     Weather weather = new Weather();
-                    String data = ( (new WeatherHttpClient()).getWeatherDataByLatLon(params[0],params[1]));
-
+                    String data = ( (new WeatherHttpClient()).getWeatherData(params[0],params[1]));
+                    System.out.println(data);
                     try {
                             weather = JSONWeatherParser.getWeather(data);
                             
@@ -169,6 +106,43 @@ public class WeatherActivity extends FragmentActivity {
             }
     
     }
+    
+    private class JSONForecastWeatherTask extends AsyncTask<String, Void, WeatherForecast> {
+        
+        @Override
+        protected WeatherForecast doInBackground(String... params) {
+                
+                String data = ( (new WeatherHttpClient()).getForecastWeatherData(params[0], params[1], params[2]));
+                WeatherForecast forecast = new WeatherForecast();
+                try {
+                        forecast = JSONWeatherParser.getForecastWeather(data);
+                        // Let's retrieve the icon
+                        //weather.iconData = ( (new WeatherHttpClient()).getImage(weather.currentCondition.getIcon()));
+                        
+                } catch (JSONException e) {                                
+                        e.printStackTrace();
+                }
+                return forecast;
+        
+        }
+        
+        
+        
+        
+        @Override
+        protected void onPostExecute(WeatherForecast forecastWeather) {                        
+                super.onPostExecute(forecastWeather);
+                
+                DailyForecastPageAdapter adapter = new DailyForecastPageAdapter(Integer.parseInt(forecastDaysNum), getSupportFragmentManager(), forecastWeather);
+                
+                pager.setAdapter(adapter);
+        }
+
+
+
+    }
+    
+    
     
 }
 

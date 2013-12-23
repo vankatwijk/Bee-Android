@@ -10,6 +10,7 @@ import java.net.URL;
 public class WeatherHttpClient {
 
     private static String BASE_URL = "http://api.openweathermap.org/data/2.5/weather?q=";
+    private static String BASE_URL_LATLONG = "http://api.openweathermap.org/data/2.5/weather?";
     private static String IMG_URL = "http://openweathermap.org/img/w/";
 
     
@@ -56,6 +57,43 @@ public class WeatherHttpClient {
                             
     }
     
+    public String getWeatherDataByLatLon(String latitude, String longitude) {
+        HttpURLConnection con = null ;
+        InputStream is = null;
+        
+        try {
+                String url = BASE_URL_LATLONG + "lat=" + latitude + "&lon=" + longitude;
+                
+                con = (HttpURLConnection) ( new URL(url)).openConnection();
+                con.setRequestMethod("GET");
+                con.setDoInput(true);
+                con.setDoOutput(true);
+                con.connect();
+                
+                // Let's read the response
+                StringBuffer buffer = new StringBuffer();
+                is = con.getInputStream();
+                BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                String line = null;
+                while (  (line = br.readLine()) != null )
+                        buffer.append(line + "\r\n");
+                
+                is.close();
+                con.disconnect();
+                
+                return buffer.toString();
+    }
+        catch(Throwable t) {
+                t.printStackTrace();
+        }
+        finally {
+                try { is.close(); } catch(Throwable t) {}
+                try { con.disconnect(); } catch(Throwable t) {}
+        }
+
+        return null;
+                        
+}
     
     public String getForecastWeatherData(String location, String lang, String sForecastDayNum) {
             HttpURLConnection con = null ;
