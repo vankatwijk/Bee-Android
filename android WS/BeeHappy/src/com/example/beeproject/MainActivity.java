@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
+import com.example.beeproject.calendar.CalendarActivity;
 import com.example.beeproject.calendar.FragmentCalender;
 import com.example.beeproject.diseases.FragmentDiseases;
 import com.example.beeproject.profile.FragmentProfileInfo;
@@ -46,10 +47,9 @@ public class MainActivity extends FragmentActivity implements
 				startActivity(intent);
 		        
 			}else if(id == "3"){
-
-				FragmentCalender fragment = new FragmentCalender();				
-				getSupportFragmentManager().beginTransaction().replace(R.id.item_detail_container, fragment).commit();	
-					
+				Intent intent = new Intent(getApplicationContext(), CalendarActivity.class);
+				startActivity(intent);
+		        	
 		        
 			}else if(id == "4"){
 

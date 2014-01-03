@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
+import com.example.beeproject.calendar.CalendarActivity;
 import com.example.beeproject.calendar.FragmentCalender;
 import com.example.beeproject.diseases.FragmentDiseases;
 import com.example.beeproject.profile.FragmentProfileInfo;
@@ -45,8 +46,8 @@ public class ContainerActivity extends Methods{
 		        
 			}else if(MainActivity.status == "3"){
 
-				FragmentCalender fragment = new FragmentCalender();				
-				getSupportFragmentManager().beginTransaction().replace(R.id.item_detail_container, fragment).commit();	
+				Intent intent = new Intent(getApplicationContext(), CalendarActivity.class);
+				startActivity(intent);					
 					
 		        
 			}else if(MainActivity.status == "4"){
