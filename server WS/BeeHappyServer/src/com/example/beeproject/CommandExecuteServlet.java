@@ -1,5 +1,6 @@
 package com.example.beeproject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -36,15 +37,31 @@ public class CommandExecuteServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		 doPost(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		response.setContentType("application/json");
+		System.out.println("HELLO1");
 		PrintWriter responseWriter = response.getWriter();
 		
-		String commandJson = (String) request.getAttribute("command");
-		//responseWriter.println(commandJson);
+		StringBuilder sb = new StringBuilder();
+		BufferedReader br = request.getReader();
+		String str;
+		while( (str = br.readLine()) != null ){
+		    sb.append(str);
+		}    
+		
+		String commandJson = sb.toString();
+		
+		System.out.println(commandJson);
 		Gson gson = GsonProvider.getGson();
 		BeeCommand command = gson.fromJson(commandJson, BeeCommand.class);
-		//responseWriter.println(command);
+		System.out.println(command);
 		
 		CommandExecuter commandExecuter = new CommandExecuter();
 		BeeCommandResult result = commandExecuter.execute(command);
@@ -52,14 +69,7 @@ public class CommandExecuteServlet extends HttpServlet {
 		
 		String resultJson = gson.toJson(result, BeeCommandResult.class);
 		responseWriter.println(resultJson);
-				
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		System.out.println("HELLO!!!!");
 	}
 
 }
