@@ -8,7 +8,7 @@ package com.example.beeproject.commandexecution.commands;
  * @version 1.0	
  */
 public class CreateCommand implements BeeCommand{
-	private final BeeCommandType type = BeeCommandType.CREATE;
+	private final BeeCommandType commandType = BeeCommandType.CREATE;
 	private String className;
 	private String objectJson; //created object to be saved in the DB
 
@@ -41,10 +41,10 @@ public class CreateCommand implements BeeCommand{
 
 	@Override
 	public BeeCommandType getCommandType() {
-		return type;
+		return commandType;
 	}
 	
 	public String toString(){
-		return "Create command: [type = "+type+", className = '"+className+"', objectJson = "+objectJson+"]";
+		return "Create command: [commandType = "+commandType+", className = '"+className+"', objectJson = "+objectJson+"]";
 	}
 }

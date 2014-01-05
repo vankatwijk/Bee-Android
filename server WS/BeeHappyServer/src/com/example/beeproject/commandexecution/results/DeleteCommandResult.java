@@ -3,7 +3,9 @@ package com.example.beeproject.commandexecution.results;
 import com.example.beeproject.commandexecution.commands.BeeCommandType;
 
 public class DeleteCommandResult  implements BeeCommandResult{
-	private final BeeCommandResultType resultType = BeeCommandResultType.SUCCESS; //result is success. If deleting the object in DB was not successful, an ErrorResult must be generated
+	private final BeeCommandResultType resultType = BeeCommandResultType.SUCCESS; //result is success. 
+																				  //If object to be deleted was not found in the database, an ErrorResult must be generated
+																				  //If deleting the object in DB was not successful, an ErrorResult must be generated
 	private final BeeCommandType commandType = BeeCommandType.DELETE;
 	private String className; //name of class of deleted object
 	private String objectJson; //object, deleted from the DB 

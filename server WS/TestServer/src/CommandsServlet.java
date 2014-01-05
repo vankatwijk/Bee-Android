@@ -80,6 +80,11 @@ public class CommandsServlet extends HttpServlet {
 		//create commands
 		ArrayList<BeeCommand> beeCommandList = new ArrayList<BeeCommand>();
 		beeCommandList.add(new SelectCommand(Yard.class.getName(), whereStatement));
+		BeeCommand com = beeCommandList.get(0);
+		responseWriter.println("com = "+com);
+		String jcom = gson.toJson(com, BeeCommand.class);
+		responseWriter.println("jcom = "+jcom);
+		
 		beeCommandList.add(new SelectCommand(Yard.class.getName()));
 		beeCommandList.add(new CreateCommand(Yard.class.getName(), gson.toJson(newYard, Yard.class)));
 		beeCommandList.add(new UpdateCommand(Yard.class.getName(), gson.toJson(updatedYard, Yard.class)));

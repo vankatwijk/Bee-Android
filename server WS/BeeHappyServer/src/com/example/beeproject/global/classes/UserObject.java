@@ -6,7 +6,7 @@ import com.j256.ormlite.table.DatabaseTable;
 
 
 @DatabaseTable(tableName = "users")
-public class UserObject {
+public class UserObject implements BeeObjectInterface{
 	
 	@DatabaseField(generatedId = true)
     private int id;
@@ -21,6 +21,12 @@ public class UserObject {
 	}
 	
 	public UserObject(String username, String password){
+		this.username = username;
+		this.password = password;
+	}
+	
+	public UserObject(int id, String username, String password){
+		this.id = id;
 		this.username = username;
 		this.password = password;
 	}
@@ -44,4 +50,17 @@ public class UserObject {
 	public void setPassword(String password){
 		this.password = password;
 	}
+
+	@Override
+	public String getDBTableName() {
+		return "users";
+	}
+
+	@Override
+	public String toString() {
+		return "UserObject [id=" + id + ", username=" + username
+				+ ", password=" + password + "]";
+	}
+	
+	
 }

@@ -5,7 +5,7 @@ import com.j256.ormlite.table.DatabaseTable;
 
 
 @DatabaseTable(tableName = "checkforms")
-public class CheckFormObject {
+public class CheckFormObject implements BeeObjectInterface{
 
 	@DatabaseField(generatedId = true)
 	private int id;
@@ -60,6 +60,10 @@ public class CheckFormObject {
 
 	public CheckFormObject(){	
 	}
+
+	public CheckFormObject(int id){	
+		this.id = id;
+	}
 	
 	
 	
@@ -86,8 +90,55 @@ public class CheckFormObject {
 		this.comments = comments;
 		this.synced = synced;
 	}
+	
+	public CheckFormObject(int hiveID, Long timestamp, boolean hasQueen,
+			String qDateBorn, boolean qWingsCliped, String qRace,
+			int nrOfFrames, int occupiedFrames, int nrOfLayers, int eggs,
+			int larve, int pupae, int nrOfMites, int honeyCombs,
+			String comments, boolean synced) {
+		super();
+		this.hiveID = new HiveObject(hiveID);
+		this.timestamp = timestamp;
+		this.hasQueen = hasQueen;
+		this.qDateBorn = qDateBorn;
+		this.qWingsCliped = qWingsCliped;
+		this.qRace = qRace;
+		this.nrOfFrames = nrOfFrames;
+		this.occupiedFrames = occupiedFrames;
+		this.nrOfLayers = nrOfLayers;
+		this.eggs = eggs;
+		this.larve = larve;
+		this.pupae = pupae;
+		this.nrOfMites = nrOfMites;
+		this.honeyCombs = honeyCombs;
+		this.comments = comments;
+		this.synced = synced;
+	}
 
-
+	public CheckFormObject(int id, int hiveID, Long timestamp, boolean hasQueen,
+			String qDateBorn, boolean qWingsCliped, String qRace,
+			int nrOfFrames, int occupiedFrames, int nrOfLayers, int eggs,
+			int larve, int pupae, int nrOfMites, int honeyCombs,
+			String comments, boolean synced) {
+		super();
+		this.id=id;
+		this.hiveID = new HiveObject(hiveID);
+		this.timestamp = timestamp;
+		this.hasQueen = hasQueen;
+		this.qDateBorn = qDateBorn;
+		this.qWingsCliped = qWingsCliped;
+		this.qRace = qRace;
+		this.nrOfFrames = nrOfFrames;
+		this.occupiedFrames = occupiedFrames;
+		this.nrOfLayers = nrOfLayers;
+		this.eggs = eggs;
+		this.larve = larve;
+		this.pupae = pupae;
+		this.nrOfMites = nrOfMites;
+		this.honeyCombs = honeyCombs;
+		this.comments = comments;
+		this.synced = synced;
+	}
 
 	public int getId() {
 		return id;
@@ -223,6 +274,26 @@ public class CheckFormObject {
 
 	public void setSynced(boolean synced) {
 		this.synced = synced;
+	}
+
+
+
+	@Override
+	public String getDBTableName() {
+		return "checkforms";
+	}
+
+	@Override
+	public String toString() {
+		return "CheckFormObject [id=" + id + ", hiveID=" + hiveID
+				+ ", timestamp=" + timestamp + ", hasQueen=" + hasQueen
+				+ ", qDateBorn=" + qDateBorn + ", qWingsCliped=" + qWingsCliped
+				+ ", qRace=" + qRace + ", nrOfFrames=" + nrOfFrames
+				+ ", occupiedFrames=" + occupiedFrames + ", nrOfLayers="
+				+ nrOfLayers + ", eggs=" + eggs + ", larve=" + larve
+				+ ", pupae=" + pupae + ", nrOfMites=" + nrOfMites
+				+ ", honeyCombs=" + honeyCombs + ", comments=" + comments
+				+ ", synced=" + synced + "]";
 	}
 	
 	

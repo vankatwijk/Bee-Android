@@ -1,3 +1,4 @@
+
 package com.example.beeproject.global.classes;
 
 import com.j256.ormlite.field.DatabaseField;
@@ -5,7 +6,7 @@ import com.j256.ormlite.table.DatabaseTable;
 
 
 @DatabaseTable(tableName = "yards")
-public class YardObject {
+public class YardObject implements BeeObjectInterface{
 
 	@DatabaseField(generatedId = true)
     private int id;
@@ -23,12 +24,40 @@ public class YardObject {
 	private boolean synced;
 	
 	public YardObject() {
+    }	
+	
+	public YardObject(int id) {
+		this.id = id;
     }
+	
 	
 	public YardObject(String yardName, String location, UserObject userID, boolean synced) {
 		this.yardName = yardName;
 		this.location = location;
 		this.userID = userID;
+		this.synced = synced;
+	}
+	
+	public YardObject(int id, String yardName, String location, UserObject userID, boolean synced) {
+		this.id = id;
+		this.yardName = yardName;
+		this.location = location;
+		this.userID = userID;
+		this.synced = synced;
+	}
+
+	public YardObject(String yardName, String location, int userID, boolean synced) {
+		this.yardName = yardName;
+		this.location = location;
+		this.userID = new UserObject(userID, "", "");
+		this.synced = synced;
+	}
+	
+	public YardObject(int id, String yardName, String location, int userID, boolean synced) {
+		this.id = id;
+		this.yardName = yardName;
+		this.location = location;
+		this.userID = new UserObject(userID, "", "");
 		this.synced = synced;
 	}
 
@@ -63,6 +92,18 @@ public class YardObject {
 
 	public void setSynced(boolean synced) {
 		this.synced = synced;
+	}
+
+	@Override
+	public String getDBTableName() {
+		return "yards";
+	}
+
+	@Override
+	public String toString() {
+		return "YardObject [id=" + id + ", yardName=" + yardName
+				+ ", location=" + location + ", userID=" + userID + ", synced="
+				+ synced + "]";
 	}
 		
 	

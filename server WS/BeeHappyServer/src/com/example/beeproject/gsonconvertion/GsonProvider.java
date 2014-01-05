@@ -12,7 +12,7 @@ public class GsonProvider {
 		if (gson == null){
 			GsonBuilder gsonBuilder = new GsonBuilder();
 			//make Gson use adapter for converting the BeeCommand interface to json
-	        gsonBuilder.registerTypeAdapter(BeeCommandType.class, new InterfaceAdapter<BeeCommand>());
+	        gsonBuilder.registerTypeAdapter(BeeCommand.class, new InterfaceAdapter<BeeCommand>());
 	        gsonBuilder.registerTypeAdapter(BeeCommandResult.class, new InterfaceAdapter<BeeCommandResult>());
 	        
 	        gson = gsonBuilder.create();

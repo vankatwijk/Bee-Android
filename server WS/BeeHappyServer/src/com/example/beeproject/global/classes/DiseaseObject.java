@@ -5,7 +5,7 @@ import com.j256.ormlite.table.DatabaseTable;
 
 
 @DatabaseTable(tableName = "diseases")
-public class DiseaseObject {
+public class DiseaseObject implements BeeObjectInterface{
 
 	@DatabaseField(generatedId = true)
     private int id;
@@ -24,6 +24,10 @@ public class DiseaseObject {
 	
 	public DiseaseObject(){
 	}
+	
+	public DiseaseObject(int id){
+		this.id= id;
+	}
 
 	public DiseaseObject(String diseaseName, String description,
 			String treatment, boolean contagious) {
@@ -33,6 +37,17 @@ public class DiseaseObject {
 		this.treatment = treatment;
 		this.contagious = contagious;
 	}
+
+	public DiseaseObject(int id, String diseaseName, String description,
+			String treatment, boolean contagious) {
+		super();
+		this.id= id;
+		this.diseaseName = diseaseName;
+		this.description = description;
+		this.treatment = treatment;
+		this.contagious = contagious;
+	}
+
 
 	public int getId() {
 		return id;
@@ -72,6 +87,18 @@ public class DiseaseObject {
 
 	public void setContagious(boolean contagious) {
 		this.contagious = contagious;
+	}
+
+	@Override
+	public String getDBTableName() {
+		return "diseases";
+	}
+
+	@Override
+	public String toString() {
+		return "DiseaseObject [id=" + id + ", diseaseName=" + diseaseName
+				+ ", description=" + description + ", treatment=" + treatment
+				+ ", contagious=" + contagious + "]";
 	}
 	
 	

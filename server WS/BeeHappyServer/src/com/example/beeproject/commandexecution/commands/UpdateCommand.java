@@ -1,7 +1,7 @@
 package com.example.beeproject.commandexecution.commands;
 
 public class UpdateCommand implements BeeCommand{
-	private final BeeCommandType type = BeeCommandType.UPDATE;
+	private final BeeCommandType commandType = BeeCommandType.UPDATE;
 	private String className;
 	private String objectJson; //updated object to be updated in the DB
  
@@ -33,11 +33,11 @@ public class UpdateCommand implements BeeCommand{
 	
 	@Override
 	public BeeCommandType getCommandType() {
-		return type;
+		return commandType;
 	}
 	
 	public String toString(){
-		return "Update command: [type = "+type+", className = '"+className+"', objectJson = "+objectJson+"]";
+		return "Update command: [commandType = "+commandType+", className = '"+className+"', objectJson = "+objectJson+"]";
 	}
 
 }

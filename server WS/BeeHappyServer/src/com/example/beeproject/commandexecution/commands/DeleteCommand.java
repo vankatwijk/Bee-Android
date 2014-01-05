@@ -8,7 +8,7 @@ package com.example.beeproject.commandexecution.commands;
  * @version 1.0	
  */
 public class DeleteCommand implements BeeCommand{
-	public final BeeCommandType type = BeeCommandType.DELETE;
+	public final BeeCommandType commandType = BeeCommandType.DELETE;
 	private String className;	//class of the object to be deleted
 	private String objectJson; //object to be deleted
 
@@ -41,10 +41,10 @@ public class DeleteCommand implements BeeCommand{
 
 	@Override
 	public BeeCommandType getCommandType() {
-		return type;
+		return commandType;
 	}
 	
 	public String toString(){
-		return "Delete command: [type = "+type+", className = '"+className+"', objectJson = "+objectJson+"]";
+		return "Delete command: [commandType = "+commandType+", className = '"+className+"', objectJson = "+objectJson+"]";
 	}
 }
