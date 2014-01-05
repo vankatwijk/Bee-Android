@@ -42,7 +42,7 @@ public class TestActions {
 		responseWriter.println("\nCommands:");
 		responseWriter.println(StringUtils.listToString(crudCommands));
 		
-		//testCommandsToJsonAndBack(responseWriter, crudCommands);
+		testCommandsToJsonAndBack(responseWriter, crudCommands);
 		
 		List<BeeCommandResult> crudResults = testExecuting(responseWriter, crudCommands);
 	}
@@ -95,6 +95,7 @@ public class TestActions {
 		
 		//create commands
 		ArrayList<BeeCommand> beeCommandList = new ArrayList<BeeCommand>();
+		beeCommandList.add(new PingCommand());
 		beeCommandList.add(new SelectCommand(objectClass.getName(), whereStatement));
 		beeCommandList.add(new SelectCommand(objectClass.getName()));
 		beeCommandList.add(new CreateCommand(objectClass.getName(), gson.toJson(objToCreate, objectClass)));

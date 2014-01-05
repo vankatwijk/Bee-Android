@@ -8,7 +8,7 @@ import java.util.Properties;
 
 import sun.awt.AppContext;
 
-import com.example.beeproject.TestBeeHappyServlet;
+import com.example.beeproject.TestCRUDServlet;
 import com.example.beeproject.test.TestActions;
 
 public class PropertiesProvider {

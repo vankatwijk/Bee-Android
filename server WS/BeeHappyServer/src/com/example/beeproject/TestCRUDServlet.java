@@ -15,14 +15,14 @@ import com.example.beeproject.test.TestActions;
 /**
  * Servlet to test stuff
  */
-@WebServlet("/TestBeeHappyServlet")
-public class TestBeeHappyServlet extends HttpServlet {
+@WebServlet("/TestCRUDServlet")
+public class TestCRUDServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public TestBeeHappyServlet() {
+    public TestCRUDServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
