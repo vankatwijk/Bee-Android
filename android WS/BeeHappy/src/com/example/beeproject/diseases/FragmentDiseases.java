@@ -26,9 +26,12 @@ import android.widget.TextView;
 import com.example.beeproject.R;
 import com.example.beeproject.commandexecution.commands.BeeCommand;
 import com.example.beeproject.commandexecution.commands.PingCommand;
+import com.example.beeproject.commandexecution.commands.SelectCommand;
 import com.example.beeproject.commandexecution.results.BeeCommandResult;
+import com.example.beeproject.global.classes.YardObject;
 import com.example.beeproject.gsonconvertion.GsonProvider;
-import com.example.beeproject.weather.BeeServerHttpClient;
+import com.example.beeproject.syncing.BeeServerHttpClient;
+import com.example.beeproject.syncing.SyncHelper;
 import com.google.gson.Gson;
 
 
@@ -51,39 +54,40 @@ public class FragmentDiseases extends Fragment {
 		
 		View rootView = inflater.inflate(R.layout.fragmentdiseases, container, false);
 		diseasesTextView = (TextView) rootView.findViewById(R.id.DiseasesTextView);
-
+		
+		/*
     	Log.d(LOG_TAG, "Connecting to servlet");
     	BeeCommand command = new PingCommand();
-    	
     	new ServletTask().execute(command);
+    	
+    	command = new SelectCommand(YardObject.class.getName());
+    	*/
+    	new ServletTask().execute("");
     	
 		return rootView;
 	}
 	
 	
-	class ServletTask extends AsyncTask<BeeCommand, Void, BeeCommandResult> {
+	class ServletTask extends AsyncTask<String, Void, String> {
 
-	    protected BeeCommandResult doInBackground(BeeCommand... command) {
-        		Log.d(LOG_TAG, "ServletTask.doInBackground(command)");
-	            
-        		Log.d(LOG_TAG, "command: " + command.toString());
-        		BeeCommand oneCommand = command[0];
-        		Log.d(LOG_TAG, "oneCommand: " + oneCommand.toString());
-	            
-	            BeeCommandResult result = BeeServerHttpClient.executeCommand(oneCommand);
+	    protected String doInBackground(String... arg) {
+        		Log.d(LOG_TAG, "ServletTask.doInBackground()");
+        		SyncHelper syncHelper = new SyncHelper(getActivity());
+        		
+	            String result = syncHelper.syncronizeToServer();
 	            
         		
 	            return result;
 	    }
 
-	    protected void onPostExecute(BeeCommandResult result) {
+	    protected void onPostExecute(String result) {
 	    	Log.d(LOG_TAG, "ServletTask.onPostExecute(), result=["+result+"]");
 	    	
 	    	if(result!=null){
-	    		diseasesTextView.setText(result.toString());
+	    		diseasesTextView.setText(diseasesTextView.getText() + "\n" + result.toString());
 	    	}
 	    	else{
-	    		diseasesTextView.setText("--");
+	    		diseasesTextView.setText(diseasesTextView.getText() + "\n" + "--");
 	    	}
 	    }
 	}

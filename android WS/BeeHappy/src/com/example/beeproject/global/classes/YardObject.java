@@ -5,7 +5,7 @@ import com.j256.ormlite.table.DatabaseTable;
 
 
 @DatabaseTable(tableName = "yards")
-public class YardObject {
+public class YardObject implements BeeObjectInterface{
 
 	@DatabaseField(generatedId = true)
     private int id;
@@ -21,7 +21,16 @@ public class YardObject {
     
     @DatabaseField(canBeNull = false)
 	private boolean synced;
+    
+    @DatabaseField(canBeNull = true)
+    private int serverSideID;
 	
+	
+
+	public void setUserID(UserObject userID) {
+		this.userID = userID;
+	}
+
 	public YardObject() {
     }
 	
@@ -64,8 +73,27 @@ public class YardObject {
 	public void setSynced(boolean synced) {
 		this.synced = synced;
 	}
-		
 	
+	public int getServerSideID() {
+		return serverSideID;
+	}
+
+	public void setServerSideID(int serverSideID) {
+		this.serverSideID = serverSideID;
+	}
+
+	@Override
+	public String getDBTableName() {
+		return "yards";
+	}
+		
+	@Override
+	public String toString() {
+		return "YardObject [id=" + id + ", yardName=" + yardName
+				+ ", location=" + location + ", userID=" + userID + ", synced="
+				+ synced + "]";
+	}
+		
 	
 }
 

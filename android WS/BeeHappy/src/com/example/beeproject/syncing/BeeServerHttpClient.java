@@ -1,4 +1,4 @@
-package com.example.beeproject.weather;
+package com.example.beeproject.syncing;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -35,7 +35,7 @@ public class BeeServerHttpClient {
         try {
         	Gson gson = GsonProvider.getGson();
         	String commandJson = gson.toJson(command, BeeCommand.class);
-    		Log.d(LOG_TAG, "commandJson: " + commandJson);
+    		//Log.d(LOG_TAG, "commandJson: " + commandJson);
         	
         	HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(BASE_URL);
@@ -46,7 +46,7 @@ public class BeeServerHttpClient {
 
             HttpResponse response = httpclient.execute(httppost);
             String jsonResult = EntityUtils.toString(response.getEntity());
-    		Log.d(LOG_TAG, "3, jsonResult=["+jsonResult+"]");
+    		//Log.d(LOG_TAG, "3, jsonResult=["+jsonResult+"]");
     		
     		BeeCommandResult commandResult = gson.fromJson(jsonResult, BeeCommandResult.class);
             return commandResult;

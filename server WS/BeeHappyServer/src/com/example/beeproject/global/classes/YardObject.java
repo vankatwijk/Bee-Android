@@ -5,11 +5,17 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 
+/**
+ * Class representing yard object.
+ * ONLY for server side. Client must have its own different implementaion
+ * @author Olya
+ *
+ */
 @DatabaseTable(tableName = "yards")
 public class YardObject implements BeeObjectInterface{
 
 	@DatabaseField(generatedId = true)
-    private int id;
+    private int id; //server side id
     
 	@DatabaseField(canBeNull = false)
     private String yardName;
@@ -23,6 +29,9 @@ public class YardObject implements BeeObjectInterface{
     @DatabaseField(canBeNull = false)
 	private boolean synced;
 	
+    //NOT A DATABASE FIELD, only database field on the client side
+    private int serverSideID;
+    
 	public YardObject() {
     }	
 	

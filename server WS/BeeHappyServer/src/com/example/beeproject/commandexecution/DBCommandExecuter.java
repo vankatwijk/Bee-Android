@@ -41,7 +41,7 @@ public class DBCommandExecuter {
 		
 		try {
 			Class objectClass = getObjectClass(command.getClassName());
-			Object object = gson.fromJson(command.getObjectJson(), objectClass);
+			BeeObjectInterface object = gson.fromJson(command.getObjectJson(), objectClass);
 			System.out.println("object to be inserted: " + object);
 			
 			// instantiate the dao
@@ -51,7 +51,7 @@ public class DBCommandExecuter {
 			int nInsertedRows = objectClassDao.create(objectClass.cast(object));
 	
 			if(nInsertedRows==1){
-				String objectJson = gson.toJson(object);
+				String objectJson = gson.toJson(object, BeeObjectInterface.class);
 				//object was successfuly added to DB
 				result = new CreateCommandResult(command.getClassName(), objectJson);
 			} else if(nInsertedRows == 0){
@@ -80,7 +80,7 @@ public class DBCommandExecuter {
 		
 		try {
 			Class objectClass = getObjectClass(command.getClassName());
-			Object object = gson.fromJson(command.getObjectJson(), objectClass);
+			BeeObjectInterface object = gson.fromJson(command.getObjectJson(), objectClass);
 			System.out.println("object to be updated: " + object);
 			
 			// instantiate the dao
@@ -89,7 +89,7 @@ public class DBCommandExecuter {
 			//update the object in DB
 			int nUpdatedRows = objectClassDao.update(object);			
 			if(nUpdatedRows==1){
-				String objectJson = gson.toJson(object);
+				String objectJson = gson.toJson(object, BeeObjectInterface.class);
 				//object was successfuly updated
 				result = new UpdateCommandResult(command.getClassName(), objectJson);
 			} else if(nUpdatedRows == 0){
@@ -131,7 +131,7 @@ public class DBCommandExecuter {
 				//delete the object in DB
 				int nDeletedRows = objectClassDao.delete(objectInDb);	
 				if(nDeletedRows==1){
-					String objectJson = gson.toJson(objectInDb);
+					String objectJson = gson.toJson(objectInDb, BeeObjectInterface.class);
 					//object was successfuly deleted
 					result = new DeleteCommandResult(command.getClassName(), objectJson);
 				} else if(nDeletedRows == 0){

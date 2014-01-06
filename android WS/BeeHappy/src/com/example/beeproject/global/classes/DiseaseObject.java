@@ -74,6 +74,13 @@ public class DiseaseObject {
 		this.contagious = contagious;
 	}
 	
+	@Override
+	public String toString() {
+		return "DiseaseObject [id=" + id + ", diseaseName=" + diseaseName
+				+ ", description=" + description + ", treatment=" + treatment
+				+ ", contagious=" + contagious + "]";
+	}
+	
 	
 	
 }

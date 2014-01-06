@@ -5,7 +5,7 @@ import com.j256.ormlite.table.DatabaseTable;
 
 
 @DatabaseTable(tableName = "checkforms")
-public class CheckFormObject {
+public class CheckFormObject implements BeeObjectInterface{
 
 	@DatabaseField(generatedId = true)
 	private int id;
@@ -224,7 +224,39 @@ public class CheckFormObject {
 	public void setSynced(boolean synced) {
 		this.synced = synced;
 	}
+
+	@Override
+	public String getDBTableName() {
+		return "checkforms";
+	}
 	
-	
+	@Override
+	public String toString() {
+		return "CheckFormObject [id=" + id + ", hiveID=" + hiveID
+				+ ", timestamp=" + timestamp + ", hasQueen=" + hasQueen
+				+ ", qDateBorn=" + qDateBorn + ", qWingsCliped=" + qWingsCliped
+				+ ", qRace=" + qRace + ", nrOfFrames=" + nrOfFrames
+				+ ", occupiedFrames=" + occupiedFrames + ", nrOfLayers="
+				+ nrOfLayers + ", eggs=" + eggs + ", larve=" + larve
+				+ ", pupae=" + pupae + ", nrOfMites=" + nrOfMites
+				+ ", honeyCombs=" + honeyCombs + ", comments=" + comments
+				+ ", synced=" + synced + "]";
+	}
+
+
+
+	@Override
+	public int getServerSideID() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+
+	@Override
+	public void setServerSideID(int serverSideID) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

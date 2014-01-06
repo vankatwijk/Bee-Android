@@ -4,7 +4,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "hives")
-public class HiveObject {
+public class HiveObject implements BeeObjectInterface{
 	
 	@DatabaseField(generatedId = true)
 	private int id;
@@ -60,6 +60,33 @@ public class HiveObject {
 
 	public void setSynced(boolean synced) {
 		this.synced = synced;
+	}
+
+	@Override
+	public String getDBTableName() {
+		return "hives";
+	}
+	
+	@Override
+	public String toString() {
+		return "HiveObject [id=" + id + ", hiveName=" + hiveName + ", yardID="
+				+ yardID + ", synced=" + synced + "]";
+	}
+
+
+
+	@Override
+	public int getServerSideID() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+
+	@Override
+	public void setServerSideID(int serverSideID) {
+		// TODO Auto-generated method stub
+		
 	}
 
 

@@ -61,11 +61,11 @@ public class CommandExecuteServlet extends HttpServlet {
 		System.out.println(commandJson);
 		Gson gson = GsonProvider.getGson();
 		BeeCommand command = gson.fromJson(commandJson, BeeCommand.class);
-		System.out.println(command);
+		System.out.println("command\n"+command);
 		
 		CommandExecuter commandExecuter = new CommandExecuter();
 		BeeCommandResult result = commandExecuter.execute(command);
-		//responseWriter.println(result);
+		System.out.println("result\n"+result);
 		
 		String resultJson = gson.toJson(result, BeeCommandResult.class);
 		responseWriter.println(resultJson);
