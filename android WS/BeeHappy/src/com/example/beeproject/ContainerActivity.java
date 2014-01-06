@@ -8,7 +8,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.example.beeproject.calendar.FragmentCalender;
+import com.example.beeproject.calendar.CalendarActivity;
+import com.example.beeproject.diseases.FragmentDiseases;
 import com.example.beeproject.global.classes.GlobalVar;
 import com.example.beeproject.login.LoginActivity;
 import com.example.beeproject.profile.FragmentProfileInfo;
