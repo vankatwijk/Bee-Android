@@ -5,13 +5,12 @@ import hirondelle.date4j.DateTime;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Set;
+import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -32,39 +31,66 @@ import com.roomorama.caldroid.CaldroidListener;
 public class CalendarActivity extends FragmentActivity {
 	private CaldroidFragment caldroidFragment;
 	private final String TAG = "CalendarActivity";
-	private void setCustomResourceForDates() {		
+	private Date currentSelectedDate;
+	private int currentSelectedMonth = Calendar.getInstance().get(Calendar.MONTH);
+	
+	private void setCustomResourceForDates() {
 		if(!CalendarResolver.hasCalendar(getApplicationContext())) {
 			Log.i(TAG, "Create Calendar");
 			CalendarResolver.createCalendar(getApplicationContext());
 		}
 		else {
 			Log.i(TAG, "Calendar Exist");
-		}
-		Calendar cal = Calendar.getInstance();
-
-		cal.add(Calendar.DATE, -18);
-		Date blueDate = cal.getTime();
-
-		cal = Calendar.getInstance();
-		cal.add(Calendar.DATE, 16);
-		Date greenDate = cal.getTime();
-
-		if (caldroidFragment != null) {
-			caldroidFragment.setBackgroundResourceForDate(R.color.blue,
-					blueDate);
-			caldroidFragment.setBackgroundResourceForDate(R.color.green,
-					greenDate);
-			caldroidFragment.setTextColorForDate(R.color.white, blueDate);
-			caldroidFragment.setTextColorForDate(R.color.white, greenDate);
-		}		
+		}				
 	}
-
+	
+	private void setSelectedDate(Date date) {
+		// clear current selected date
+		if(currentSelectedDate != null) {
+			caldroidFragment.setTextColorForDate(R.color.black, currentSelectedDate);
+			
+			if(sameDay(Calendar.getInstance().getTime(), currentSelectedDate)) {
+				caldroidFragment.setBackgroundResourceForDate(R.drawable.red_border, currentSelectedDate);
+			}
+			else{
+				caldroidFragment.setBackgroundResourceForDate(R.color.white, currentSelectedDate);
+				
+				if(!sameMonth(currentSelectedDate, currentSelectedMonth)) {
+					caldroidFragment.setTextColorForDate(R.color.caldroid_gray, currentSelectedDate);
+				}
+			}
+		}
+		currentSelectedDate = date;
+				
+		// set new current selected date		
+		caldroidFragment.setBackgroundResourceForDate(R.color.blue, date);
+		caldroidFragment.setTextColorForDate(R.color.white, date);
+		caldroidFragment.refreshView();		
+	}
+	
+	private boolean sameDay(Date date1, Date date2) {
+		Calendar cal1 = new GregorianCalendar();
+		Calendar cal2 = new GregorianCalendar();
+		
+		cal1.setTime(date1);
+		cal2.setTime(date2);
+		
+		return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+				cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH) &&
+				cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH);
+	}
+	
+	private boolean sameMonth(Date date1, int month) {
+		Calendar cal1 = new GregorianCalendar();		
+		cal1.setTime(date1);
+		Log.i(TAG, "selected month: " + cal1.get(Calendar.MONTH) + "current month: " + (month - 1));
+		return cal1.get(Calendar.MONTH) == month - 1;				
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_calendar);
-
-		final SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy", getResources().getConfiguration().locale);
+		setContentView(R.layout.activity_calendar);		
 
 		caldroidFragment = new CaldroidFragment();
 
@@ -82,19 +108,14 @@ public class CalendarActivity extends FragmentActivity {
 			args.putInt(CaldroidFragment.START_DAY_OF_WEEK, Calendar.MONDAY);
 			caldroidFragment.setArguments(args);
 		}
-		DateTime start = DateTime.now(TimeZone.getDefault());
-		Log.i(TAG,"start custom resource @" + start);
-		setCustomResourceForDates();
-		DateTime end = DateTime.now(TimeZone.getDefault());
-		Log.i(TAG,"end custom resource @" + end);
+		final SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy", 
+				getResources().getConfiguration().locale);
 		
-		start = DateTime.now(TimeZone.getDefault());
-		Log.i(TAG,"start refresh @" + start);
+		setCustomResourceForDates();
+		
 		FragmentTransaction t = getSupportFragmentManager().beginTransaction();
 		t.replace(R.id.calendar1, caldroidFragment);
 		t.commit();
-		end = DateTime.now(TimeZone.getDefault());
-		Log.i(TAG,"end refresh @" + end);
 
 		// Setup listener
 		final CaldroidListener listener = new CaldroidListener() {
@@ -102,7 +123,8 @@ public class CalendarActivity extends FragmentActivity {
 			@Override
 			public void onSelectDate(Date date, View view) {
 				Toast.makeText(getApplicationContext(), formatter.format(date),
-						Toast.LENGTH_SHORT).show();				
+						Toast.LENGTH_SHORT).show();
+				setSelectedDate(date);
 			}
 
 			@Override
@@ -110,6 +132,7 @@ public class CalendarActivity extends FragmentActivity {
 				String text = "month: " + month + " year: " + year;
 				Toast.makeText(getApplicationContext(), text,
 						Toast.LENGTH_SHORT).show();
+				currentSelectedMonth = month;
 			}
 
 			@Override
@@ -125,6 +148,7 @@ public class CalendarActivity extends FragmentActivity {
 					Toast.makeText(getApplicationContext(),
 							"Caldroid view is created", Toast.LENGTH_SHORT)
 							.show();
+					
 				}
 			}
 		};
@@ -171,6 +195,12 @@ public class CalendarActivity extends FragmentActivity {
 			return Long.parseLong(newUri.getLastPathSegment());
 		}
 		
+		/**
+		 * adds an event to a calendar
+		 * @param ctx (activity context)
+		 * @param cv, ContentValues. Must contain a Calendar_ID
+		 * @return URI of the event
+		 */
 		public static Uri addEvent(Context ctx, ContentValues cv) {
 			ContentResolver cr = ctx.getContentResolver();				
 			return cr.insert(buildEventUri(), cv);
