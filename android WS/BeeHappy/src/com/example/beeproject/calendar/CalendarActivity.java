@@ -1,12 +1,8 @@
 package com.example.beeproject.calendar;
 
-import hirondelle.date4j.DateTime;
-
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.TimeZone;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -20,6 +16,8 @@ import android.provider.CalendarContract.Events;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -83,7 +81,7 @@ public class CalendarActivity extends FragmentActivity {
 	private boolean sameMonth(Date date1, int month) {
 		Calendar cal1 = new GregorianCalendar();		
 		cal1.setTime(date1);
-		Log.i(TAG, "selected month: " + cal1.get(Calendar.MONTH) + "current month: " + (month - 1));
+		// GregorianCalendar runs from 0 - 11 while month runs from 1 - 12		
 		return cal1.get(Calendar.MONTH) == month - 1;				
 	}
 	
@@ -108,8 +106,6 @@ public class CalendarActivity extends FragmentActivity {
 			args.putInt(CaldroidFragment.START_DAY_OF_WEEK, Calendar.MONDAY);
 			caldroidFragment.setArguments(args);
 		}
-		final SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy", 
-				getResources().getConfiguration().locale);
 		
 		setCustomResourceForDates();
 		
@@ -122,40 +118,35 @@ public class CalendarActivity extends FragmentActivity {
 
 			@Override
 			public void onSelectDate(Date date, View view) {
-				Toast.makeText(getApplicationContext(), formatter.format(date),
-						Toast.LENGTH_SHORT).show();
 				setSelectedDate(date);
 			}
 
 			@Override
 			public void onChangeMonth(int month, int year) {
-				String text = "month: " + month + " year: " + year;
-				Toast.makeText(getApplicationContext(), text,
-						Toast.LENGTH_SHORT).show();
 				currentSelectedMonth = month;
 			}
 
 			@Override
 			public void onLongClickDate(Date date, View view) {
-				Toast.makeText(getApplicationContext(),
-						"Long click " + formatter.format(date),
-						Toast.LENGTH_SHORT).show();
-			}
-
-			@Override
-			public void onCaldroidViewCreated() {
-				if (caldroidFragment.getLeftArrowButton() != null) {
-					Toast.makeText(getApplicationContext(),
-							"Caldroid view is created", Toast.LENGTH_SHORT)
-							.show();
-					
-				}
 			}
 		};
 
-		caldroidFragment.setCaldroidListener(listener);
+		caldroidFragment.setCaldroidListener(listener);		
 	}
 	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.calendar, menu);
+		return true;
+	}
+	
+	public void goToToday(MenuItem v) {
+		caldroidFragment.moveToDate(Calendar.getInstance().getTime());
+	}
+	
+	public void toBeImplemented(MenuItem v) {
+		Toast.makeText(getApplicationContext(), "to be implemented", Toast.LENGTH_SHORT).show();
+	}
 	/**
 	 * Implemented version of 
 	 * http://www.derekbekoe.co.uk/blog/item/16-using-the-android-4-0-calendar-api
@@ -177,7 +168,7 @@ public class CalendarActivity extends FragmentActivity {
 					Calendars.CALENDAR_TIME_ZONE, Calendars.DELETED };
 			ContentResolver cr = ctx.getContentResolver();
 			Cursor cur = cr.query(buildCalUri(), CALENDARS_PROPS_PROJECTION, Calendars.NAME + " = ?", new String[] { CALENDAR_NAME }, null);			
-			return (cur.getCount() > 0);
+			return cur.getCount() > 0;
 		}
 		
 		/**
