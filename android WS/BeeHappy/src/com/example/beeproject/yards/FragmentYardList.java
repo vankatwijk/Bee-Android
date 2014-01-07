@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.InputType;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -30,9 +32,11 @@ import com.example.beeproject.global.classes.DatabaseHelper;
 import com.example.beeproject.global.classes.DatabaseManager;
 import com.example.beeproject.global.classes.GlobalVar;
 import com.example.beeproject.global.classes.HiveObject;
+import com.example.beeproject.global.classes.StockObject;
 import com.example.beeproject.global.classes.YardObject;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.stmt.DeleteBuilder;
+import com.j256.ormlite.stmt.UpdateBuilder;
 
 
 public class FragmentYardList extends Fragment {
@@ -106,6 +110,18 @@ public class FragmentYardList extends Fragment {
 		
 		
         registerForContextMenu(yardListView);
+        
+        Button checkStock = (Button)getView().findViewById(R.id.checkStockButton);
+        
+        checkStock.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				createStockDialog();
+				
+				
+			}
+		});
         
     }
 	
@@ -246,4 +262,90 @@ public class FragmentYardList extends Fragment {
 		return yardlist;
 	}
 	
+	
+	private void createStockDialog(){
+		final RuntimeExceptionDao<StockObject, Integer> stockDao = db.getStockRunDao();
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Current Stock:");
+        builder.setMessage("This is the current number of frames available. Click to update:");
+        
+        final Boolean check = checkIfStockExists(); 
+        
+        final EditText input = new EditText(getActivity());
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        if(check == true){
+    		List<StockObject> stockList;
+    		try {
+				stockList = stockDao.query(
+					      stockDao.queryBuilder().where()
+					         .eq("id", userID)
+					         .prepare());
+				
+				input.setText(stockList.get(0).getNumberOfFrames());
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
+        
+        builder.setView(input);
+        
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        	 
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String value = input.getText().toString();
+                              
+                
+                if(check == false){
+                	StockObject stock = new StockObject(userID, value);
+                	stockDao.create(stock);
+                } else if(check == true){           	
+                	try {
+                		UpdateBuilder<StockObject, Integer> updateBuilder = stockDao.updateBuilder();
+                    	updateBuilder.updateColumnValue("numberOfFrames", value);
+						updateBuilder.where().eq("id", userID);
+						updateBuilder.update();
+						
+						Toast.makeText(getActivity().getApplicationContext(), "Changes have been saved!",
+								   Toast.LENGTH_LONG).show();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+                	
+                }
+                
+                return;
+            }
+            
+            
+        });
+        builder.show();
+        
+	}
+	
+	private boolean checkIfStockExists(){
+		boolean check = false;
+		
+		RuntimeExceptionDao<StockObject, Integer> stockDao = db.getStockRunDao();
+		
+		List<StockObject> stockList;
+		try {
+			stockList = stockDao.query(
+				      stockDao.queryBuilder().where()
+				         .eq("id", userID)
+				         .prepare());
+			if(stockList.size() > 0){
+				check = true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return check;
+	}
 }

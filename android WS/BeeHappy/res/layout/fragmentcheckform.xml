@@ -294,7 +294,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/progressBar3"
-        android:layout_marginTop="116dp"
+        android:layout_marginTop="150dp"
         android:layout_toRightOf="@+id/honeyCombsTV"
         android:text="@string/saveButton" />
 
@@ -314,8 +314,7 @@
         android:layout_alignBaseline="@+id/hasDiseaseTV"
         android:layout_alignBottom="@+id/hasDiseaseTV"
         android:layout_alignLeft="@+id/commentsET"
-        android:layout_marginLeft="14dp"
-        android:text="No disease" />
+        android:layout_marginLeft="14dp" />
 
     <Button
         android:id="@+id/checkDiseaseButton"
@@ -324,6 +323,14 @@
         android:layout_alignLeft="@+id/diseaseStatus"
         android:layout_below="@+id/diseaseStatus"
         android:text="@string/checkDiseaseString" />
+
+    <Button
+        android:id="@+id/AddDisease"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/checkDiseaseButton"
+        android:layout_below="@+id/checkDiseaseButton"
+        android:text="@string/AddDiseaseString" />
 
 </RelativeLayout>
 </ScrollView>
