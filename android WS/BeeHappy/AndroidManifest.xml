@@ -23,7 +23,7 @@
         <activity
             android:name="com.example.beeproject.ContainerActivity"
             android:label="@string/title_item_detail"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".StatisticsActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
@@ -44,6 +44,10 @@
         <activity
             android:name="com.example.beeproject.MainAct"
             android:label="@string/title_activity_main" >
+        </activity>
+        <activity
+            android:name="com.example.beeproject.statistics.Statistics"
+            android:label="@string/title_activity_statistics" >
         </activity>
     </application>
 
