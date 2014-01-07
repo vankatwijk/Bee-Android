@@ -3,18 +3,8 @@ package com.example.beeproject.statistics;
 import java.util.Locale;
 import java.util.Random;
 
-import com.example.beeproject.R;
-import com.example.beeproject.R.layout;
-import com.example.beeproject.R.menu;
-import com.example.viewpagerexample.MainActivity.DummySectionFragment;
-import com.example.viewpagerexample.MainActivity.SectionsPagerAdapter;
-import com.jjoe64.graphview.BarGraphView;
-import com.jjoe64.graphview.GraphViewSeries;
-import com.jjoe64.graphview.GraphView.GraphViewData;
-
-import android.os.Bundle;
-import android.app.Activity;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -26,6 +16,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.example.beeproject.R;
+import com.jjoe64.graphview.BarGraphView;
+import com.jjoe64.graphview.GraphView.GraphViewData;
+import com.jjoe64.graphview.GraphViewSeries;
 
 public class Statistics extends FragmentActivity {
 
