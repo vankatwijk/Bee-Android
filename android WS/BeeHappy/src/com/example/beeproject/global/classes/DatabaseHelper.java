@@ -194,7 +194,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	//outbrake
 	public Dao<OutbrakeObject, Integer> getOutbrakeDao() throws SQLException {
 		if (outbrakeDao == null) {
-			outbrakeDao = getDao(StockObject.class);
+			outbrakeDao = getDao(OutbrakeObject.class);
 		}
 		return outbrakeDao;
 	}
