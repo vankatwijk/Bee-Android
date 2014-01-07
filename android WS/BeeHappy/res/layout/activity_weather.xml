@@ -115,7 +115,11 @@
 	<ProgressBar
 	    android:id="@+id/progressBar1"
 	    style="?android:attr/progressBarStyleHorizontal"
+<<<<<<< HEAD
 	    android:layout_width="0dip"
+=======
+	    android:layout_width="match_parent"
+>>>>>>> 36c09c31f0f909c9746004ede01053e3e69a586f
 	    android:layout_height="wrap_content" />
 
 	<ListView

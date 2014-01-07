@@ -6,7 +6,7 @@ import com.j256.ormlite.table.DatabaseTable;
 
 
 @DatabaseTable(tableName = "users")
-public class UserObject {
+public class UserObject implements BeeObjectInterface{
 	
 	@DatabaseField(generatedId = true)
     private int id;
@@ -16,6 +16,12 @@ public class UserObject {
     
     @DatabaseField(canBeNull = false)
     private String password;
+
+    @DatabaseField(canBeNull = false)
+	private boolean synced;
+    
+    @DatabaseField(canBeNull = true)
+    private int serverSideID;
 	
 	public UserObject(){
 	}
@@ -24,6 +30,13 @@ public class UserObject {
 		this.username = username;
 		this.password = password;
 	}
+
+	public UserObject(int id, String username, String password){
+		this.id = id;
+		this.username = username;
+		this.password = password;
+	}
+	
 	
 	public int getId() {
 		return id;
@@ -44,4 +57,35 @@ public class UserObject {
 	public void setPassword(String password){
 		this.password = password;
 	}
+
+	@Override
+	public String getDBTableName() {
+		return "users";
+	}
+	
+	@Override
+	public String toString() {
+		return "UserObject [id=" + id + ", username=" + username
+				+ ", password=" + password + ", synced=" + synced + ", serverSideID="+serverSideID+" ]";
+	}
+
+	@Override
+	public boolean isSynced() {
+		return synced;
+	}
+	
+	@Override
+	public void setSynced(boolean synced) {
+		this.synced = synced;
+	}
+
+	public int getServerSideID() {
+		return serverSideID;
+	}
+
+	public void setServerSideID(int serverSideID) {
+		this.serverSideID = serverSideID;
+	}
+
+	
 }

@@ -9,6 +9,7 @@ import android.util.Log;
 import com.example.beeproject.R;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
@@ -219,6 +220,32 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			diseaseNotesRuntimeDao = getRuntimeExceptionDao(DiseaseNotesObject.class);
 		}
 		return diseaseNotesRuntimeDao;
+	}
+	
+	/**
+	 * Helper method that returns DAO of the given class
+	 * @param objectClass
+	 * @return
+	 * @throws SQLException
+	 */
+	public Dao<? super BeeObjectInterface, Integer> getObjectClassDao(Class objectClass) throws SQLException{
+		
+		Dao<? super BeeObjectInterface, Integer> objectClassDao = DaoManager.createDao(getConnectionSource(), objectClass);
+		return objectClassDao;
+	}
+	
+	/**
+	 * Helper method that returns runtime DAO of the given class
+	 * @param objectClass
+	 * @return
+	 * @throws SQLException
+	 */
+	public RuntimeExceptionDao<? super BeeObjectInterface, Integer> getObjectClassRunDao(Class objectClass) throws SQLException{
+		
+		Dao<? super BeeObjectInterface, Integer> objectClassDao = DaoManager.createDao(getConnectionSource(), objectClass);
+		RuntimeExceptionDao<? super BeeObjectInterface, Integer> objectClassRunDao = 
+				new RuntimeExceptionDao(objectClassDao);
+		return objectClassRunDao;
 	}
 	
 	/**

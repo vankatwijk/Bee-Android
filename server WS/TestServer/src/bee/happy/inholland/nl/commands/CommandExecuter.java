@@ -34,6 +34,11 @@ public class CommandExecuter {
 				System.out.println("executing update command: " + deleteCommand);
 				result = dbActionsExecuter.delete(deleteCommand);
 				break;
+			case SELECT:
+				SelectCommand selectCommand = (SelectCommand) command;
+				System.out.println("executing select command: " + selectCommand);
+				result = dbActionsExecuter.select(selectCommand);
+				break;
 				
 		}
 		return result;
