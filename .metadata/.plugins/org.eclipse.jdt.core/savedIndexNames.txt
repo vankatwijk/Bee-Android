@@ -1,9 +1,6 @@
 INDEX VERSION 1.126+C:\Development\Bee\.metadata\.plugins\org.eclipse.jdt.core
 1974386344.index
-2140280996.index
-2610037018.index
-1078708547.index
-1863462863.index
+1333227430.index
 2053332863.index
 1361623564.index
 1531412002.index
