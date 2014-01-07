@@ -3,7 +3,13 @@ package com.example.beeproject.global.classes;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-
+/**
+ * Class representing check form object.
+ * <p>Objects of this class can be persisted to a database using ORMLite
+ * <p>THIS VERSION IS ONLY FOR SERVER SIDE. Client must have its own different implementation
+ * @author rezolya
+ *
+ */
 @DatabaseTable(tableName = "checkforms")
 public class CheckFormObject implements BeeObjectInterface{
 
@@ -54,10 +60,13 @@ public class CheckFormObject implements BeeObjectInterface{
 	
 	@DatabaseField(canBeNull = true)
 	private String comments;
-	
-	@DatabaseField(canBeNull = false)
+
+    //NOT A DATABASE FIELD, only database field on the client side
 	private boolean synced;
 
+    //NOT A DATABASE FIELD, only database field on the client side
+    private int serverSideID;
+    
 	public CheckFormObject(){	
 	}
 
@@ -275,6 +284,15 @@ public class CheckFormObject implements BeeObjectInterface{
 	public void setSynced(boolean synced) {
 		this.synced = synced;
 	}
+	
+	public int getServerSideID() {
+		return serverSideID;
+	}
+
+	public void setServerSideID(int serverSideID) {
+		this.serverSideID = serverSideID;
+	}
+
 
 
 

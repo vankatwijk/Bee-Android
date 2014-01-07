@@ -4,6 +4,13 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 
+/**
+ * Class representing yard object.
+ * <p>Objects of this class can be persisted to a database using ORMLite
+ * <p>THIS VERSION IS ONLY FOR CLIENT SIDE. Server must have its own different implementation
+ * @author rezolya
+ *
+ */
 @DatabaseTable(tableName = "yards")
 public class YardObject implements BeeObjectInterface{
 
@@ -33,6 +40,10 @@ public class YardObject implements BeeObjectInterface{
 
 	public YardObject() {
     }
+
+	public YardObject(int id) {
+		this.id = id;
+    }
 	
 	public YardObject(String yardName, String location, UserObject userID, boolean synced) {
 		this.yardName = yardName;
@@ -41,6 +52,30 @@ public class YardObject implements BeeObjectInterface{
 		this.synced = synced;
 	}
 
+	
+	public YardObject(int id, String yardName, String location, UserObject userID, boolean synced) {
+		this.id = id;
+		this.yardName = yardName;
+		this.location = location;
+		this.userID = userID;
+		this.synced = synced;
+	}
+
+	public YardObject(String yardName, String location, int userID, boolean synced) {
+		this.yardName = yardName;
+		this.location = location;
+		this.userID = new UserObject(userID, "", "");
+		this.synced = synced;
+	}
+	
+	public YardObject(int id, String yardName, String location, int userID, boolean synced) {
+		this.id = id;
+		this.yardName = yardName;
+		this.location = location;
+		this.userID = new UserObject(userID, "", "");
+		this.synced = synced;
+	}
+	
 	public int getId() {
 		return id;
 	}
@@ -91,7 +126,7 @@ public class YardObject implements BeeObjectInterface{
 	public String toString() {
 		return "YardObject [id=" + id + ", yardName=" + yardName
 				+ ", location=" + location + ", userID=" + userID + ", synced="
-				+ synced + "]";
+				+ synced + ", serverSideID="+serverSideID+" ]";
 	}
 		
 	

@@ -7,8 +7,9 @@ import com.j256.ormlite.table.DatabaseTable;
 
 /**
  * Class representing yard object.
- * ONLY for server side. Client must have its own different implementaion
- * @author Olya
+ * <p>Objects of this class can be persisted to a database using ORMLite
+ * <p>THIS VERSION IS ONLY FOR SERVER SIDE. Client must have its own different implementation
+ * @author rezolya
  *
  */
 @DatabaseTable(tableName = "yards")
@@ -25,8 +26,8 @@ public class YardObject implements BeeObjectInterface{
 	
     @DatabaseField(canBeNull = true, foreign = true, foreignAutoCreate = true) 
 	private UserObject userID;
-    
-    @DatabaseField(canBeNull = false)
+
+    //NOT A DATABASE FIELD, only database field on the client side
 	private boolean synced;
 	
     //NOT A DATABASE FIELD, only database field on the client side
@@ -74,6 +75,10 @@ public class YardObject implements BeeObjectInterface{
 		return id;
 	}
 
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public String getYardName() {
 		return yardName;
 	}
@@ -101,6 +106,14 @@ public class YardObject implements BeeObjectInterface{
 
 	public void setSynced(boolean synced) {
 		this.synced = synced;
+	}
+		
+	public int getServerSideID() {
+		return serverSideID;
+	}
+
+	public void setServerSideID(int serverSideID) {
+		this.serverSideID = serverSideID;
 	}
 
 	@Override

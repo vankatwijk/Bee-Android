@@ -1,5 +1,5 @@
 #
-# generated on 2013/12/16 01:49:11
+# generated on 2014/01/06 09:33:26
 #
 # --table-start--
 dataClass=com.example.beeproject.global.classes.YardObject
@@ -25,6 +25,9 @@ foreignAutoCreate=true
 fieldName=synced
 canBeNull=false
 # --field-end--
+# --field-start--
+fieldName=serverSideID
+# --field-end--
 # --table-fields-end--
 # --table-end--
 #################################
@@ -43,6 +46,13 @@ canBeNull=false
 # --field-start--
 fieldName=password
 canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=synced
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=serverSideID
 # --field-end--
 # --table-fields-end--
 # --table-end--
@@ -67,6 +77,9 @@ foreignAutoCreate=true
 # --field-start--
 fieldName=synced
 canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=serverSideID
 # --field-end--
 # --table-fields-end--
 # --table-end--
@@ -139,6 +152,9 @@ fieldName=comments
 # --field-start--
 fieldName=synced
 canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=serverSideID
 # --field-end--
 # --table-fields-end--
 # --table-end--

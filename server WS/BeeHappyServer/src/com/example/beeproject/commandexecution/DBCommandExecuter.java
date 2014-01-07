@@ -27,10 +27,6 @@ public class DBCommandExecuter {
 	
 	public DBCommandExecuter() {
 		gson = GsonProvider.getGson();
-		/*Properties properties = PropertiesProvider.getProperties();
-		System.out.println("\n\nproperties:"+properties);*/
-		//TODO: get the connection string from config file
-        //TODO: get the password from config file?
 	}
 	
 	
@@ -55,10 +51,10 @@ public class DBCommandExecuter {
 				//object was successfuly added to DB
 				result = new CreateCommandResult(command.getClassName(), objectJson);
 			} else if(nInsertedRows == 0){
-				throw new Exception(object + " could not be added in DB");
+				throw new Exception( "Object could not be added in DB", new Throwable("Adding " + object.toString()));
 			}
 			else{
-				throw new Exception("Something went wrong...");
+				throw new Exception("Something went wrong...", new Throwable("Adding " + object.toString()));
 			}
 			
 		} catch (SQLException e) {
@@ -73,6 +69,16 @@ public class DBCommandExecuter {
 		
 	}
 	
+	/**
+	 * Executes the UpdateCommand<br>
+	 * ATTENTION: 
+	 * Command contains object of BeeObjectInterface that needs to be updated.
+	 * The id of this object is local id from the client. 
+	 * In order to find the object in the server database, object.serverSideID should be used.
+	 * To simplify the update and not loop through all the fields object.id is set to object.serverSideId and the update is executed.<br>
+	 * @param command
+	 * @return
+	 */
 	public BeeCommandResult update(UpdateCommand command) {
 		BeeCommandResult result = null;
 		
@@ -86,17 +92,27 @@ public class DBCommandExecuter {
 			// instantiate the dao
 			Dao<? super Object, Integer> objectClassDao = DaoManager.createDao(ConnectionProvider.getConnectionSource(), objectClass);
 			
-			//update the object in DB
-			int nUpdatedRows = objectClassDao.update(object);			
-			if(nUpdatedRows==1){
-				String objectJson = gson.toJson(object, BeeObjectInterface.class);
-				//object was successfuly updated
-				result = new UpdateCommandResult(command.getClassName(), objectJson);
-			} else if(nUpdatedRows == 0){
-				throw new Exception(object + " cound not be updated in DB");
+			BeeObjectInterface objectInDb = (BeeObjectInterface) objectClassDao.queryForId(object.getServerSideID());
+			
+			if(objectInDb==null){
+				//object not found in DB
+				throw new Exception( "Object could not be found in DB", new Throwable("Updating " + object.toString()));
 			}
 			else{
-				throw new Exception("Something went wrong...");
+				//update the object in DB
+				//To simplify the update and not loop through all the fields object.id is set to object.serverSideId
+				object.setId(object.getServerSideID());
+				int nUpdatedRows = objectClassDao.update(object);			
+				if(nUpdatedRows==1){
+					String objectJson = gson.toJson(object, BeeObjectInterface.class);
+					//object was successfuly updated
+					result = new UpdateCommandResult(command.getClassName(), objectJson);
+				} else if(nUpdatedRows == 0){
+					throw new Exception( "Object could not be updated in DB", new Throwable("Updating " + object.toString()));
+				}
+				else{
+					throw new Exception("Something went wrong...", new Throwable("Updating " + object.toString()));
+				}
 			}
 			
 		} catch (SQLException e) {
@@ -120,12 +136,12 @@ public class DBCommandExecuter {
 			BeeObjectInterface objectFromJson = gson.fromJson(command.getObjectJson(), objectClass);
 			System.out.println("object to be deleted: " + objectFromJson);
 			// instantiate the dao
-			Dao<? super Object, Integer> objectClassDao = DaoManager.createDao(ConnectionProvider.getConnectionSource(), objectClass);
+			Dao<? super BeeObjectInterface, Integer> objectClassDao = DaoManager.createDao(ConnectionProvider.getConnectionSource(), objectClass);
 			BeeObjectInterface objectInDb = (BeeObjectInterface) objectClassDao.queryForId(objectFromJson.getId());
 			
 			if(objectInDb==null){
 				//object not found in DB
-				throw new Exception(objectFromJson + " could not be found in DB");
+				throw new Exception( "Object could not be found in DB", new Throwable("Deleting " + objectFromJson.toString()));
 			}
 			else{
 				//delete the object in DB
@@ -135,10 +151,10 @@ public class DBCommandExecuter {
 					//object was successfuly deleted
 					result = new DeleteCommandResult(command.getClassName(), objectJson);
 				} else if(nDeletedRows == 0){
-					throw new Exception(objectFromJson + " could not be deleted in DB");
+					throw new Exception( "Object could not be deleted in DB", new Throwable("Deleting " + objectFromJson.toString()));
 				}
 				else{
-					throw new Exception("Something went wrong...");
+					throw new Exception("Something went wrong...", new Throwable("Deleting " + objectFromJson.toString()));
 				}
 			}
 			

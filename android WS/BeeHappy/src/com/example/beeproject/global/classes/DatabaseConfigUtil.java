@@ -19,6 +19,6 @@ public class DatabaseConfigUtil extends OrmLiteConfigUtil {
 		
         public static void main(String[] args) throws SQLException, IOException {
  
-                writeConfigFile(new File("D:/Programming/Android/BeeHappy/res/raw/ormlite_config.txt"), classes);
+                writeConfigFile(new File("D:/BEEHAPPY/bee/android WS/BeeHappy/res/raw/ormlite_config.txt"), classes);
         }
 }

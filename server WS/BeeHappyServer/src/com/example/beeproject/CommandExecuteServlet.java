@@ -46,7 +46,7 @@ public class CommandExecuteServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		response.setContentType("application/json");
-		System.out.println("HELLO1");
+		System.out.println("==== RECEIVED REQUEST ====");
 		PrintWriter responseWriter = response.getWriter();
 		
 		StringBuilder sb = new StringBuilder();
@@ -58,18 +58,18 @@ public class CommandExecuteServlet extends HttpServlet {
 		
 		String commandJson = sb.toString();
 		
-		System.out.println(commandJson);
+		//System.out.println(commandJson);
 		Gson gson = GsonProvider.getGson();
 		BeeCommand command = gson.fromJson(commandJson, BeeCommand.class);
-		System.out.println("command\n"+command);
+		System.out.println("COMMAND:\n"+command);
 		
 		CommandExecuter commandExecuter = new CommandExecuter();
 		BeeCommandResult result = commandExecuter.execute(command);
-		System.out.println("result\n"+result);
+		System.out.println("RESULT:\n"+result);
 		
 		String resultJson = gson.toJson(result, BeeCommandResult.class);
 		responseWriter.println(resultJson);
-		System.out.println("HELLO!!!!");
+		System.out.println("==== REQUEST PROCESSED ====");
 	}
 
 }

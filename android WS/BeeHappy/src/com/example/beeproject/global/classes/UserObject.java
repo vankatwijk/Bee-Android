@@ -16,6 +16,12 @@ public class UserObject implements BeeObjectInterface{
     
     @DatabaseField(canBeNull = false)
     private String password;
+
+    @DatabaseField(canBeNull = false)
+	private boolean synced;
+    
+    @DatabaseField(canBeNull = true)
+    private int serverSideID;
 	
 	public UserObject(){
 	}
@@ -24,6 +30,13 @@ public class UserObject implements BeeObjectInterface{
 		this.username = username;
 		this.password = password;
 	}
+
+	public UserObject(int id, String username, String password){
+		this.id = id;
+		this.username = username;
+		this.password = password;
+	}
+	
 	
 	public int getId() {
 		return id;
@@ -53,30 +66,26 @@ public class UserObject implements BeeObjectInterface{
 	@Override
 	public String toString() {
 		return "UserObject [id=" + id + ", username=" + username
-				+ ", password=" + password + "]";
+				+ ", password=" + password + ", synced=" + synced + ", serverSideID="+serverSideID+" ]";
 	}
 
 	@Override
 	public boolean isSynced() {
-		// TODO Auto-generated method stub
-		return false;
+		return synced;
 	}
-
+	
 	@Override
 	public void setSynced(boolean synced) {
-		// TODO Auto-generated method stub
-		
+		this.synced = synced;
 	}
 
-	@Override
 	public int getServerSideID() {
-		// TODO Auto-generated method stub
-		return 0;
+		return serverSideID;
 	}
 
-	@Override
 	public void setServerSideID(int serverSideID) {
-		// TODO Auto-generated method stub
-		
+		this.serverSideID = serverSideID;
 	}
+
+	
 }
