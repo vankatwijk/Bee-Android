@@ -156,11 +156,12 @@ public class FragmentCheckForm extends Fragment {
 				
 				@Override
 				public void onClick(View v) {
-					Intent intent = new Intent(getActivity(), CheckDiseaseActivity.class);
-					intent.putExtra("hiveID", hiveID);
-					intent.putExtra("diseaseName", diseaseTV.getText().toString());
-					startActivity(intent);
-					
+					if(!diseaseTV.getText().toString().equals("No disease")){
+						Intent intent = new Intent(getActivity(), CheckDiseaseActivity.class);
+						intent.putExtra("hiveID", hiveID);
+						intent.putExtra("diseaseName", diseaseTV.getText().toString());
+						startActivity(intent);
+					}
 				}
 			});
 	        

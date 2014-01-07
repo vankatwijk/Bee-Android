@@ -10,6 +10,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -23,7 +24,7 @@
         <activity
             android:name="com.example.beeproject.ContainerActivity"
             android:label="@string/title_item_detail"
-            android:parentActivityName=".StatisticsActivity" >
+            android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
@@ -39,15 +40,29 @@
         </activity>
         <activity
             android:name="com.example.beeproject.weather.WeatherActivity"
+            android:label="@string/title_item_detail" 
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.example.beeproject.weather.YardWeatherActivity"
             android:label="@string/title_item_detail" >
         </activity>
         <activity
-            android:name="com.example.beeproject.MainAct"
-            android:label="@string/title_activity_main" >
+            android:name="com.example.beeproject.yards.OutbrakeActivity"
+            android:label="@string/title_item_detail" >
         </activity>
         <activity
-            android:name="com.example.beeproject.statistics.Statistics"
-            android:label="@string/title_activity_statistics" >
+            android:name="com.example.beeproject.yards.CheckDiseaseActivity"
+            android:label="@string/title_item_detail" >
+        </activity>
+        <activity
+             android:name="com.example.beeproject.statistics.Statistics"
+             android:label="@string/title_activity_statistics" >
+        </activity>
+
+        <activity
+            android:name="com.example.beeproject.MainAct"
+            android:label="@string/title_activity_main" >
         </activity>
     </application>
 
