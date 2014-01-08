@@ -12,7 +12,7 @@
 jdbcDriver=org.postgresql.Driver
 
 # database URL
-jdbcURL=jdbc:postgresql://localhost:5432/DW
+jdbcURL=jdbc:postgresql://localhost:5432/BeeHappy
 # specific data types
 # string, getString() = 0;    --> nominal
 # boolean, getBoolean() = 1;  --> nominal
