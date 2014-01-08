@@ -9,6 +9,15 @@
         android:layout_height="56dp"
         android:onClick="LogoutOfActivity"
         android:showAsAction="ifRoom"/>
-
-
+    
+    <item
+        android:id="@+id/action_syncroniseToServer"
+        android:orderInCategory="1"
+        android:icon="@drawable/ic_action_syncronise"
+        android:title="Syncronise"
+        android:layout_width="46dp"
+        android:layout_height="56dp"
+        android:onClick="syncroniseToServer"
+        android:showAsAction="ifRoom"/>
+  
 </menu>

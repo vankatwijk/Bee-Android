@@ -8,6 +8,7 @@ import java.util.Map;
 
 import android.app.Activity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.beeproject.commandexecution.commands.BeeCommand;
 import com.example.beeproject.commandexecution.commands.CreateCommand;
@@ -35,11 +36,13 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 public class SyncHelper {
 	public final String LOG_TAG ="SyncHelper";
 	
+	Activity context;
 	DatabaseManager dbManager;
 	DatabaseHelper db;
 	Gson gson; 
 	
 	public SyncHelper(Activity context){
+		this.context = context;
 		dbManager = new DatabaseManager();
 		db = dbManager.getHelper(context);
 		gson = GsonProvider.getGson();
@@ -72,12 +75,12 @@ public class SyncHelper {
 		    	syncronizeClass(objectClass);
 			}
 			
-			result = "syncronizeToServer finished";
+			result = "Synchronisation to BeeHappy server has finished.";
 		}
 		else{
 			result = "Cannot connect to BeeHappy server.";
 		}
-		
+
 		return result;
 	}
 	

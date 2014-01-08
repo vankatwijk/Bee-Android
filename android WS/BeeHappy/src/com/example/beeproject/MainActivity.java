@@ -3,6 +3,7 @@ package com.example.beeproject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +17,8 @@ import com.example.beeproject.login.LoginActivity;
 import com.example.beeproject.profile.FragmentProfileInfo;
 import com.example.beeproject.statistics.FragmentStatistics;
 import com.example.beeproject.statistics.Statistics;
+import com.example.beeproject.syncing.SyncTask;
+import com.example.beeproject.syncing.SyncTaskCallback;
 import com.example.beeproject.weather.WeatherActivity;
 import com.example.beeproject.yards.FragmentYardList;
 
@@ -45,8 +48,8 @@ public class MainActivity extends FragmentActivity implements
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+	
 	public void LogoutOfActivity(MenuItem v){
-		
 		//set username and password to null in shared prefs
 		getSharedPreferences(GlobalVar.USERPREFS,MODE_PRIVATE)
         .edit()
@@ -109,4 +112,18 @@ public class MainActivity extends FragmentActivity implements
 			startActivity(detailIntent);
 		}
 	}
+
+	public void syncroniseToServer(MenuItem v){
+
+		SyncTaskCallback syncTaskCallback = new SyncTaskCallback() {
+			@Override
+			public void onSyncTaskFinished(String result) {
+				Toast.makeText(getApplicationContext(), result,  Toast.LENGTH_LONG).show();
+			}
+		};
+		
+    	new SyncTask(this, syncTaskCallback).execute("");
+    }
+	
+	
 }

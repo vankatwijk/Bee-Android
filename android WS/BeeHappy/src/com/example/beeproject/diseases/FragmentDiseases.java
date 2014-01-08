@@ -1,16 +1,17 @@
 package com.example.beeproject.diseases;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.beeproject.R;
-import com.example.beeproject.syncing.SyncHelper;
+import com.example.beeproject.syncing.SyncTask;
+import com.example.beeproject.syncing.SyncTaskCallback;
 
 
 
@@ -33,41 +34,20 @@ public class FragmentDiseases extends Fragment {
 		View rootView = inflater.inflate(R.layout.fragmentdiseases, container, false);
 		diseasesTextView = (TextView) rootView.findViewById(R.id.DiseasesTextView);
 		
-		/*
-    	Log.d(LOG_TAG, "Connecting to servlet");
-    	BeeCommand command = new PingCommand();
-    	new ServletTask().execute(command);
-    	
-    	command = new SelectCommand(YardObject.class.getName());
-    	*/
-    	new ServletTask().execute("");
     	
 		return rootView;
 	}
 	
-	
-	class ServletTask extends AsyncTask<String, Void, String> {
+	public void syncroniseToServer(MenuItem v){
 
-	    protected String doInBackground(String... arg) {
-        		Log.d(LOG_TAG, "ServletTask.doInBackground()");
-        		SyncHelper syncHelper = new SyncHelper(getActivity());
-        		
-	            String result = syncHelper.syncronizeToServer();
-	            
-        		
-	            return result;
-	    }
-
-	    protected void onPostExecute(String result) {
-	    	Log.d(LOG_TAG, "ServletTask.onPostExecute(), result=["+result+"]");
-	    	
-	    	if(result!=null){
-	    		diseasesTextView.setText(diseasesTextView.getText() + "\n" + result.toString());
-	    	}
-	    	else{
-	    		diseasesTextView.setText(diseasesTextView.getText() + "\n" + "--");
-	    	}
-	    }
-	}
+		SyncTaskCallback syncTaskCallback = new SyncTaskCallback() {
+			@Override
+			public void onSyncTaskFinished(String result) {
+				Toast.makeText(getActivity().getApplicationContext(), result,  Toast.LENGTH_LONG).show();
+			}
+		};
+		
+    	new SyncTask(getActivity(), syncTaskCallback).execute("");
+    }
 	
 }
