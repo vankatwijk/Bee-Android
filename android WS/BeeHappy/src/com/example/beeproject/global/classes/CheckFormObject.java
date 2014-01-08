@@ -293,7 +293,7 @@ public class CheckFormObject implements BeeObjectInterface{
 				+ nrOfLayers + ", eggs=" + eggs + ", larve=" + larve
 				+ ", pupae=" + pupae + ", nrOfMites=" + nrOfMites
 				+ ", honeyCombs=" + honeyCombs + ", comments=" + comments
-				+ ", synced=" + synced + "]";
+				+ ", synced=" + synced + ", serverSideID=" + serverSideID + "]";
 	}
 
 

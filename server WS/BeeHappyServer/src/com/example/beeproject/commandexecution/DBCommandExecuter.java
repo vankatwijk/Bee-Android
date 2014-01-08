@@ -18,6 +18,7 @@ import com.example.beeproject.commandexecution.results.*;
 import com.example.beeproject.db.ConnectionProvider;
 import com.example.beeproject.global.classes.*;
 import com.example.beeproject.gsonconvertion.GsonProvider;
+import com.example.beeproject.syncing.DeletedObject;
 import com.example.beeproject.utils.PropertiesProvider;
 
 public class DBCommandExecuter {
@@ -127,34 +128,50 @@ public class DBCommandExecuter {
 		
 	}
 	
-	public BeeCommandResult delete(DeleteCommand command) {
+	/**
+	 * Executes the DeleteCommand
+	 * <p>DeleteCommand contains json of DeletedObject, which contains info on the object to be deleted.
+	 * <p>In order to keep data for later data mining, the objects are not actually being deleted,
+	 * just marked with deleted==true
+	 * @param command
+	 * @return
+	 */
+	public BeeCommandResult markAsDeleted(DeleteCommand command) {
 		BeeCommandResult result = null;
-		System.out.println("deleting in DB:");
+		System.out.println("Marking as deleted in DB:");
 		
 		try {
-			Class objectClass = getObjectClass(command.getClassName());
-			BeeObjectInterface objectFromJson = gson.fromJson(command.getObjectJson(), objectClass);
-			System.out.println("object to be deleted: " + objectFromJson);
+			Class objectFromJsonClass = getObjectClass(command.getClassName());
+			DeletedObject deletedObjectInfo = gson.fromJson(command.getObjectJson(), objectFromJsonClass);
+			
+			Class objectClass = getObjectClass(deletedObjectInfo.getObjectClassName()); //class of an object that needs to be deleted
+			BeeObjectInterface objectToDelete = (BeeObjectInterface) objectClass.newInstance();
+			objectToDelete.setId(deletedObjectInfo.getServerSideId());
+			
+			System.out.println("object to be marked as deleted: " + objectToDelete);
 			// instantiate the dao
 			Dao<? super BeeObjectInterface, Integer> objectClassDao = DaoManager.createDao(ConnectionProvider.getConnectionSource(), objectClass);
-			BeeObjectInterface objectInDb = (BeeObjectInterface) objectClassDao.queryForId(objectFromJson.getId());
+			BeeObjectInterface objectInDb = (BeeObjectInterface) objectClassDao.queryForId(objectToDelete.getId());
 			
 			if(objectInDb==null){
 				//object not found in DB
-				throw new Exception( "Object could not be found in DB", new Throwable("Deleting " + objectFromJson.toString()));
+				throw new Exception( "Object could not be found in DB", new Throwable("Marking as deleted " + objectToDelete.toString()));
 			}
 			else{
-				//delete the object in DB
-				int nDeletedRows = objectClassDao.delete(objectInDb);	
-				if(nDeletedRows==1){
-					String objectJson = gson.toJson(objectInDb, BeeObjectInterface.class);
-					//object was successfuly deleted
-					result = new DeleteCommandResult(command.getClassName(), objectJson);
-				} else if(nDeletedRows == 0){
-					throw new Exception( "Object could not be deleted in DB", new Throwable("Deleting " + objectFromJson.toString()));
+				/* 
+				 * Marking the object as deleted - set deleted=true and update
+				 * */
+				objectInDb.setDeleted(true);
+				int nUpdatedRows = objectClassDao.delete(objectInDb);	
+				if(nUpdatedRows==1){
+					String objectJson = gson.toJson(deletedObjectInfo, DeletedObject.class);
+					//object was successfuly marked as deleted
+					result = new DeleteCommandResult(DeletedObject.class.getName(), objectJson);
+				} else if(nUpdatedRows == 0){
+					throw new Exception( "Object could not be marked as deleted in DB", new Throwable("Marking as deleted " + objectToDelete.toString()));
 				}
 				else{
-					throw new Exception("Something went wrong...", new Throwable("Deleting " + objectFromJson.toString()));
+					throw new Exception("Something went wrong...", new Throwable("Marking as deleted " + objectToDelete.toString()));
 				}
 			}
 			

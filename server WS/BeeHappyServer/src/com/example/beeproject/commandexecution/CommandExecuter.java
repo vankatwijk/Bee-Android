@@ -35,8 +35,8 @@ public class CommandExecuter {
 			break;
 		case DELETE:
 			DeleteCommand deleteCommand = (DeleteCommand) command;
-			System.out.println("executing update command: " + deleteCommand);
-			result = dbActionsExecuter.delete(deleteCommand);
+			System.out.println("executing delete command: " + deleteCommand);
+			result = dbActionsExecuter.markAsDeleted(deleteCommand);
 			break;
 		case SELECT:
 			SelectCommand selectCommand = (SelectCommand) command;

@@ -30,6 +30,9 @@ public class DiseaseObject implements BeeObjectInterface{
     //NOT A DATABASE FIELD, only database field on the client side
 	private boolean synced;
 
+    @DatabaseField(canBeNull = true) 
+	private boolean deleted; // true if object is considered deleted on the server
+    
     //NOT A DATABASE FIELD, only database field on the client side
     private int serverSideID;
     
@@ -116,6 +119,16 @@ public class DiseaseObject implements BeeObjectInterface{
 		this.serverSideID = serverSideID;
 	}
 
+	@Override
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	@Override
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+	
 	@Override
 	public String getDBTableName() {
 		return "diseases";

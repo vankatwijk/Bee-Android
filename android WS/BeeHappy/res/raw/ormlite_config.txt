@@ -1,9 +1,5 @@
 #
-<<<<<<< HEAD
-# generated on 2014/01/06 05:09:38
-=======
-# generated on 2014/01/06 09:33:26
->>>>>>> 36c09c31f0f909c9746004ede01053e3e69a586f
+# generated on 2014/01/07 11:27:54
 #
 # --table-start--
 dataClass=com.example.beeproject.global.classes.YardObject
@@ -257,6 +253,25 @@ canBeNull=false
 # --field-end--
 # --field-start--
 fieldName=description
+canBeNull=false
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.example.beeproject.syncing.DeletedObject
+tableName=deletedobjects
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=objectClassName
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=serverSideId
 canBeNull=false
 # --field-end--
 # --table-fields-end--

@@ -1,19 +1,5 @@
 package com.example.beeproject.diseases;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,15 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.beeproject.R;
-import com.example.beeproject.commandexecution.commands.BeeCommand;
-import com.example.beeproject.commandexecution.commands.PingCommand;
-import com.example.beeproject.commandexecution.commands.SelectCommand;
-import com.example.beeproject.commandexecution.results.BeeCommandResult;
-import com.example.beeproject.global.classes.YardObject;
-import com.example.beeproject.gsonconvertion.GsonProvider;
-import com.example.beeproject.syncing.BeeServerHttpClient;
 import com.example.beeproject.syncing.SyncHelper;
-import com.google.gson.Gson;
 
 
 

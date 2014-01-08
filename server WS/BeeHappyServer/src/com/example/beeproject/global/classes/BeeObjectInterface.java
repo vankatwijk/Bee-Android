@@ -36,6 +36,16 @@ public interface BeeObjectInterface {
 	public void setSynced(boolean synced);
 	
 	/**
+	 * @return true if the object is considered deleted on the server, otherwise false
+	 */
+	public boolean isDeleted();
+
+	/**
+	 * @param deleted==true if object is considered deleted on the server
+	 */
+	public void setDeleted(boolean deleted);
+	
+	/**
 	 * @return id of this object stored in the server side
 	 */
 	public int getServerSideID();

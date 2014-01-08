@@ -30,6 +30,9 @@ public class YardObject implements BeeObjectInterface{
     //NOT A DATABASE FIELD, only database field on the client side
 	private boolean synced;
 	
+    @DatabaseField(canBeNull = true) 
+	private boolean deleted; // true if object is considered deleted on the server
+	
     //NOT A DATABASE FIELD, only database field on the client side
     private int serverSideID;
     
@@ -126,6 +129,16 @@ public class YardObject implements BeeObjectInterface{
 		return "YardObject [id=" + id + ", yardName=" + yardName
 				+ ", location=" + location + ", userID=" + userID + ", synced="
 				+ synced + "]";
+	}
+
+	@Override
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	@Override
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 		
 	

@@ -28,6 +28,9 @@ public class UserObject implements BeeObjectInterface{
 	
     //NOT A DATABASE FIELD, only database field on the client side
     private int serverSideID;
+
+    @DatabaseField(canBeNull = true) 
+	private boolean deleted; // true if object is considered deleted on the server
     
 	public UserObject(){
 	}
@@ -83,6 +86,16 @@ public class UserObject implements BeeObjectInterface{
 		this.serverSideID = serverSideID;
 	}
 
+	@Override
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	@Override
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+	
 	
 	@Override
 	public String getDBTableName() {

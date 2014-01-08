@@ -8,7 +8,6 @@ import com.j256.ormlite.table.DatabaseTable;
  * Class representing yard object.
  * <p>Objects of this class can be persisted to a database using ORMLite
  * <p>THIS VERSION IS ONLY FOR CLIENT SIDE. Server must have its own different implementation
- * @author rezolya
  *
  */
 @DatabaseTable(tableName = "yards")
@@ -37,7 +36,11 @@ public class YardObject implements BeeObjectInterface{
 	public void setUserID(UserObject userID) {
 		this.userID = userID;
 	}
-
+	
+	/**
+	 * Default no-arg constructor
+	 * required by ORMLite
+	 */
 	public YardObject() {
     }
 

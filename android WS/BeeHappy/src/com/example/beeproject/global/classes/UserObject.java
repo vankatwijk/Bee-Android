@@ -4,7 +4,12 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 
-
+/**
+ * Class representing user object.
+ * <p>Objects of this class can be persisted to a database using ORMLite
+ * <p>THIS VERSION IS ONLY FOR CLIENT SIDE. Server must have its own different implementation
+ *
+ */
 @DatabaseTable(tableName = "users")
 public class UserObject implements BeeObjectInterface{
 	
@@ -22,7 +27,11 @@ public class UserObject implements BeeObjectInterface{
     
     @DatabaseField(canBeNull = true)
     private int serverSideID;
-	
+    
+    /**
+	 * Default no-arg constructor
+	 * required by ORMLite
+	 */
 	public UserObject(){
 	}
 	

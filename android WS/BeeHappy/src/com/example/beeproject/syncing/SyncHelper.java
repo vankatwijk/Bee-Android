@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.example.beeproject.commandexecution.commands.BeeCommand;
 import com.example.beeproject.commandexecution.commands.CreateCommand;
+import com.example.beeproject.commandexecution.commands.DeleteCommand;
 import com.example.beeproject.commandexecution.commands.PingCommand;
 import com.example.beeproject.commandexecution.commands.UpdateCommand;
 import com.example.beeproject.commandexecution.results.BeeCommandResult;
@@ -54,6 +55,7 @@ public class SyncHelper {
 		
 		//createSomeStuff();
 		//updateSomeStuff();
+		//deleteSomeStuff();
 		
 		String result = "";
 		BeeCommand pingCommand = new PingCommand();
@@ -85,7 +87,11 @@ public class SyncHelper {
 	 */
 	public int syncronizeClass(Class objectClass){
 		try {
+			/* Syncronise created or updated objects.
+			 * These are the objects that have synced==false
+			 * */
 			RuntimeExceptionDao<? super BeeObjectInterface, Integer> objectClassDao = db.getObjectClassRunDao(objectClass);
+			
 			Map<String, Object> fieldValues = new HashMap<String, Object>();
 			fieldValues.put("synced", false);
 			List<BeeObjectInterface> notSyncedObjects = (List<BeeObjectInterface>) objectClassDao.queryForFieldValues(fieldValues);
@@ -93,13 +99,25 @@ public class SyncHelper {
 	    	Log.d(LOG_TAG, "notSyncedObjects"+ notSyncedObjects.toString());
 	    	
 	    	for(BeeObjectInterface objToSync: notSyncedObjects){
-
 		    	syncronizeObject(objectClass, objectClassDao, objToSync);
-		    	
-		    	
 	    	}
 
-	    	//TODO:implement deleting
+	    	/* Syncronise deleted objects. 
+	    	 * These are the objects stored in the table DeletedObjects.
+	    	 * Delete on the server only objects of objectClass, objects of other classes will be deleted in their turn.
+	    	 * This is because order of deleting is probably important*/
+			RuntimeExceptionDao<DeletedObject, Integer> deletedObjectDao = db.getDeletedObjectRunDao();
+
+			fieldValues = new HashMap<String, Object>();
+			fieldValues.put("objectClassName", objectClass.getName());
+			List<DeletedObject> deletedObjects = deletedObjectDao.queryForFieldValues(fieldValues);
+			
+	    	Log.d(LOG_TAG, "deletedObjects"+ deletedObjects.toString());
+			
+	    	for(DeletedObject objToDelete: deletedObjects){
+		    	deleteObject(deletedObjectDao, objToDelete);
+	    	}
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -107,6 +125,32 @@ public class SyncHelper {
 		
 		
 		return 0;
+		
+	}
+
+	/** Helper method to synchronize deletion of an object to the server
+	 * <p> If syncronisation was successful, objToDelete is removed from the deletedobjects table
+	 * @param deletedObjectDao 
+	 * @param objToDelete
+	 */
+	private void deleteObject(RuntimeExceptionDao<DeletedObject, Integer> deletedObjectDao, DeletedObject objToDelete) {
+		BeeCommand command = new DeleteCommand(DeletedObject.class.getName(), gson.toJson(objToDelete, DeletedObject.class));
+		BeeCommandResult commandResult = BeeServerHttpClient.executeCommand(command);
+		Log.d(LOG_TAG, "commandResult "+ commandResult.toString());
+		
+		if(commandResult.getCommandResultType()==BeeCommandResultType.SUCCESS){
+			int nrDeletedRows = deletedObjectDao.delete(objToDelete);
+			if(nrDeletedRows == 1){
+				Log.d(LOG_TAG, "Synced to server: " + objToDelete.toString());
+			}
+			else{
+				Log.e(LOG_TAG, "Synced to server, but not deleted: " + objToDelete.toString());
+			}
+		}
+		else{
+			String errorMessage = getErrorMessageFromResult(commandResult);
+			Log.e(LOG_TAG, errorMessage + " " + objToDelete.toString());
+		}
 		
 	}
 
@@ -165,14 +209,21 @@ public class SyncHelper {
 	}
 	
 	/**
-	 * Stores the information on the deleted object in the local database.
+	 * Stores the information on the deleted object in the local database. 
+	 * <p>This method must be called every time an object that is synced to server is deleted
 	 * @param deletedObject
-	 * @return
+	 * @return 0 if stored successfully, 1 if not
 	 */
 	public int storeDeletedObjectForSyncronisation(BeeObjectInterface object){
-		//DeletedObject deletedObject = new DeletedObject(object);
-		
-		return 0;
+		int result = 1;
+	    DeletedObject deletedObject = new DeletedObject(object);
+		RuntimeExceptionDao<DeletedObject, Integer> dao = db.getDeletedObjectRunDao();
+		int nrInsertedRows = dao.create(deletedObject);
+		if(nrInsertedRows==1){
+			Log.d(LOG_TAG, "created deleted object: " + deletedObject);
+			result = 0;
+		}
+		return result;
 	}
 	
 	public String getErrorMessageFromResult(BeeCommandResult commandResult){
@@ -321,31 +372,34 @@ public class SyncHelper {
 	public void deleteSomething(Class objectClass) throws SQLException{
 		//Create objects to work with
 		BeeObjectInterface object = null;
+		int idToDelete = 4;
 		
 		Log.d(LOG_TAG, "Delete something("+objectClass.getSimpleName());
 		
 		if(objectClass.getSimpleName().equals("YardObject")){
-			object = new YardObject(2);
-			object.setServerSideID(1);
+			object = new YardObject(idToDelete);
+			object.setServerSideID(idToDelete);
 		}
 		else if(objectClass.getSimpleName().equals("HiveObject")){
-			object = new HiveObject(2);
-			object.setServerSideID(1);
+			object = new HiveObject(idToDelete);
+			object.setServerSideID(idToDelete);
 		}
 		else if(objectClass.getSimpleName().equals("UserObject")){
-			object = new UserObject(2,"","");
-			object.setServerSideID(1);
+			object = new UserObject(idToDelete,"","");
+			object.setServerSideID(idToDelete);
 		}
 		else if(objectClass.getSimpleName().equals("CheckFormObject")){
-			object = new CheckFormObject(2);
-			object.setServerSideID(1);
+			object = new CheckFormObject(idToDelete);
+			object.setServerSideID(idToDelete);
 		}
 		
 		if(object!=null){
 			RuntimeExceptionDao<? super BeeObjectInterface, Integer> objectClassDao = db.getObjectClassRunDao(objectClass);
 			int nrInsertedRows = objectClassDao.delete(object);
+			
 			if(nrInsertedRows==1){
 				Log.d(LOG_TAG, "deleted: " + object);
+				storeDeletedObjectForSyncronisation(object);
 			}
 			else{
 				Log.d(LOG_TAG, "couldnt delete: " + object);

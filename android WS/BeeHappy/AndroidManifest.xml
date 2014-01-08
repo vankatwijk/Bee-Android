@@ -52,7 +52,6 @@
             android:label="@string/title_item_detail" >
         </activity>
         <activity
-<<<<<<< HEAD
             android:name="com.example.beeproject.yards.CheckDiseaseActivity"
             android:label="@string/title_item_detail" >
         </activity>
@@ -62,12 +61,6 @@
         </activity>
 
         <activity
-=======
-            android:name="com.example.beeproject.weather.YardWeatherActivity"
-            android:label="@string/title_item_detail" >
-        </activity>
-        <activity
->>>>>>> 36c09c31f0f909c9746004ede01053e3e69a586f
             android:name="com.example.beeproject.MainAct"
             android:label="@string/title_activity_main" >
         </activity>
