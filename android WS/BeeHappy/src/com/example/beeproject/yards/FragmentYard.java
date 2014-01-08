@@ -157,7 +157,7 @@ public class FragmentYard extends Fragment{
 									/* A HiveObject has been deleted from the local database.
 									 * Therefore, the infromation about the deleted object must be saved in DeletedObjects table
 									 * in order to syncronise the deleting to the server 
-									 * next time the sincronisation (i.e SyncHelper.syncronizeToServer()) is run 
+									 * next time the syncronisation (i.e SyncHelper.syncronizeToServer()) is run 
 									 * */
 									SyncHelper syncHelper = new SyncHelper(getActivity());
 									DeletedObject deletedObjectInfo = new DeletedObject(HiveObject.class.getName(), hiveServerSideId);

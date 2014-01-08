@@ -113,6 +113,10 @@ public class HiveObject implements BeeObjectInterface{
 	public String getDBTableName() {
 		return "hives";
 	}
+	
+	public static String getDBTableNameStatic() {
+		return "hives";
+	}
 
 	@Override
 	public String toString() {

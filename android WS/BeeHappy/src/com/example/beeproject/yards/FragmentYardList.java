@@ -34,6 +34,8 @@ import com.example.beeproject.global.classes.GlobalVar;
 import com.example.beeproject.global.classes.HiveObject;
 import com.example.beeproject.global.classes.StockObject;
 import com.example.beeproject.global.classes.YardObject;
+import com.example.beeproject.syncing.DeletedObject;
+import com.example.beeproject.syncing.SyncHelper;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.UpdateBuilder;
@@ -180,6 +182,7 @@ public class FragmentYardList extends Fragment {
 										.eq("yardName", selectedYard)
 										.prepare());
         	            		int yardID = yardIDList.get(0).getId();
+        	            		int yardServerSideId = yardIDList.get(0).getServerSideID();
         	            		
         	            		hiveList = hiveDao.query(hiveDao.queryBuilder().where()
 										.eq("yardID_id", yardID)
@@ -202,7 +205,18 @@ public class FragmentYardList extends Fragment {
 								deleteBuilder.where().eq("yardName", selectedYard)
 													 .and()
 													 .eq("userID_id", userID);
-								deleteBuilder.delete();
+								
+								int nrDeletedRows = deleteBuilder.delete();
+								if(nrDeletedRows == 1){
+									/* A YardObject has been deleted from the local database.
+									 * Therefore, the infromation about the deleted object must be saved in DeletedObjects table
+									 * in order to syncronise the deleting to the server 
+									 * next time the syncronisation (i.e SyncHelper.syncronizeToServer()) is run 
+									 * */
+									SyncHelper syncHelper = new SyncHelper(getActivity());
+									DeletedObject deletedObjectInfo = new DeletedObject(YardObject.class.getName(), yardServerSideId);
+									syncHelper.storeDeletedObjectForSyncronisation(deletedObjectInfo);
+								}
 								
 								Toast.makeText(getActivity().getApplicationContext(), "Yard has been deleted!",
 										   Toast.LENGTH_LONG).show();

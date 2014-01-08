@@ -162,6 +162,7 @@ public class DBCommandExecuter {
 				 * Marking the object as deleted - set deleted=true and update
 				 * */
 				objectInDb.setDeleted(true);
+				int nUpdatedObjects = cascadeMarkAsDeleted(objectInDb);
 				int nUpdatedRows = objectClassDao.update(objectInDb);	
 				if(nUpdatedRows==1){
 					String objectJson = gson.toJson(deletedObjectInfo, DeletedObject.class);
@@ -188,6 +189,65 @@ public class DBCommandExecuter {
 	}
 	
 	
+	/**
+	 * Method to propagate marked as deleted through child objects.
+	 * <p>F.e. HiveObject is child of YardObject, so after marking YardObject as deleted, 
+	 * all related HiveObjects must be marked as deleted too.
+	 * <p>See Diagrams/DomainObjects.ucls for a diagram of domain objects and their relations
+	 * @param objectInDb
+	 * @return nr of child objects affected by the cascade
+	 * @throws SQLException 
+	 */
+	private int cascadeMarkAsDeleted(BeeObjectInterface parentObject) throws SQLException {
+		int nrAffected = 0;
+		System.out.println("cascadeMarkAsDeleted: " + parentObject);
+		
+		Class childObjectClass = null;
+		String queryString = "";
+		switch(parentObject.getClass().getSimpleName()){
+		case "UserObject":
+			UserObject userParentObject = (UserObject) parentObject;
+			childObjectClass = YardObject.class;
+			queryString = "SELECT * FROM " + YardObject.getDBTableNameStatic() + " WHERE " + "(\"userID_id\" = " + userParentObject.getId() + ")";
+			break;
+		case "YardObject":
+			YardObject yardParentObject = (YardObject) parentObject;
+			childObjectClass = HiveObject.class;
+			queryString = "SELECT * FROM " + HiveObject.getDBTableNameStatic() + " WHERE " + "(\"yardID_id\" = " + yardParentObject.getId() + ")";
+			break;
+		case "HiveObject":
+			HiveObject hiveParentObject = (HiveObject) parentObject;
+			childObjectClass = CheckFormObject.class;
+			queryString = "SELECT * FROM " + CheckFormObject.getDBTableNameStatic() + " WHERE " + "(\"hiveID_id\" = " + hiveParentObject.getId() + ")";
+			break;
+		}
+		
+		if(childObjectClass!=null && !queryString.equals("")){
+			Dao<? super BeeObjectInterface, Integer> childObjectClassDao = DaoManager.createDao(ConnectionProvider.getConnectionSource(), childObjectClass);
+			GenericRawResults<? super BeeObjectInterface> selectedResult = childObjectClassDao.queryRaw(queryString, childObjectClassDao.getRawRowMapper());
+			List<BeeObjectInterface> childrenToMarkDeleted = (List<BeeObjectInterface>) selectedResult.getResults();
+			
+			System.out.println("To mark deleted: \n" + childrenToMarkDeleted);
+			/* 
+			 * Marking the objects as deleted - set deleted=true and update
+			 * */
+			for(BeeObjectInterface objToMarkDeleted : childrenToMarkDeleted){
+				objToMarkDeleted.setDeleted(true);
+				int nUpdateChildren = cascadeMarkAsDeleted(objToMarkDeleted); //cascade deletion through the child objects of the child
+				int nUpdatedRows = childObjectClassDao.update(objToMarkDeleted);
+				nrAffected += nUpdatedRows + nUpdateChildren;
+			}
+		}
+		else{
+			System.out.println("Unknown childObjectClass or queryString for "
+					+ parentObject.getClass().getSimpleName());
+		}
+
+		System.out.println("finished cascadeMarkAsDeleted: " + parentObject + "\n   nrAffected="+nrAffected);
+		return nrAffected;
+	}
+
+
 	public Class getObjectClass(String className){
 		Class objectClass = null;
 		try {

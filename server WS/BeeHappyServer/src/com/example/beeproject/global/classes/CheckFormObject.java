@@ -312,6 +312,10 @@ public class CheckFormObject implements BeeObjectInterface{
 	public String getDBTableName() {
 		return "checkforms";
 	}
+	
+	public static String getDBTableNameStatic() {
+		return "checkforms";
+	}
 
 	@Override
 	public String toString() {

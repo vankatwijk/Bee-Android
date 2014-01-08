@@ -123,7 +123,11 @@ public class YardObject implements BeeObjectInterface{
 	public String getDBTableName() {
 		return "yards";
 	}
-
+	
+	public static String getDBTableNameStatic() {
+		return "yards";
+	}
+	
 	@Override
 	public String toString() {
 		return "YardObject [id=" + id + ", yardName=" + yardName
