@@ -1,5 +1,5 @@
 #
-# generated on 2014/01/06 05:09:38
+# generated on 2014/01/07 11:27:54
 #
 # --table-start--
 dataClass=com.example.beeproject.global.classes.YardObject
@@ -25,6 +25,9 @@ foreignAutoCreate=true
 fieldName=synced
 canBeNull=false
 # --field-end--
+# --field-start--
+fieldName=serverSideID
+# --field-end--
 # --table-fields-end--
 # --table-end--
 #################################
@@ -43,6 +46,13 @@ canBeNull=false
 # --field-start--
 fieldName=password
 canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=synced
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=serverSideID
 # --field-end--
 # --table-fields-end--
 # --table-end--
@@ -67,6 +77,9 @@ foreignAutoCreate=true
 # --field-start--
 fieldName=synced
 canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=serverSideID
 # --field-end--
 # --table-fields-end--
 # --table-end--
@@ -139,6 +152,9 @@ fieldName=comments
 # --field-start--
 fieldName=synced
 canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=serverSideID
 # --field-end--
 # --table-fields-end--
 # --table-end--
@@ -237,6 +253,25 @@ canBeNull=false
 # --field-end--
 # --field-start--
 fieldName=description
+canBeNull=false
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.example.beeproject.syncing.DeletedObject
+tableName=deletedobjects
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=objectClassName
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=serverSideId
 canBeNull=false
 # --field-end--
 # --table-fields-end--

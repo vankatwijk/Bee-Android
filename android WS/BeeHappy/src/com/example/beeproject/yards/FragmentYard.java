@@ -30,6 +30,8 @@ import com.example.beeproject.global.classes.CheckFormObject;
 import com.example.beeproject.global.classes.DatabaseHelper;
 import com.example.beeproject.global.classes.DatabaseManager;
 import com.example.beeproject.global.classes.HiveObject;
+import com.example.beeproject.syncing.DeletedObject;
+import com.example.beeproject.syncing.SyncHelper;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.stmt.DeleteBuilder;
 
@@ -142,6 +144,7 @@ public class FragmentYard extends Fragment{
 										.prepare());
         	            		
         	            		int hiveID = hiveIDList.get(0).getId();
+        	            		int hiveServerSideId = hiveIDList.get(0).getServerSideID();
         	            		
         	            		deleteCheckFormBuilder.where().eq("hiveID_id", hiveID);
         	            		deleteCheckFormBuilder.delete();
@@ -149,7 +152,17 @@ public class FragmentYard extends Fragment{
 								deleteHiveBuilder.where().eq("hiveName", selectedHive)
 													 .and()
 													 .eq("yardID_id", yardID);
-								deleteHiveBuilder.delete();
+								int nrDeletedRows = deleteHiveBuilder.delete();
+								if(nrDeletedRows == 1){
+									/* A HiveObject has been deleted from the local database.
+									 * Therefore, the infromation about the deleted object must be saved in DeletedObjects table
+									 * in order to syncronise the deleting to the server 
+									 * next time the syncronisation (i.e SyncHelper.syncronizeToServer()) is run 
+									 * */
+									SyncHelper syncHelper = new SyncHelper(getActivity());
+									DeletedObject deletedObjectInfo = new DeletedObject(HiveObject.class.getName(), hiveServerSideId);
+									syncHelper.storeDeletedObjectForSyncronisation(deletedObjectInfo);
+								}
 								
 								Toast.makeText(getActivity().getApplicationContext(), "Hive has been deleted!",
 										   Toast.LENGTH_LONG).show();

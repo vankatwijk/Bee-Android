@@ -3,6 +3,7 @@
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,8 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.j256.ormlite.stmt.Where;
 
 import bee.happy.inholland.nl.commands.*;
+import bee.happy.inholland.nl.domainmodel.BeeObjectInterface;
 import bee.happy.inholland.nl.domainmodel.Yard;
 
 /**
@@ -31,6 +35,8 @@ public class CommandsServlet extends HttpServlet {
      */
     public CommandsServlet() {
         super();
+        
+        System.out.println("HI");
 
         GsonBuilder gsonBuilder = new GsonBuilder();
 		//make Gson use adapter for converting the BeeCommand interface to json
@@ -61,26 +67,35 @@ public class CommandsServlet extends HttpServlet {
 	private void testYardCRUD(PrintWriter responseWriter){
 		System.out.println("\n====================== TESTING YARD CRUD ===================");
 		responseWriter.println("\n====================== TESTING YARD CRUD ===================");
-		dbCommandExecuter.selectAll();
+		
+		
 		 
 		Yard newYard = new Yard("New Yard", 1, 1);
 		Yard updatedYard = new Yard(5, "Updated Yard", 15, 10);
 		Yard deletedYard = new Yard(38, " ", 15, 10);
+		
+		 
+		String whereStatement = "(\"name\" = 'New Yard' AND \"latitude\" = 2 )";
 
 		//create commands
 		ArrayList<BeeCommand> beeCommandList = new ArrayList<BeeCommand>();
+		beeCommandList.add(new SelectCommand(Yard.class.getName(), whereStatement));
+		BeeCommand com = beeCommandList.get(0);
+		responseWriter.println("com = "+com);
+		String jcom = gson.toJson(com, BeeCommand.class);
+		responseWriter.println("jcom = "+jcom);
+		
+		beeCommandList.add(new SelectCommand(Yard.class.getName()));
 		beeCommandList.add(new CreateCommand(Yard.class.getName(), gson.toJson(newYard, Yard.class)));
 		beeCommandList.add(new UpdateCommand(Yard.class.getName(), gson.toJson(updatedYard, Yard.class)));
 		beeCommandList.add(new DeleteCommand(Yard.class.getName(), gson.toJson(deletedYard, Yard.class)));
+		beeCommandList.add(new SelectCommand(Yard.class.getName()));
 		
 		ArrayList<BeeCommandResult> resultList = testExecuting(responseWriter, beeCommandList);
 		testCommandsToJsonAndBack(responseWriter, beeCommandList);
 		testCommandResultsToJsonAndBack(responseWriter, resultList);
 		
 
-		System.out.println("\n after executing commands:");
-		dbCommandExecuter.selectAll();	
-		
 
 		System.out.println("====================== FINISHED TESTING YARD CRUD ===================\n");
 		responseWriter.println("====================== FINISHED TESTING YARD CRUD ===================\n");
@@ -125,9 +140,8 @@ public class CommandsServlet extends HttpServlet {
 	
 		//print commands, decoded from json
 		responseWriter.println("\nCommands from JSON: \n");
-		for(BeeCommand com :beeCommandListFromJson){
-			responseWriter.println(com);
-		}
+		printArrayList(beeCommandListFromJson, responseWriter);
+		
 		responseWriter.println("======= FINISHED TESTING TO JSON AND BACK ======= \n");
 	 
 	}
@@ -155,9 +169,26 @@ public class CommandsServlet extends HttpServlet {
 	
 		//print commands, decoded from json
 		responseWriter.println("\nResults from JSON: \n");
-		for(BeeCommandResult com : listFromJson){
-			responseWriter.println(com);
-		}
+		printArrayList(listFromJson, responseWriter);
+		
+		responseWriter.println("======= FINISHED TESTING TO JSON AND BACK ======= \n");
+	 
+	}
+	
+	private void testListToJsonAndBack(PrintWriter responseWriter, List<BeeObjectInterface> objectList){
+		responseWriter.println("\n======= TESTING TO JSON AND BACK ======= ");
+
+		//convert list to json
+		String jsonList = gson.toJson(objectList, new TypeToken<List<BeeObjectInterface>>(){}.getType());
+ 
+		responseWriter.println("List of BeeObjectInterface in JSON: \n" + jsonList);
+		
+		//get objects from json
+		List<BeeObjectInterface> objectListFromJson = gson.fromJson(jsonList, new TypeToken<List<BeeObjectInterface>>(){}.getType()); 
+		//print commands, decoded from json
+		responseWriter.println("\nObjects decoded from JSON list: \n");
+		printArrayList(objectListFromJson, responseWriter);
+		
 		responseWriter.println("======= FINISHED TESTING TO JSON AND BACK ======= \n");
 	 
 	}
@@ -182,5 +213,12 @@ public class CommandsServlet extends HttpServlet {
 		}
 		responseWriter.println("======= FINISHED TESTING EXECUTING ======= \n");
 		return resultList;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public void printArrayList(List list, PrintWriter responseWriter){
+		for(Object o: list){
+			responseWriter.println(o);
+		}			
 	}
 }

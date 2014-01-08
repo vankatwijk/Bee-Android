@@ -7,8 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.example.beeproject.R;
+import com.example.beeproject.syncing.DeletedObject;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
@@ -22,7 +24,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	// name of the database file for your application -- change to something appropriate for your app
 	private static final String DATABASE_NAME = "BeeHappy.db";
 	// any time you make changes to your database objects, you may have to increase the database version
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 
 	
 	private Dao<UserObject, Integer> userDao = null;
@@ -48,6 +50,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	
 	private Dao<DiseaseNotesObject, Integer> diseaseNotesDao = null;
 	private RuntimeExceptionDao<DiseaseNotesObject, Integer> diseaseNotesRuntimeDao = null;
+
+	private Dao<DeletedObject, Integer> deletedObjectDao = null;
+	private RuntimeExceptionDao<DeletedObject, Integer> deletedObjectRuntimeDao = null;
 	
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
@@ -69,6 +74,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.createTable(connectionSource, StockObject.class);
 			TableUtils.createTable(connectionSource, OutbrakeObject.class);
 			TableUtils.createTable(connectionSource, DiseaseNotesObject.class);
+			TableUtils.createTable(connectionSource, DeletedObject.class);
 		} catch (SQLException e) {
 			Log.e(DatabaseHelper.class.getName(), "Can't create database", e);
 			throw new RuntimeException(e);
@@ -94,6 +100,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.dropTable(connectionSource, StockObject.class, true);
 			TableUtils.dropTable(connectionSource, OutbrakeObject.class, true);
 			TableUtils.dropTable(connectionSource, DiseaseNotesObject.class, true);
+			TableUtils.dropTable(connectionSource, DeletedObject.class, true);
 			// after we drop the old databases, we create the new ones
 			onCreate(db, connectionSource);
 		} catch (SQLException e) {
@@ -219,6 +226,47 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			diseaseNotesRuntimeDao = getRuntimeExceptionDao(DiseaseNotesObject.class);
 		}
 		return diseaseNotesRuntimeDao;
+	}
+	
+	//deleted objects to be synced to server
+	public Dao<DeletedObject, Integer> getDeletedObjectDao() throws SQLException {
+		if (deletedObjectDao == null) {
+			deletedObjectDao = getDao(DeletedObject.class);
+		}
+		return deletedObjectDao;
+	}
+	
+	public RuntimeExceptionDao<DeletedObject, Integer> getDeletedObjectRunDao() {
+		if (deletedObjectRuntimeDao == null) {
+			deletedObjectRuntimeDao = getRuntimeExceptionDao(DeletedObject.class);
+		}
+		return deletedObjectRuntimeDao;
+	}
+		
+	/**
+	 * Helper method that returns DAO of the given class
+	 * @param objectClass
+	 * @return
+	 * @throws SQLException
+	 */
+	public Dao<? super BeeObjectInterface, Integer> getObjectClassDao(Class objectClass) throws SQLException{
+		
+		Dao<? super BeeObjectInterface, Integer> objectClassDao = DaoManager.createDao(getConnectionSource(), objectClass);
+		return objectClassDao;
+	}
+	
+	/**
+	 * Helper method that returns runtime DAO of the given class
+	 * @param objectClass
+	 * @return
+	 * @throws SQLException
+	 */
+	public RuntimeExceptionDao<? super BeeObjectInterface, Integer> getObjectClassRunDao(Class objectClass) throws SQLException{
+		
+		Dao<? super BeeObjectInterface, Integer> objectClassDao = DaoManager.createDao(getConnectionSource(), objectClass);
+		RuntimeExceptionDao<? super BeeObjectInterface, Integer> objectClassRunDao = 
+				new RuntimeExceptionDao(objectClassDao);
+		return objectClassRunDao;
 	}
 	
 	/**

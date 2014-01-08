@@ -72,8 +72,11 @@ public class FragmentEditYard extends Fragment {
 					UpdateBuilder<YardObject, Integer> updateBuilder = yardDao.updateBuilder();
 					updateBuilder.updateColumnValue("yardName", yardNameET.getText().toString());
 					updateBuilder.updateColumnValue("location", yardLocET.getText().toString());
+					updateBuilder.updateColumnValue("synced", false); //object was changed, need to be synced to the server
 					updateBuilder.where().eq("yardName", selectedYard);
 					updateBuilder.update();
+					
+					
 					
 					Toast.makeText(getActivity().getApplicationContext(), "Changes have been saved!",
 							   Toast.LENGTH_LONG).show();
