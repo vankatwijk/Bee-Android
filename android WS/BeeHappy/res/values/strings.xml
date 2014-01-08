@@ -45,5 +45,21 @@
     <string name="title_activity_main">MainAct</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-
+    <string name="checkStockString">Check Frame Stock</string>
+    <string name="AddDiseaseString">Add Disease</string>
+    <string name="selectDiseaseString">Select a disease:</string>
+    <string name="startDateString">Disease Start Date:</string>
+    <string name="notesString">Notes:</string>
+    <string name="notesDateString">Note Date:</string>
+    <string name="outbrakeEndDateString">Disease End Date(only input if outbrake has ended!):</string>
+    <string name="title_section1">Eggs</string>
+    <string name="title_section2">Pupae</string>
+    <string name="title_section3">Mites</string>
+    <string name="title_section1des">statistics for Eggs</string>
+    <string name="title_section2des">statistics for Pupae</string>
+    <string name="title_section3des">statistics for Mites</string>
+    <string name="title_activity_statistics">Statistics</string>
+    
+    
+    
 </resources>

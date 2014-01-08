@@ -39,7 +39,16 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	
 	private Dao<DiseaseObject, Integer> diseaseDao = null;
 	private RuntimeExceptionDao<DiseaseObject, Integer> diseaseRuntimeDao = null;
+	
+	private Dao<StockObject, Integer> stockDao = null;
+	private RuntimeExceptionDao<StockObject, Integer> stockRuntimeDao = null;
 
+	private Dao<OutbrakeObject, Integer> outbrakeDao = null;
+	private RuntimeExceptionDao<OutbrakeObject, Integer> outbrakeRuntimeDao = null;
+	
+	private Dao<DiseaseNotesObject, Integer> diseaseNotesDao = null;
+	private RuntimeExceptionDao<DiseaseNotesObject, Integer> diseaseNotesRuntimeDao = null;
+	
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
 	}
@@ -57,6 +66,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.createTable(connectionSource, UserObject.class);
 			TableUtils.createTable(connectionSource, CheckFormObject.class);
 			TableUtils.createTable(connectionSource, DiseaseObject.class);
+			TableUtils.createTable(connectionSource, StockObject.class);
+			TableUtils.createTable(connectionSource, OutbrakeObject.class);
+			TableUtils.createTable(connectionSource, DiseaseNotesObject.class);
 		} catch (SQLException e) {
 			Log.e(DatabaseHelper.class.getName(), "Can't create database", e);
 			throw new RuntimeException(e);
@@ -79,6 +91,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.dropTable(connectionSource, UserObject.class, true);
 			TableUtils.dropTable(connectionSource, CheckFormObject.class, true);
 			TableUtils.dropTable(connectionSource, DiseaseObject.class, true);
+			TableUtils.dropTable(connectionSource, StockObject.class, true);
+			TableUtils.dropTable(connectionSource, OutbrakeObject.class, true);
+			TableUtils.dropTable(connectionSource, DiseaseNotesObject.class, true);
 			// after we drop the old databases, we create the new ones
 			onCreate(db, connectionSource);
 		} catch (SQLException e) {
@@ -161,6 +176,51 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		return diseaseRuntimeDao;
 	}
 	
+	//stock
+	public Dao<StockObject, Integer> getStockDao() throws SQLException {
+		if (stockDao == null) {
+			stockDao = getDao(StockObject.class);
+		}
+		return stockDao;
+	}
+	
+	public RuntimeExceptionDao<StockObject, Integer> getStockRunDao() {
+		if (stockRuntimeDao == null) {
+			stockRuntimeDao = getRuntimeExceptionDao(StockObject.class);
+		}
+		return stockRuntimeDao;
+	}
+	
+	//outbrake
+	public Dao<OutbrakeObject, Integer> getOutbrakeDao() throws SQLException {
+		if (outbrakeDao == null) {
+			outbrakeDao = getDao(OutbrakeObject.class);
+		}
+		return outbrakeDao;
+	}
+	
+	public RuntimeExceptionDao<OutbrakeObject, Integer> getOutbrakeRunDao() {
+		if (outbrakeRuntimeDao == null) {
+			outbrakeRuntimeDao = getRuntimeExceptionDao(OutbrakeObject.class);
+		}
+		return outbrakeRuntimeDao;
+	}
+	
+	//disease notes
+	public Dao<DiseaseNotesObject, Integer> getDiseaseNotesDao() throws SQLException {
+		if (diseaseNotesDao == null) {
+			diseaseNotesDao = getDao(DiseaseNotesObject.class);
+		}
+		return diseaseNotesDao;
+	}
+	
+	public RuntimeExceptionDao<DiseaseNotesObject, Integer> getDiseaseNotesRunDao() {
+		if (diseaseNotesRuntimeDao == null) {
+			diseaseNotesRuntimeDao = getRuntimeExceptionDao(DiseaseNotesObject.class);
+		}
+		return diseaseNotesRuntimeDao;
+	}
+	
 	/**
 	 * Close the database connections and clear any cached DAOs.
 	 */
@@ -171,5 +231,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		hiveRuntimeDao = null;
 		userRuntimeDao = null;
 		diseaseRuntimeDao = null;
+		stockRuntimeDao = null;
+		outbrakeRuntimeDao = null;
+		diseaseNotesRuntimeDao = null;
 	}
 }

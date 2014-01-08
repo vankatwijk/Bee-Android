@@ -10,6 +10,7 @@ import com.example.beeproject.calendar.FragmentCalender;
 import com.example.beeproject.diseases.FragmentDiseases;
 import com.example.beeproject.profile.FragmentProfileInfo;
 import com.example.beeproject.statistics.FragmentStatistics;
+import com.example.beeproject.statistics.Statistics;
 import com.example.beeproject.weather.WeatherActivity;
 import com.example.beeproject.yards.FragmentYardList;
 
@@ -57,9 +58,11 @@ public class ContainerActivity extends Methods{
 		        
 			}else if(MainActivity.status == "5"){
 
-				FragmentStatistics fragment = new FragmentStatistics();				
+				/*FragmentStatistics fragment = new FragmentStatistics();				
 				getSupportFragmentManager().beginTransaction().replace(R.id.item_detail_container, fragment).commit();	
-					
+				*/
+				Intent intent = new Intent(getApplicationContext(), Statistics.class);
+				startActivity(intent);	
 		        
 			}else if(MainActivity.status == "6"){
 

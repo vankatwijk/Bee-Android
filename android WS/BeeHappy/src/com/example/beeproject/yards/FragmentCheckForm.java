@@ -3,6 +3,7 @@ package com.example.beeproject.yards;
 import java.sql.SQLException;
 import java.util.List;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -20,7 +21,9 @@ import com.example.beeproject.R;
 import com.example.beeproject.global.classes.CheckFormObject;
 import com.example.beeproject.global.classes.DatabaseHelper;
 import com.example.beeproject.global.classes.DatabaseManager;
+import com.example.beeproject.global.classes.DiseaseObject;
 import com.example.beeproject.global.classes.HiveObject;
+import com.example.beeproject.global.classes.OutbrakeObject;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 public class FragmentCheckForm extends Fragment {
@@ -33,6 +36,9 @@ public class FragmentCheckForm extends Fragment {
 	
 	RuntimeExceptionDao<CheckFormObject, Integer> checkFormDao = db.getCheckFormRunDao();
 	RuntimeExceptionDao<HiveObject, Integer> hiveDao = db.getHiveRunDao();
+	RuntimeExceptionDao<OutbrakeObject, Integer> outbrakeDao = db.getOutbrakeRunDao();
+	RuntimeExceptionDao<DiseaseObject, Integer> diseaseDao = db.getDiseaseRunDao();
+
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState){
@@ -59,8 +65,11 @@ public class FragmentCheckForm extends Fragment {
         final EditText nrOfMitesET = (EditText)view.findViewById(R.id.nrOfMites);
         final EditText honeyCombsET = (EditText)view.findViewById(R.id.honeyCombsET);
         final EditText commentsET = (EditText)view.findViewById(R.id.commentsET);
+        final TextView diseaseTV = (TextView)view.findViewById(R.id.diseaseStatus);
         
-        List<HiveObject> hiveIDList;
+        
+  
+        final List<HiveObject> hiveIDList;
         
         try {
 			hiveIDList = hiveDao.query(
@@ -68,7 +77,7 @@ public class FragmentCheckForm extends Fragment {
 				         .eq("hiveName", hiveName)
 				         .prepare());
 			
-			int hiveID = hiveIDList.get(0).getId();
+			final int hiveID = hiveIDList.get(0).getId();
 	        
 	        List<CheckFormObject> checkFormList;
 	        
@@ -102,14 +111,64 @@ public class FragmentCheckForm extends Fragment {
 	        	commentsET.setText(lastCheckForm.getComments());
 	        }
 	        
+	        List<OutbrakeObject> checkOutbrake;
+	        
+	        checkOutbrake = outbrakeDao.query(outbrakeDao.queryBuilder()
+					 .where()
+					 .eq("hiveID_id", hiveID)
+					 .and()
+					 .isNull("endDate")
+					 .prepare());
+	        
+	        if(checkOutbrake.size() > 0){
+	        		List<DiseaseObject> diseaseList;
+		        	diseaseList = diseaseDao.query(diseaseDao.queryBuilder()
+							 .where()
+							 .eq("id", checkOutbrake.get(checkOutbrake.size()-1).getDiseaseID().getId())
+							 .prepare());
+		        	
+		        	diseaseTV.setText(diseaseList.get(0).getDiseaseName());
+	        }else if(checkOutbrake.size() == 0){
+	        	diseaseTV.setText("No disease");
+	        }
+	        
+	        Button addDisease = (Button)view.findViewById(R.id.AddDisease);
+	        
+	        addDisease.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					
+					if(diseaseTV.getText().toString().equals("No disease")){
+						Intent intent = new Intent(getActivity(), OutbrakeActivity.class);
+						intent.putExtra("hiveID", hiveID);
+						startActivity(intent);
+					}else{
+						Toast.makeText(getActivity().getApplicationContext(), "Only one disease per hive can be set at once!",
+								   Toast.LENGTH_LONG).show();
+					}
+				}
+			});
+	        
+	        Button checkDisease = (Button)view.findViewById(R.id.checkDiseaseButton);
+	        
+	        checkDisease.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					if(!diseaseTV.getText().toString().equals("No disease")){
+						Intent intent = new Intent(getActivity(), CheckDiseaseActivity.class);
+						intent.putExtra("hiveID", hiveID);
+						intent.putExtra("diseaseName", diseaseTV.getText().toString());
+						startActivity(intent);
+					}
+				}
+			});
+	        
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-        
-        
-        
-       
+		}  
         
         Button saveForm = (Button)view.findViewById(R.id.saveForm);
         
@@ -242,4 +301,52 @@ public class FragmentCheckForm extends Fragment {
 		
 	return view;
 	}
+	
+	@Override
+	 public void onResume() {
+	     super.onResume();
+	     System.out.println("Testing");
+	     
+	     final TextView diseaseTV = (TextView)getView().findViewById(R.id.diseaseStatus);
+
+	     Bundle args = getArguments();
+	     hiveName = args.getString("hiveName");
+	     
+	     List<HiveObject> hiveIDList;
+	     
+	     try {
+			hiveIDList = hiveDao.query(
+				      hiveDao.queryBuilder().where()
+				         .eq("hiveName", hiveName)
+				         .prepare());
+			
+			final int hiveID = hiveIDList.get(0).getId();
+		     
+		     List<OutbrakeObject> checkOutbrake;
+		        
+		        checkOutbrake = outbrakeDao.query(outbrakeDao.queryBuilder()
+						 .where()
+						 .eq("hiveID_id", hiveID)
+						 .and()
+						 .isNull("endDate")
+						 .prepare());
+		        
+		        if(checkOutbrake.size() > 0){
+		        		List<DiseaseObject> diseaseList;
+			        	diseaseList = diseaseDao.query(diseaseDao.queryBuilder()
+								 .where()
+								 .eq("id", checkOutbrake.get(checkOutbrake.size()-1).getDiseaseID().getId())
+								 .prepare());
+			        	
+			        	diseaseTV.setText(diseaseList.get(0).getDiseaseName());
+		        }else if(checkOutbrake.size() == 0){
+		        	diseaseTV.setText("No disease");
+		        }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	 }
 }

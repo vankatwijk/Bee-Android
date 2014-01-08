@@ -8,7 +8,7 @@
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
     android:showDividers="middle"
-    tools:context=".MainActivity" >
+    tools:context=".StatisticsActivity" >
 
     <!--
     This layout is a two-pane layout for the Items
