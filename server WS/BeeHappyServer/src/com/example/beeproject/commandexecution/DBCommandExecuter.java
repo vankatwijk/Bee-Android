@@ -162,7 +162,7 @@ public class DBCommandExecuter {
 				 * Marking the object as deleted - set deleted=true and update
 				 * */
 				objectInDb.setDeleted(true);
-				int nUpdatedRows = objectClassDao.delete(objectInDb);	
+				int nUpdatedRows = objectClassDao.update(objectInDb);	
 				if(nUpdatedRows==1){
 					String objectJson = gson.toJson(deletedObjectInfo, DeletedObject.class);
 					//object was successfuly marked as deleted

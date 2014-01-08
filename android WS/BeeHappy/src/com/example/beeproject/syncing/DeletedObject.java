@@ -57,6 +57,12 @@ public class DeletedObject {
 		this.serverSideId = deletedObject.getServerSideID();
 	}
 	
+	public DeletedObject(String objectClassName, int serverSideId) {
+		super();
+		this.objectClassName = objectClassName;
+		this.serverSideId = serverSideId;
+	}
+
 	@Override
 	public String toString() {
 		return "DeletedObject [id=" + id + ", objectClassName=" + objectClassName

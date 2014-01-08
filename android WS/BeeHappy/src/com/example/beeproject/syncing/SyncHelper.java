@@ -53,6 +53,8 @@ public class SyncHelper {
 	 */
 	public String syncronizeToServer(){
 		
+		/* These methods are called to fastly create/update/or delete objects of all syncronised classes
+		 * To test that everything works*/
 		//createSomeStuff();
 		//updateSomeStuff();
 		//deleteSomeStuff();
@@ -214,9 +216,8 @@ public class SyncHelper {
 	 * @param deletedObject
 	 * @return 0 if stored successfully, 1 if not
 	 */
-	public int storeDeletedObjectForSyncronisation(BeeObjectInterface object){
+	public int storeDeletedObjectForSyncronisation(DeletedObject deletedObject ){
 		int result = 1;
-	    DeletedObject deletedObject = new DeletedObject(object);
 		RuntimeExceptionDao<DeletedObject, Integer> dao = db.getDeletedObjectRunDao();
 		int nrInsertedRows = dao.create(deletedObject);
 		if(nrInsertedRows==1){
@@ -399,7 +400,8 @@ public class SyncHelper {
 			
 			if(nrInsertedRows==1){
 				Log.d(LOG_TAG, "deleted: " + object);
-				storeDeletedObjectForSyncronisation(object);
+				DeletedObject deletedObject = new DeletedObject(object);
+				storeDeletedObjectForSyncronisation(deletedObject);
 			}
 			else{
 				Log.d(LOG_TAG, "couldnt delete: " + object);
