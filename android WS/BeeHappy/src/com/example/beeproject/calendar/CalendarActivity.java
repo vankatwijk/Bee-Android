@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import android.app.DialogFragment;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -42,12 +43,16 @@ public class CalendarActivity extends FragmentActivity {
 		}				
 	}
 	
+	private Date getCurrentDate() {
+		return Calendar.getInstance().getTime();
+	}
+	
 	private void setSelectedDate(Date date) {
 		// clear current selected date
 		if(currentSelectedDate != null) {
 			caldroidFragment.setTextColorForDate(R.color.black, currentSelectedDate);
 			
-			if(sameDay(Calendar.getInstance().getTime(), currentSelectedDate)) {
+			if(sameDay(getCurrentDate(), currentSelectedDate)) {
 				caldroidFragment.setBackgroundResourceForDate(R.drawable.red_border, currentSelectedDate);
 			}
 			else{
@@ -60,10 +65,12 @@ public class CalendarActivity extends FragmentActivity {
 		}
 		currentSelectedDate = date;
 				
-		// set new current selected date		
-		caldroidFragment.setBackgroundResourceForDate(R.color.blue, date);
-		caldroidFragment.setTextColorForDate(R.color.white, date);
-		caldroidFragment.refreshView();		
+		// set new current selected date
+		if(date != null) {
+			caldroidFragment.setBackgroundResourceForDate(R.color.blue, date);
+			caldroidFragment.setTextColorForDate(R.color.white, date);
+			caldroidFragment.refreshView();
+		}
 	}
 	
 	private boolean sameDay(Date date1, Date date2) {
@@ -123,11 +130,13 @@ public class CalendarActivity extends FragmentActivity {
 
 			@Override
 			public void onChangeMonth(int month, int year) {
+				setSelectedDate(null);
 				currentSelectedMonth = month;
 			}
 
 			@Override
 			public void onLongClickDate(Date date, View view) {
+				
 			}
 		};
 
@@ -141,12 +150,24 @@ public class CalendarActivity extends FragmentActivity {
 	}
 	
 	public void goToToday(MenuItem v) {
-		caldroidFragment.moveToDate(Calendar.getInstance().getTime());
+		Date date = getCurrentDate();
+		caldroidFragment.moveToDate(date);
+		setSelectedDate(date);		
 	}
 	
 	public void toBeImplemented(MenuItem v) {
 		Toast.makeText(getApplicationContext(), "to be implemented", Toast.LENGTH_SHORT).show();
 	}
+	
+	public void openDialog(MenuItem v) {
+		DialogFragment newFragment = new EventDialog();
+		Bundle args = new Bundle();
+		if(currentSelectedDate != null)
+			args.putLong("selectedDate", currentSelectedDate.getTime());
+		newFragment.setArguments(args);
+		newFragment.show(getFragmentManager(), "event");		
+	}
+	
 	/**
 	 * Implemented version of 
 	 * http://www.derekbekoe.co.uk/blog/item/16-using-the-android-4-0-calendar-api
