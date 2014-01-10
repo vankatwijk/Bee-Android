@@ -10,7 +10,7 @@ package com.example.beeproject.global.classes;
 public class BeeObjectClasses {
 	private static final Class[] list = {YardObject.class, HiveObject.class, UserObject.class, CheckFormObject.class, DiseaseObject.class};
 
-	private static final Class[] classesToSync = {YardObject.class, HiveObject.class, CheckFormObject.class};
+	private static final Class[] classesToSync = {UserObject.class, YardObject.class, HiveObject.class, CheckFormObject.class};
 	
 	/**
 	 * @return list of all classes that are being persisted to DB 

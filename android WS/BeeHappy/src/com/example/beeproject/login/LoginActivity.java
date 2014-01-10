@@ -170,7 +170,6 @@ public class LoginActivity extends FragmentActivity implements OnClickLoginButto
 	//the username exists already
 	@Override
 	public void createAccount(String username, String password) {
-
 		
 		String encodedPassowrd = null;
 		try {

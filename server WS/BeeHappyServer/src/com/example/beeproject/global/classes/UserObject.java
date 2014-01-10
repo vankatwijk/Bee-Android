@@ -105,7 +105,7 @@ public class UserObject implements BeeObjectInterface{
 	@Override
 	public String toString() {
 		return "UserObject [id=" + id + ", username=" + username
-				+ ", password=" + password + "]";
+				+ ", password=" + password + ", serverSideID="+serverSideID+"]";
 	}
 	
 	
