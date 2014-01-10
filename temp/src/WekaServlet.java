@@ -47,14 +47,13 @@ public class WekaServlet extends HttpServlet {
 			query = new InstanceQuery();
 			query.setUsername("postgres");
 			query.setPassword("beeHappy");
-			query.setQuery("SELECT * FROM hive LIMIT 20");
+			query.setQuery("SELECT * FROM hives LIMIT 20");
 			 
 			Instances data = query.retrieveInstances();
 			out.println(data);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			System.out.println("-------------\n-----\n---\nPUFFFF");
+			e.printStackTrace();
 		}
 		
 			

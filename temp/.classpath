@@ -13,8 +13,6 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry kind="lib" path="F:/BeeHappy/temp/libs/weka-dev-3.7.5"/>
-	<classpathentry kind="lib" path="D:/BEEHAPPY/bee/temp/libs/weka-dev-3.7.5.jar"/>
-	<classpathentry kind="lib" path="D:/BEEHAPPY/bee/temp/libs/weka-dev-src.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/weka-dev-3.7.5"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
