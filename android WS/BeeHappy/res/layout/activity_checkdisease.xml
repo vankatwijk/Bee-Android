@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="#FF9E00" >
 
     <TextView
         android:id="@+id/diseaseNameTV"
@@ -10,6 +11,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="45dp"
+        android:textColor="#000"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
@@ -22,10 +24,12 @@
         android:layout_marginLeft="35dp"
         android:layout_marginTop="24dp"
         android:text="@string/notesString"
+        android:textColor="#000"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
         android:id="@+id/checkDiseaseDescription"
+        android:background="@drawable/rect_edit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/notesTV"
@@ -41,10 +45,12 @@
         android:layout_alignLeft="@+id/checkDiseaseDescription"
         android:layout_below="@+id/checkDiseaseDescription"
         android:text="@string/notesDateString"
+        android:textColor="#000"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
         android:id="@+id/noteDate"
+        android:background="@drawable/rect_edit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textView1"
@@ -73,12 +79,14 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/progressBar1"
         android:layout_marginTop="26dp"
+        android:textColor="#000"
         android:text="@string/outbrakeEndDateString"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="13sp" />
 
     <Button
         android:id="@+id/saveCheckDisease"
+        style="@style/buttonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/diseaseEndDate"
@@ -88,6 +96,7 @@
 
     <EditText
         android:id="@+id/diseaseEndDate"
+        android:background="@drawable/rect_edit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/outbrakeEndDateTV"

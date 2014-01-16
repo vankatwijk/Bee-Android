@@ -3,12 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:background="#FF9E00"
     tools:context=".MainActivity" >
 
 	<RelativeLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
 	    android:layout_marginBottom="10dp"
+	    android:background="#FF9E00"
 	    tools:context=".MainActivity" >
 
 	    <TextView
@@ -20,12 +22,13 @@
 	        android:layout_marginBottom="10dp" />
 
 	    <ImageView
-	        android:contentDescription="icon"
 	        android:id="@+id/condIcon"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_alignParentLeft="true"
-	        android:layout_below="@id/cityText" />
+	        android:layout_below="@id/cityText"
+	        android:layout_centerHorizontal="true"
+	        android:contentDescription="icon" />
 
 	    <TextView
 	        android:id="@+id/condDescr"
@@ -121,7 +124,9 @@
 	<ListView
 	    android:id="@+id/locationsList"
 	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content" >
+	    android:layout_height="1000dp"
+	    android:background="#FF9E00" >
+
 	</ListView>
  
 </LinearLayout>

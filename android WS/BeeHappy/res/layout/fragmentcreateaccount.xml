@@ -12,6 +12,7 @@
         android:layout_marginRight="10dp"
         android:layout_toRightOf="@+id/newAccountTittle"
         android:ems="10"
+        android:background="@drawable/rect_edit_text"
         android:inputType="text" />
 
     <TextView
@@ -21,6 +22,8 @@
         android:layout_alignLeft="@+id/newAccountTittle"
         android:layout_below="@+id/newAccountTittle"
         android:layout_marginTop="15dp"
+        android:textColor="#000"
+        android:textSize="17sp"
         android:text="@string/password" />
 
     <EditText
@@ -31,6 +34,7 @@
         android:layout_alignLeft="@+id/newusernameEditText"
         android:layout_alignRight="@+id/newusernameEditText"
         android:ems="10"
+        android:background="@drawable/rect_edit_text"
         android:inputType="textPassword" />
 
     <TextView
@@ -41,7 +45,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="46dp"
         android:text="@string/newAccountString"
-        android:textSize="20sp" />
+        android:textColor="#000"
+        android:textSize="22sp" />
 
     <TextView
         android:id="@+id/newAccountTittle"
@@ -51,10 +56,13 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="22dp"
         android:layout_marginTop="92dp"
+        android:textColor="#000"
+        android:textSize="17sp"
         android:text="@string/username" />
 
     <Button
         android:id="@+id/createAccount"
+        style="@style/buttonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/newpasswordEditText"
@@ -64,11 +72,13 @@
 
     <Button
         android:id="@+id/cancelCreateAccountButton"
+        style="@style/buttonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/createAccount"
+        android:layout_alignRight="@+id/createAccount"
         android:layout_below="@+id/createAccount"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="5dp"
         android:text="@string/cancelCreateAccount" />
 
 </RelativeLayout>
