@@ -55,7 +55,8 @@ public class SyncHelper {
 	 * @return
 	 */
 	public String syncronizeToServer(){
-		
+		System.out
+				.println(BeeObjectClasses.getParentChildRelationships());
 		/* These methods are called to fastly create/update/or delete objects of all syncronised classes
 		 * To test that everything works*/
 		//createSomeStuff();
@@ -170,9 +171,11 @@ public class SyncHelper {
 	 */
 	private void syncronizeObject(Class objectClass,
 			RuntimeExceptionDao<? super BeeObjectInterface, Integer> objectClassDao, BeeObjectInterface objToSync) {
-		//Log.d(LOG_TAG, "syncronizeObject: "+ objToSync.toString());
-
+		Log.d(LOG_TAG, "syncronizeObject: "+ objToSync.toString());
+		BeeObjectInterface refreshedObjToSync = refreshObjectForeignRelations(objToSync);
+		Log.d(LOG_TAG, "syncronizeObject: "+ objToSync.toString());
 		if(objToSync.getServerSideID()==0){
+			
 			//object needs to be added to server DB
 			BeeCommand command = new CreateCommand(objectClass.getName(), gson.toJson(objToSync,objectClass));
 			BeeCommandResult commandResult = BeeServerHttpClient.executeCommand(command);
@@ -213,6 +216,13 @@ public class SyncHelper {
 		}
 	}
 	
+	private BeeObjectInterface refreshObjectForeignRelations(
+			BeeObjectInterface objToSync) {
+		Class childObjectClass = null;
+		
+		return null;
+	}
+
 	/**
 	 * Stores the information on the deleted object in the local database. 
 	 * <p>This method must be called every time an object that is synced to server is deleted

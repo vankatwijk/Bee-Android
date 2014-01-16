@@ -1,5 +1,8 @@
 package com.example.beeproject.global.classes;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Class that provide a list of all the classes that are being persisted to DB
  * by ORMLite. These classes must implement BeeObjectInterface
@@ -12,6 +15,11 @@ public class BeeObjectClasses {
 
 	private static final Class[] classesToSync = {UserObject.class, YardObject.class, HiveObject.class, CheckFormObject.class};
 	
+	private static Map<Class, Class[]> parentChildRelationships = new HashMap<Class, Class[]>(){{
+		put(UserObject.class, new Class[]{YardObject.class});
+	}};
+	
+	
 	/**
 	 * @return list of all classes that are being persisted to DB 
 	 */
@@ -22,5 +30,9 @@ public class BeeObjectClasses {
 
 	public static Class[] getClassesToSyncList(){
 		return classesToSync;
+	}
+	
+	public static Map<Class,Class[]> getParentChildRelationships(){
+		return parentChildRelationships;
 	}
 }
