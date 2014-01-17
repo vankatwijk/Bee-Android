@@ -1,6 +1,7 @@
 package com.example.beeproject.test;
 
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Properties;
 import com.example.beeproject.commandexecution.*;
 import com.example.beeproject.commandexecution.commands.*;
 import com.example.beeproject.commandexecution.results.*;
+import com.example.beeproject.db.ConnectionProvider;
 import com.example.beeproject.global.classes.BeeObjectInterface;
 import com.example.beeproject.global.classes.CheckFormObject;
 import com.example.beeproject.global.classes.DiseaseObject;
@@ -21,9 +23,35 @@ import com.example.beeproject.gsonconvertion.GsonProvider;
 import com.example.beeproject.utils.PropertiesProvider;
 import com.example.beeproject.utils.StringUtils;
 import com.google.gson.Gson;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.dao.GenericRawResults;
 
 public class TestActions {
 	private static final Class[] classessToTest = {YardObject.class};//, HiveObject.class, UserObject.class, CheckFormObject.class, DiseaseObject.class};
+	
+	public static void testORM(PrintWriter responseWriter) throws SQLException{
+		String queryString = "SELECT yards.id, count(checkforms.id) "
+				+ " FROM checkforms JOIN hives ON hives.id = checkforms.\"hiveID_id\""
+				+ " JOIN yards ON yards.id=hives.\"yardID_id\""
+				+ " GROUP BY yards.id";
+
+		Dao<CheckFormObject, Integer> objectClassDao = DaoManager.createDao(ConnectionProvider.getConnectionSource(), CheckFormObject.class); 
+		GenericRawResults<String[]> selectedResult = objectClassDao.queryRaw(queryString);
+		List<String[]> selectedList = (List<String[]>) selectedResult.getResults();
+		responseWriter.println(selectedResult); 
+		for(String col : selectedResult.getColumnNames()){
+			responseWriter.println(col);
+		}
+		
+		responseWriter.println(selectedList); 
+		for(String[] row : selectedList){
+			for(String col : row){
+				responseWriter.print(col+" ");
+			}
+			responseWriter.println("");
+		}
+	}
 	
 	public static void testClassess(PrintWriter responseWriter){
 		

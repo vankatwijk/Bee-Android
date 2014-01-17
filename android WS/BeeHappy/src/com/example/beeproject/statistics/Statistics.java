@@ -1,32 +1,36 @@
 package com.example.beeproject.statistics;
 
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.example.beeproject.R;
-import com.jjoe64.graphview.BarGraphView;
-import com.jjoe64.graphview.GraphView.GraphViewData;
-import com.jjoe64.graphview.GraphViewSeries;
+import com.example.beeproject.global.classes.DatabaseHelper;
+import com.example.beeproject.global.classes.DatabaseManager;
+import com.example.beeproject.global.classes.GlobalVar;
+import com.example.beeproject.global.classes.HiveObject;
+import com.example.beeproject.global.classes.YardObject;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.Where;
 
 public class Statistics extends FragmentActivity {
 
 
 	SectionsPagerAdapter mSectionsPagerAdapter;
 	ViewPager mViewPager;
+	DatabaseHelper db;
+	public List<Object[]> yardsAndHives; // o[0] - String, o[1] - HiveObject
 
 	
 	@Override
@@ -38,6 +42,33 @@ public class Statistics extends FragmentActivity {
 
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
+		
+		//preload list of yardNames and hives belonging to them
+		//no point to load them every time DummySectionFragment.onCreateView() runs
+		db = new DatabaseManager().getHelper(this);
+		yardsAndHives = new ArrayList<Object[]>();
+		try{
+			RuntimeExceptionDao<YardObject, Integer> yardDao = db.getYardRunDao();
+			RuntimeExceptionDao<HiveObject, Integer> hiveDao = db.getHiveRunDao();
+			
+			QueryBuilder<YardObject, Integer> yardQuery = yardDao.queryBuilder();
+			Where<YardObject, Integer> yardWhere = yardQuery.where().eq("userID_id", GlobalVar.getInstance().getUserID());
+			yardQuery.setWhere(yardWhere);
+			List<YardObject> yards = yardDao.query(yardQuery.orderBy("yardName", true).prepare());
+			
+			QueryBuilder<HiveObject, Integer> hiveQuery = hiveDao.queryBuilder();
+			for(YardObject yard : yards){
+				Where<HiveObject, Integer> where = hiveQuery.where().eq("yardID_id", yard.getId());
+				hiveQuery.setWhere(where);
+				List<HiveObject> hives= hiveDao.query(hiveQuery.orderBy("hiveName", true).prepare());
+				for(HiveObject hive : hives){
+					yardsAndHives.add(new Object[] { yard.getYardName(), hive } );
+				}
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -55,9 +86,11 @@ public class Statistics extends FragmentActivity {
 
 		@Override
 		public Fragment getItem(int position) {
-			Fragment fragment = new DummySectionFragment();
+			Fragment fragment = new StatisticsSectionFragment();
 			Bundle args = new Bundle();
-			args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
+			args.putInt(StatisticsSectionFragment.ARG_SECTION_NUMBER, position + 1);
+			args.putSerializable(StatisticsSectionFragment.ARG_YARDS_AND_HIVES, (Serializable) yardsAndHives);
+			
 			fragment.setArguments(args);
 			return fragment;
 		}
@@ -82,83 +115,5 @@ public class Statistics extends FragmentActivity {
 		}
 	}
 
-	public static class DummySectionFragment extends Fragment {
-
-		public static final String ARG_SECTION_NUMBER = "section_number";
-
-		public DummySectionFragment() {
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			
-			View rootView = inflater.inflate(R.layout.fragment_main_dummy,container, false);
-			TextView dummyTextView = (TextView) rootView.findViewById(R.id.section_label);
-			dummyTextView.setText(getPageTitledes(getArguments().getInt(ARG_SECTION_NUMBER)));
-
-			Double[] BeeData = getBeeData(getArguments().getInt(ARG_SECTION_NUMBER));
-	        GraphViewSeries exampleSeries = new GraphViewSeries(new GraphViewData[] {  
-	                new GraphViewData(0, BeeData[0])  
-	                , new GraphViewData(1, BeeData[1])  
-	                , new GraphViewData(2, BeeData[2])
-
-	          });  
-	             
-	          //-------------------------------------------------------------------------------------
-	          //LineGraphView
-	          BarGraphView graphView = new BarGraphView(  
-	        		  getActivity() // context  
-	                , "bee project" // heading  
-	          );  
-	          //graphView.setManualYAxisBounds(0, 10); set length manually
-
-	          //set background color to black
-	          graphView.setBackgroundColor(Color.BLACK);
-	          
-	          //add data to graph
-	          graphView.addSeries(exampleSeries); // data  
-	             
-	          LinearLayout layout = (LinearLayout) rootView.findViewById(R.id.layout);  
-	          layout.addView(graphView); 
-	             
-	          //-------------------------------------------------------------------------------------			
-			
-			
-			return rootView;
-		}
-		public CharSequence getPageTitledes(int position) {
-			Locale l = Locale.getDefault();
-			switch (position) {
-			case 1:
-				return getString(R.string.title_section1des).toUpperCase(l);
-			case 2:
-				return getString(R.string.title_section2des).toUpperCase(l);
-			case 3:
-				return getString(R.string.title_section3des).toUpperCase(l);
-			}
-			return null;
-		}
-		
-		public Double[] getBeeData(int position) {
-			
-			Double[] BeeData =  new Double[3]; 
-			
-			for(int i=0;i<3;i++){
-				 Random rand = new Random();
-				 int randomNum = rand.nextInt((40 - 0) + 1) + 0;
-				BeeData[i] = (double) randomNum;
-			}
-			
-			switch (position) {
-			case 1:
-				return BeeData;
-			case 2:
-				return BeeData;
-			case 3:
-				return BeeData;
-			}
-			return null;
-		}
-	}
+	
 }
