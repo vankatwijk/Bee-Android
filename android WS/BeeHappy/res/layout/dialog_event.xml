@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+    tools:ignore="SelectableText" >
+
+    <EditText
+        android:id="@+id/event_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:inputType="text"
+        android:hint="@string/event_title">
+        <requestFocus />
+    </EditText>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <EditText
+            android:id="@+id/event_start"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="date"
+            android:hint="@string/event_from"/>
+
+        <Button
+            android:id="@+id/button_datePickerFrom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/event_date"
+            android:textColor="@color/blue"
+            android:onClick="showDatePicker"
+            style="?android:attr/borderlessButtonStyle"/>
+ 	    
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <EditText
+            android:id="@+id/event_end"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="date"
+            android:hint="@string/event_to"/>
+
+        <Button
+            android:id="@+id/button_datePickerTo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/event_date"
+            android:textColor="@color/blue"
+            android:onClick="showDatePicker"
+            style="?android:attr/borderlessButtonStyle" />
+    
+	</LinearLayout>
+
+    <EditText
+        android:id="@+id/event_notes"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:inputType="textMultiLine"
+        android:lines="5"
+        android:gravity="top|left"
+        android:hint="@string/event_notes"/>
+
+</LinearLayout>
+	

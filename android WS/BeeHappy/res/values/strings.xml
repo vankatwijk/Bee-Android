@@ -67,7 +67,9 @@
     <string name="changePassword">Change Password</string>
     <string name="logout">Logout</string>
     <string name="synchronize">Synchronize</string>
-    
-    
-    
+    <string name="event_title"><i>title</i></string>
+    <string name="event_date">date</string>
+    <string name="event_from"><i>from</i></string>
+    <string name="event_to"><i>to</i></string>
+    <string name="event_notes"><i>notes</i></string>
 </resources>

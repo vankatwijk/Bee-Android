@@ -4,10 +4,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,10 +20,13 @@ import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.beeproject.R;
@@ -28,10 +35,10 @@ import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
 public class CalendarActivity extends FragmentActivity {
-	private CaldroidFragment caldroidFragment;
+	private CaldroidFragment _CaldroidFragment;
 	private final String TAG = "CalendarActivity";
-	private Date currentSelectedDate;
-	private int currentSelectedMonth = Calendar.getInstance().get(Calendar.MONTH);
+	private Date _CurrentSelectedDate;
+	private int _CurrentSelectedMonth = Calendar.getInstance().get(Calendar.MONTH);
 	
 	private void setCustomResourceForDates() {
 		if(!CalendarResolver.hasCalendar(getApplicationContext())) {
@@ -43,33 +50,33 @@ public class CalendarActivity extends FragmentActivity {
 		}				
 	}
 	
-	private Date getCurrentDate() {
+	private Date getTodayDate() {
 		return Calendar.getInstance().getTime();
 	}
 	
 	private void setSelectedDate(Date date) {
 		// clear current selected date
-		if(currentSelectedDate != null) {
-			caldroidFragment.setTextColorForDate(R.color.black, currentSelectedDate);
+		if(_CurrentSelectedDate != null) {
+			_CaldroidFragment.setTextColorForDate(R.color.black, _CurrentSelectedDate);
 			
-			if(sameDay(getCurrentDate(), currentSelectedDate)) {
-				caldroidFragment.setBackgroundResourceForDate(R.drawable.red_border, currentSelectedDate);
+			if(sameDay(getTodayDate(), _CurrentSelectedDate)) {
+				_CaldroidFragment.setBackgroundResourceForDate(R.drawable.red_border, _CurrentSelectedDate);
 			}
 			else{
-				caldroidFragment.setBackgroundResourceForDate(R.color.white, currentSelectedDate);
+				_CaldroidFragment.setBackgroundResourceForDate(R.color.white, _CurrentSelectedDate);
 				
-				if(!sameMonth(currentSelectedDate, currentSelectedMonth)) {
-					caldroidFragment.setTextColorForDate(R.color.caldroid_gray, currentSelectedDate);
+				if(!sameMonth(_CurrentSelectedDate, _CurrentSelectedMonth)) {
+					_CaldroidFragment.setTextColorForDate(R.color.caldroid_gray, _CurrentSelectedDate);
 				}
 			}
 		}
-		currentSelectedDate = date;
+		_CurrentSelectedDate = date;
 				
 		// set new current selected date
 		if(date != null) {
-			caldroidFragment.setBackgroundResourceForDate(R.color.blue, date);
-			caldroidFragment.setTextColorForDate(R.color.white, date);
-			caldroidFragment.refreshView();
+			_CaldroidFragment.setBackgroundResourceForDate(R.color.blue, date);
+			_CaldroidFragment.setTextColorForDate(R.color.white, date);
+			_CaldroidFragment.refreshView();
 		}
 	}
 	
@@ -95,12 +102,13 @@ public class CalendarActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		DateFormat.getDateFormat(this);
 		setContentView(R.layout.activity_calendar);		
 
-		caldroidFragment = new CaldroidFragment();
+		_CaldroidFragment = new CaldroidFragment();
 
 		if (savedInstanceState != null) {
-			caldroidFragment.restoreStatesFromKey(savedInstanceState,
+			_CaldroidFragment.restoreStatesFromKey(savedInstanceState,
 					"CALDROID_SAVED_STATE");
 		}
 		else {
@@ -109,15 +117,15 @@ public class CalendarActivity extends FragmentActivity {
 			args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
 			args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
 			args.putBoolean(CaldroidFragment.ENABLE_SWIPE, true);
-			args.putBoolean(CaldroidFragment.SIX_WEEKS_IN_CALENDAR, true);
+			args.putBoolean(CaldroidFragment.SIX_WEEKS_IN_CALENDAR, false);
 			args.putInt(CaldroidFragment.START_DAY_OF_WEEK, Calendar.MONDAY);
-			caldroidFragment.setArguments(args);
+			_CaldroidFragment.setArguments(args);
 		}
 		
 		setCustomResourceForDates();
 		
 		FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-		t.replace(R.id.calendar1, caldroidFragment);
+		t.replace(R.id.calendar1, _CaldroidFragment);
 		t.commit();
 
 		// Setup listener
@@ -131,7 +139,7 @@ public class CalendarActivity extends FragmentActivity {
 			@Override
 			public void onChangeMonth(int month, int year) {
 				setSelectedDate(null);
-				currentSelectedMonth = month;
+				_CurrentSelectedMonth = month;
 			}
 
 			@Override
@@ -140,18 +148,29 @@ public class CalendarActivity extends FragmentActivity {
 			}
 		};
 
-		caldroidFragment.setCaldroidListener(listener);		
-	}
+		_CaldroidFragment.setCaldroidListener(listener);		
+	}	
 	
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.calendar, menu);
-		return true;
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		menu.clear();
+		if(dateHasEvent()) {
+			getMenuInflater().inflate(R.menu.date_with_event, menu);
+		}
+		else {
+			getMenuInflater().inflate(R.menu.date_no_event, menu);
+		}			
+		return super.onPrepareOptionsMenu(menu);
 	}
 	
+	private boolean dateHasEvent() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
 	public void goToToday(MenuItem v) {
-		Date date = getCurrentDate();
-		caldroidFragment.moveToDate(date);
+		Date date = getTodayDate();
+		_CaldroidFragment.moveToDate(date);
 		setSelectedDate(date);		
 	}
 	
@@ -159,13 +178,49 @@ public class CalendarActivity extends FragmentActivity {
 		Toast.makeText(getApplicationContext(), "to be implemented", Toast.LENGTH_SHORT).show();
 	}
 	
-	public void openDialog(MenuItem v) {
-		DialogFragment newFragment = new EventDialog();
-		Bundle args = new Bundle();
-		if(currentSelectedDate != null)
-			args.putLong("selectedDate", currentSelectedDate.getTime());
-		newFragment.setArguments(args);
-		newFragment.show(getFragmentManager(), "event");		
+	public void openDialog(MenuItem v) {				
+		switch(v.getItemId()) {
+			case R.id.action_edit:
+				EditEventDialog();
+				break;
+			case R.id.action_new:
+				NewEventDialog();
+				break;
+			default:
+				throw new IllegalStateException("Unidentified id" + v.getItemId());
+		}		
+	}
+	
+	private void EditEventDialog() {
+		AlertDialog alert = buildDialog("Edit event", "edit");
+		alert.show();
+	}
+	
+	private void NewEventDialog() {
+		AlertDialog alert = buildDialog("New event", "new");
+		alert.show();
+		java.text.DateFormat _Format = DateFormat.getDateFormat(this);
+		EditText et_start = (EditText) alert.findViewById(R.id.event_start);
+		et_start.setText(_Format.format(_CurrentSelectedDate));
+		
+		EditText et_end = (EditText) alert.findViewById(R.id.event_end);
+		et_end.setText(_Format.format(_CurrentSelectedDate));
+	}
+	
+	private AlertDialog buildDialog(String title, String positiveButton) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(title)
+			.setView(getLayoutInflater().inflate(R.layout.dialog_event, null))
+	        .setPositiveButton(positiveButton, new DialogInterface.OnClickListener() {
+	            public void onClick(DialogInterface dialog, int id) {
+	            }
+	        })
+	        .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+	            public void onClick(DialogInterface dialog, int id) {
+	            	Toast.makeText(getApplicationContext(), "Cancelled", Toast.LENGTH_LONG).show();
+	            }
+	        });
+		return builder.create();
 	}
 	
 	/**
@@ -274,4 +329,23 @@ public class CalendarActivity extends FragmentActivity {
 					.build();
 		}
 	}
+	public static class DatePickerFragment extends DialogFragment
+    	implements DatePickerDialog.OnDateSetListener {
+
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			// Use the current date as the default date in the picker
+			final Calendar c = Calendar.getInstance();
+			int year = c.get(Calendar.YEAR);
+			int month = c.get(Calendar.MONTH);
+			int day = c.get(Calendar.DAY_OF_MONTH);
+			
+			// Create a new instance of DatePickerDialog and return it
+			return new DatePickerDialog(getActivity(), this, year, month, day);
+		}
+		
+		public void onDateSet(DatePicker view, int year, int month, int day) {
+		// Do something with the date chosen by the user
+		}
+}
 }
