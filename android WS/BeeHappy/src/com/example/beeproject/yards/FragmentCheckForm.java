@@ -54,7 +54,7 @@ public class FragmentCheckForm extends Fragment {
         
         final CheckBox hasQueen = (CheckBox)view.findViewById(R.id.queenCheckBox);
         final EditText qDateBornET = (EditText)view.findViewById(R.id.qDateBorn);
-        final CheckBox qWingsClippedCB = (CheckBox)view.findViewById(R.id.qWingsClippedCheck);
+        final CheckBox qWingsClippedCB = (CheckBox)view.findViewById(R.id.qWingsClippedCB);
         final EditText qRaceET = (EditText)view.findViewById(R.id.qRace);
         final EditText nrOfFramesET = (EditText)view.findViewById(R.id.nrOfFrames);
         final EditText ocupiedFramesET = (EditText)view.findViewById(R.id.ocupiedFrames);
