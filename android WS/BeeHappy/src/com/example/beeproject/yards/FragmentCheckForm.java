@@ -1,5 +1,6 @@
 package com.example.beeproject.yards;
 
+import java.security.Timestamp;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -252,7 +253,7 @@ public class FragmentCheckForm extends Fragment {
 				
 				String comments = commentsET.getText().toString();
 				
-				Long timestamp = System.currentTimeMillis()/1000;
+				Long timestamp = System.currentTimeMillis();///1000;
 				
 				
 				List<HiveObject> hiveIDList = null;
