@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Beekeeper Application</string>
-    <string name="title_item_detail"></string>
+    <string name="app_name">BeeHappy</string>
+    <string name="title_item_detail">BeeHappy</string>
     <string name="addYard">Add Yard</string>
     <string name="addHive">Add Hive</string>
-    <string name="beeAppTitle">Beekeeper Application</string>
+    <string name="beeAppTitle">BeeHappy</string>
     <string name="username">Username/E-mail:</string>
     <string name="password">Password:</string>
     <string name="loginButton">Login</string>

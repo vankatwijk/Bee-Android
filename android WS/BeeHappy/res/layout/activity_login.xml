@@ -2,25 +2,26 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FF9E00"
     android:orientation="horizontal" >
-
-    <TextView
-        android:id="@+id/UsernameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="68dp"
-        android:text="@string/beeAppTitle"
-        android:textSize="30sp" />
 
     <FrameLayout
         android:id="@+id/frame_login_swap"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/UsernameTextView"
+        android:layout_below="@+id/imageView1"
         android:layout_centerHorizontal="true" >
 
     </FrameLayout>
+
+    <ImageView
+        android:contentDescription="@string/title_activity_main"
+        android:id="@+id/imageView1"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="38dp"
+        android:layout_marginTop="14dp"
+        android:src="@drawable/ic_launcher" />
 
 </RelativeLayout>

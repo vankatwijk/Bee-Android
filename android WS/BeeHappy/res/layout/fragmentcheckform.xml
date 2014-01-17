@@ -6,7 +6,7 @@
   android:layout_height="fill_parent">
 <RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content">
 
     <ProgressBar
         android:id="@+id/progressBar1"
@@ -25,7 +25,8 @@
         android:layout_below="@+id/hiveNameTV"
         android:layout_marginTop="14dp"
         android:text="@string/queenString"
-        android:textSize="25sp" />
+        android:textSize="25sp"
+        android:textColor="#000" />
 
     <TextView
         android:id="@+id/qDateBornTV"
@@ -34,7 +35,8 @@
         android:layout_alignRight="@+id/queenTV"
         android:layout_below="@+id/progressBar1"
         android:layout_marginTop="10dp"
-        android:text="@string/qDateBornString" />
+        android:text="@string/qDateBornString"
+        android:textColor="#000" />
 
     <TextView
         android:id="@+id/qWingsClipedTV"
@@ -44,7 +46,8 @@
         android:layout_below="@+id/qDateBornTV"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
-        android:text="@string/qWingsClipedString" />
+        android:text="@string/qWingsClipedString"
+        android:textColor="#000" />
 
     <TextView
         android:id="@+id/qRaceTV"
@@ -52,7 +55,8 @@
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/qWingsClipedTV"
         android:layout_below="@+id/qWingsClipedTV"
-        android:text="@string/qRaceString" />
+        android:text="@string/qRaceString"
+        android:textColor="#000" />
 
     <ProgressBar
         android:id="@+id/progressBar2"
@@ -71,7 +75,8 @@
         android:layout_below="@+id/progressBar2"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="14dp"
-        android:text="@string/nrOfFramesString" />
+        android:text="@string/nrOfFramesString"
+        android:textColor="#000" />
 
     <TextView
         android:id="@+id/ocupiedFramesTV"
@@ -80,7 +85,8 @@
         android:layout_alignRight="@+id/nrOfFramesTV"
         android:layout_below="@+id/nrOfFramesTV"
         android:layout_marginBottom="10dp"
-        android:text="@string/ocupiedFramesString" />
+        android:text="@string/ocupiedFramesString"
+        android:textColor="#000" />
 
     <TextView
         android:id="@+id/larveTV"
@@ -89,7 +95,8 @@
         android:layout_alignRight="@+id/eggsTV"
         android:layout_below="@+id/eggsTV"
         android:layout_marginBottom="10dp"
-        android:text="@string/larveString" />
+        android:text="@string/larveString"
+        android:textColor="#000" />
 
     <TextView
         android:id="@+id/pupaeTV"
@@ -98,7 +105,8 @@
         android:layout_alignRight="@+id/larveTV"
         android:layout_below="@+id/larveTV"
         android:layout_marginBottom="10dp"
-        android:text="@string/pupaeString" />
+        android:text="@string/pupaeString"
+        android:textColor="#000" />
 
     <TextView
         android:id="@+id/nrOfMitesTV"
@@ -107,26 +115,8 @@
         android:layout_alignRight="@+id/pupaeTV"
         android:layout_below="@+id/pupaeTV"
         android:layout_marginBottom="10dp"
-        android:text="@string/nrOfMitesString" />
-
-    <EditText
-        android:id="@+id/qDateBorn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/saveForm"
-        android:layout_alignTop="@+id/progressBar1"
-        android:layout_marginTop="10dp"
-        android:ems="10"
-        android:inputType="date" />
-
-    <EditText
-        android:id="@+id/qRace"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/qRaceTV"
-        android:layout_alignLeft="@+id/qDateBorn"
-        android:ems="10"
-        android:inputType="text" />
+        android:text="@string/nrOfMitesString"
+        android:textColor="#000" />
 
     <EditText
         android:id="@+id/nrOfFrames"
@@ -135,7 +125,8 @@
         android:layout_alignBottom="@+id/nrOfFramesTV"
         android:layout_alignLeft="@+id/qRace"
         android:ems="10"
-        android:inputType="numberDecimal|text" />
+        android:inputType="numberDecimal|text"
+        android:background="@drawable/rect_edit_text" />
 
     <EditText
         android:id="@+id/ocupiedFrames"
@@ -144,7 +135,8 @@
         android:layout_alignBottom="@+id/ocupiedFramesTV"
         android:layout_alignLeft="@+id/nrOfFrames"
         android:ems="10"
-        android:inputType="numberDecimal" />
+        android:inputType="numberDecimal"
+        android:background="@drawable/rect_edit_text" />
 
     <EditText
         android:id="@+id/eggs"
@@ -153,7 +145,8 @@
         android:layout_alignBottom="@+id/eggsTV"
         android:layout_alignLeft="@+id/nrOfFrames"
         android:ems="10"
-        android:inputType="numberDecimal" />
+        android:inputType="numberDecimal"
+        android:background="@drawable/rect_edit_text" />
 
     <EditText
         android:id="@+id/larve"
@@ -162,7 +155,8 @@
         android:layout_alignBottom="@+id/larveTV"
         android:layout_alignLeft="@+id/ocupiedFrames"
         android:ems="10"
-        android:inputType="numberDecimal" />
+        android:inputType="numberDecimal"
+        android:background="@drawable/rect_edit_text" />
 
     <EditText
         android:id="@+id/pupae"
@@ -171,7 +165,8 @@
         android:layout_alignBottom="@+id/pupaeTV"
         android:layout_alignLeft="@+id/eggs"
         android:ems="10"
-        android:inputType="numberDecimal" />
+        android:inputType="numberDecimal"
+        android:background="@drawable/rect_edit_text" />
 
     <EditText
         android:id="@+id/nrOfMites"
@@ -180,7 +175,8 @@
         android:layout_alignBottom="@+id/nrOfMitesTV"
         android:layout_alignLeft="@+id/larve"
         android:ems="10"
-        android:inputType="numberDecimal" />
+        android:inputType="numberDecimal"
+        android:background="@drawable/rect_edit_text" />
 
     <TextView
         android:id="@+id/hiveNameTV"
@@ -190,7 +186,8 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="30dp"
         android:text="@string/hiveNameString"
-        android:textSize="25sp" />
+        android:textSize="25sp"
+        android:textColor="#000" />
 
     <CheckBox
         android:id="@+id/queenCheckBox"
@@ -201,11 +198,11 @@
         android:layout_toRightOf="@+id/queenTV" />
 
     <CheckBox
-        android:id="@+id/qWingsClippedCheck"
+        android:id="@+id/qWingsClippedCB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/queenCheckBox"
-        android:layout_below="@+id/qDateBornTV" />
+        android:layout_below="@+id/qDateBorn" />
 
     <TextView
         android:id="@+id/hiveName"
@@ -213,7 +210,8 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/queenTV"
         android:layout_toRightOf="@+id/queenCheckBox"
-        android:textSize="25sp" />
+        android:textSize="25sp"
+        android:textColor="#000" />
 
     <TextView
         android:id="@+id/nrOfLayersTV"
@@ -222,7 +220,8 @@
         android:layout_below="@+id/ocupiedFramesTV"
         android:layout_marginBottom="10dp"
         android:layout_toLeftOf="@+id/qWingsClippedCheck"
-        android:text="@string/nrOfLayersString" />
+        android:text="@string/nrOfLayersString"
+        android:textColor="#000" />
 
     <TextView
         android:id="@+id/eggsTV"
@@ -231,7 +230,8 @@
         android:layout_below="@+id/nrOfLayersTV"
         android:layout_marginBottom="10dp"
         android:layout_toLeftOf="@+id/eggs"
-        android:text="@string/eggsString" />
+        android:text="@string/eggsString"
+        android:textColor="#000" />
 
     <EditText
         android:id="@+id/nrOfLayersET"
@@ -240,7 +240,8 @@
         android:layout_alignBottom="@+id/nrOfLayersTV"
         android:layout_toRightOf="@+id/ocupiedFramesTV"
         android:ems="10"
-        android:inputType="text" >
+        android:inputType="text"
+        android:background="@drawable/rect_edit_text" >
 
         <requestFocus />
     </EditText>
@@ -252,7 +253,8 @@
         android:layout_below="@+id/nrOfMitesTV"
         android:layout_marginBottom="10dp"
         android:layout_toLeftOf="@+id/nrOfLayersET"
-        android:text="@string/honeyCombsString" />
+        android:text="@string/honeyCombsString"
+        android:textColor="#000" />
 
     <EditText
         android:id="@+id/honeyCombsET"
@@ -261,7 +263,8 @@
         android:layout_alignBottom="@+id/honeyCombsTV"
         android:layout_alignLeft="@+id/nrOfLayersET"
         android:ems="10"
-        android:inputType="text" />
+        android:inputType="text"
+        android:background="@drawable/rect_edit_text" />
 
     <TextView
         android:id="@+id/commentsTV"
@@ -269,7 +272,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/honeyCombsTV"
         android:layout_toLeftOf="@+id/nrOfMites"
-        android:text="@string/commentsString" />
+        android:text="@string/commentsString"
+        android:textColor="#000" />
 
     <EditText
         android:id="@+id/commentsET"
@@ -278,7 +282,8 @@
         android:layout_alignLeft="@+id/honeyCombsET"
         android:layout_below="@+id/honeyCombsTV"
         android:ems="10"
-        android:inputType="textMultiLine" />
+        android:inputType="textMultiLine"
+        android:background="@drawable/rect_edit_text" />
 
     <ProgressBar
         android:id="@+id/progressBar3"
@@ -291,6 +296,7 @@
 
     <Button
         android:id="@+id/saveForm"
+        style="@style/buttonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/progressBar3"
@@ -305,7 +311,8 @@
         android:layout_alignRight="@+id/commentsTV"
         android:layout_below="@+id/progressBar3"
         android:layout_marginTop="28dp"
-        android:text="@string/hasDiseaseString" />
+        android:text="@string/hasDiseaseString"
+        android:textColor="#000" />
 
     <TextView
         android:id="@+id/diseaseStatus"
@@ -314,23 +321,49 @@
         android:layout_alignBaseline="@+id/hasDiseaseTV"
         android:layout_alignBottom="@+id/hasDiseaseTV"
         android:layout_alignLeft="@+id/commentsET"
-        android:layout_marginLeft="14dp" />
+        android:layout_marginLeft="14dp"
+        android:textColor="#000" />
 
     <Button
         android:id="@+id/checkDiseaseButton"
+        style="@style/buttonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/diseaseStatus"
         android:layout_below="@+id/diseaseStatus"
+        android:layout_marginBottom="5dp"
         android:text="@string/checkDiseaseString" />
 
     <Button
         android:id="@+id/AddDisease"
+        style="@style/buttonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/checkDiseaseButton"
+        android:layout_alignRight="@+id/checkDiseaseButton"
         android:layout_below="@+id/checkDiseaseButton"
         android:text="@string/AddDiseaseString" />
+
+    <EditText
+        android:id="@+id/qDateBorn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/qDateBornTV"
+        android:layout_toRightOf="@+id/qDateBornTV"
+        android:background="@drawable/rect_edit_text"
+        android:ems="10"
+        android:inputType="date"
+        android:textColor="#000" />
+
+    <EditText
+        android:id="@+id/qRace"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/qRaceTV"
+        android:layout_toRightOf="@+id/qRaceTV"
+        android:background="@drawable/rect_edit_text"
+        android:ems="10"
+        android:inputType="text" />
 
 </RelativeLayout>
 </ScrollView>

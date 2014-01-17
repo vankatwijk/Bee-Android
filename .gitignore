@@ -6,7 +6,7 @@
 *.dex
 
 # Java class files
-*.class
+# .class
 
 # generated files
 bin/

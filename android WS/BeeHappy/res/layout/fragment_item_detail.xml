@@ -4,6 +4,7 @@
     style="?android:attr/textAppearanceLarge"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FF9E00"
     android:padding="16dp"
     android:textIsSelectable="true"
     tools:context=".ItemDetailFragment" />
