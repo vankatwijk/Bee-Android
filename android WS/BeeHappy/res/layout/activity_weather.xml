@@ -1,0 +1,132 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#FF9E00"
+    tools:context=".MainActivity" >
+
+	<RelativeLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_marginBottom="10dp"
+	    android:background="#FF9E00"
+	    tools:context=".MainActivity" >
+
+	    <TextView
+	        android:id="@+id/cityText"
+	        style="?android:attr/textAppearanceMedium"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_centerHorizontal="true"
+	        android:layout_marginBottom="10dp" />
+
+	    <ImageView
+	        android:id="@+id/condIcon"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_below="@id/cityText"
+	        android:layout_centerHorizontal="true"
+	        android:contentDescription="@string/icon" />
+
+	    <TextView
+	        android:id="@+id/condDescr"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignLeft="@id/condIcon"
+	        android:layout_below="@id/condIcon"
+	        android:layout_marginLeft="10dp"
+	        android:layout_marginRight="10dp" />
+
+	    <TextView
+	        android:id="@+id/temp"
+	        style="@style/tempStyle"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignBaseline="@id/condDescr"
+	        android:layout_marginLeft="12dp"
+	        android:layout_toRightOf="@id/condDescr" />
+
+	    <TextView
+	        android:id="@+id/pressLab"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_below="@id/condDescr"
+	        android:layout_marginLeft="10dp"
+	        android:layout_marginRight="10dp"
+	        android:layout_marginTop="15dp"
+	        android:text="@string/presureTextView" />
+
+	    <TextView
+	        android:id="@+id/press"
+	        style="@style/valData"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignBaseline="@id/pressLab"
+	        android:layout_toRightOf="@id/pressLab" />
+
+	    <TextView
+	        android:id="@+id/humLab"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_below="@id/pressLab"
+	        android:layout_marginLeft="10dp"
+	        android:layout_marginRight="10dp"
+	        android:text="@string/humidityTextView" />
+
+	    <TextView
+	        android:id="@+id/hum"
+	        style="@style/valData"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignBaseline="@id/humLab"
+	        android:layout_marginLeft="4dp"
+	        android:layout_toRightOf="@id/humLab" />
+
+	    <TextView
+	        android:id="@+id/windLab"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_below="@id/humLab"
+	        android:layout_marginLeft="10dp"
+	        android:layout_marginRight="10dp"
+	        android:text="@string/windTextView" />
+
+	    <TextView
+	        android:id="@+id/windSpeed"
+	        style="@style/valData"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignBaseline="@id/windLab"
+	        android:layout_marginLeft="4dp"
+	        android:layout_toRightOf="@id/windLab" />
+
+	    <TextView
+	        android:id="@+id/windDeg"
+	        style="@style/valData"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignBaseline="@id/windLab"
+	        android:layout_marginLeft="4dp"
+	        android:layout_toRightOf="@id/windSpeed" />
+	</RelativeLayout>
+
+	<ProgressBar
+	    android:id="@+id/progressBar1"
+	    style="?android:attr/progressBarStyleHorizontal"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content" />
+
+	<ListView
+	    android:id="@+id/locationsList"
+	    android:layout_width="match_parent"
+	    android:layout_height="1000dp"
+	    android:background="#FF9E00" >
+
+	</ListView>
+ 
+</LinearLayout>

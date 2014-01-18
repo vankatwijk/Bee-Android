@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">BeeHappy</string>
+    <string name="title_item_detail">BeeHappy</string>
+    <string name="addYard">Add Yard</string>
+    <string name="addHive">Add Hive</string>
+    <string name="beeAppTitle">BeeHappy</string>
+    <string name="username">Username/E-mail:</string>
+    <string name="password">Password:</string>
+    <string name="loginButton">Login</string>
+    <string name="createAccount">Create Account</string>
+    <string name="newAccountString">New Account</string>
+    <string name="cancelCreateAccount">Cancel</string>
+    <string name="forecastTextView">Forecast:</string>
+    <string name="tempForecast">Temperature:</string>
+    <string name="presureTextView">Presure:</string>
+    <string name="humidityTextView">Humidity:</string>
+    <string name="windTextView">"Wind: "</string>
+    <string name="yardNameString">"Yard Name: "</string>
+    <string name="yardLocationString">Yard Location:</string>
+    <string name="editYardTitleString">Edit Yard</string>
+    <string name="editYardNameString">Change Yard Name:</string>
+    <string name="editYardLocationString">Change Yard Location:</string>
+    <string name="saveButton">Save</string>
+    <string name="cancelButton">Cancel</string>
+    <string name="hiveNameString">Hive Name:</string>
+    <string name="queenString">Queen:</string>
+    <string name="qDateBornString">Date Born:</string>
+    <string name="qWingsClipedString">Wings Clipped:</string>
+    <string name="qRaceString">Race:</string>
+    <string name="nrOfFramesString">Number of Frames:</string>
+    <string name="ocupiedFramesString">Ocupied Frames:</string>
+    <string name="eggsString">Eggs:</string>
+    <string name="larveString">Larve:</string>
+    <string name="pupaeString">Pupae:</string>
+    <string name="nrOfMitesString">Number of Mites:</string>
+    <string name="addHiveString">Add Hive</string>
+    <string name="nrOfLayersString">Number of Layers:</string>
+    <string name="honeyCombsString">Honey Combs:</string>
+    <string name="commentsString">Comments:</string>
+    <string name="hasDiseaseString">Disease Status:</string>
+    <string name="checkDiseaseString">Check Disease</string>
+    <string name="saveFormString">Save Form</string>
+    <string name="title_activity_main">MainAct</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="checkStockString">Check Frame Stock</string>
+    <string name="AddDiseaseString">Add Disease</string>
+    <string name="selectDiseaseString">Select a disease:</string>
+    <string name="startDateString">Disease Start Date:</string>
+    <string name="notesString">Notes:</string>
+    <string name="notesDateString">Note Date:</string>
+    <string name="outbrakeEndDateString">Disease End Date(only input if outbrake has ended!):</string>
+    <string name="title_section1">Eggs</string>
+    <string name="title_section2">Pupae</string>
+    <string name="title_section3">Mites</string>
+    <string name="title_section1des">statistics for Eggs</string>
+    <string name="title_section2des">statistics for Pupae</string>
+    <string name="title_section3des">statistics for Mites</string>
+    <string name="title_activity_statistics">Statistics</string>
+    <string name="icon">icon</string>
+    <string name="changePassword">Change Password</string>
+    <string name="logout">Logout</string>
+    <string name="synchronize">Synchronize</string>
+    
+    
+    
+</resources>
