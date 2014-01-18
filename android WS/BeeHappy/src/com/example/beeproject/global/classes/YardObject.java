@@ -151,8 +151,6 @@ public class YardObject implements BeeObjectInterface{
 		serverSideObject.setId(serverSideID); 
 		
 		serverSideObject.refresh(db);
-		System.out.println("refreshed in getServerSideObject: " + serverSideObject);
-		
 		serverSideObject.setUserID(new UserObject(serverSideObject.getUserID().getServerSideID()));
 		
 		return serverSideObject;

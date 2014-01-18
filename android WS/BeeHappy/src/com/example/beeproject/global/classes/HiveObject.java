@@ -41,6 +41,13 @@ public class HiveObject implements BeeObjectInterface{
 		this.yardID = yardId;
 		this.synced = synced;
 	}
+
+	public HiveObject(String hiveName, YardObject yardId, boolean synced, int serverSideID){
+		this.hiveName = hiveName;
+		this.yardID = yardId;
+		this.synced = synced;
+		this.serverSideID = serverSideID;
+	}
 	
 	public HiveObject(String hiveName, int yardId, boolean synced){
 		this.hiveName = hiveName;
@@ -118,8 +125,13 @@ public class HiveObject implements BeeObjectInterface{
 
 	@Override
 	public BeeObjectInterface getServerSideObject(DatabaseHelper db) {
-		// TODO Auto-generated method stub
-		return null;
+		HiveObject serverSideObject = new HiveObject(hiveName, yardID, synced);
+		serverSideObject.setId(serverSideID); 
+		
+		serverSideObject.refresh(db);
+		serverSideObject.setYardId(new YardObject(serverSideObject.getYardId().getServerSideID()));
+		
+		return serverSideObject;
 	}
 
 

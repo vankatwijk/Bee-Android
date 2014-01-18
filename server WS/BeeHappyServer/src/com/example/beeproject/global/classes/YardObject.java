@@ -132,7 +132,7 @@ public class YardObject implements BeeObjectInterface{
 	public String toString() {
 		return "YardObject [id=" + id + ", yardName=" + yardName
 				+ ", location=" + location + ", userID=" + userID + ", synced="
-				+ synced + "]";
+				+ synced + ", serverSideID="+serverSideID+ "]";
 	}
 
 	@Override

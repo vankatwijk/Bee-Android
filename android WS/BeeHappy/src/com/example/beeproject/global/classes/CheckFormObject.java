@@ -327,8 +327,15 @@ public class CheckFormObject implements BeeObjectInterface{
 
 	@Override
 	public BeeObjectInterface getServerSideObject(DatabaseHelper db) {
-		// TODO Auto-generated method stub
-		return null;
+		CheckFormObject serverSideObject = new CheckFormObject(hiveID, timestamp, hasQueen, qDateBorn, 
+				qWingsCliped, qRace, nrOfFrames, occupiedFrames, nrOfLayers, eggs, 
+				larve, pupae, nrOfMites, honeyCombs, comments, synced);
+		serverSideObject.setId(serverSideID); 
+		
+		serverSideObject.refresh(db);
+		serverSideObject.setHiveID(new HiveObject(serverSideObject.getHiveID().getServerSideID()));
+		
+		return serverSideObject;
 	}
 
 	

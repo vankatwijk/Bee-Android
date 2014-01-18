@@ -1,8 +1,5 @@
 package com.example.beeproject.syncing;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
@@ -27,10 +24,7 @@ import com.example.beeproject.global.classes.BeeObjectInterface;
 import com.example.beeproject.global.classes.CheckFormObject;
 import com.example.beeproject.global.classes.DatabaseHelper;
 import com.example.beeproject.global.classes.DatabaseManager;
-<<<<<<< HEAD
 import com.example.beeproject.global.classes.GlobalVar;
-=======
->>>>>>> master
 import com.example.beeproject.global.classes.HiveObject;
 import com.example.beeproject.global.classes.UserObject;
 import com.example.beeproject.global.classes.YardObject;
@@ -63,7 +57,7 @@ public class SyncHelper {
 	public String syncronizeToServer(){
 		/* These methods are called to fastly create/update/or delete objects of all syncronised classes
 		 * To test that everything works*/
-		createSomeStuff();
+		//createSomeStuff();
 		//updateSomeStuff();
 		//deleteSomeStuff();
 		
@@ -146,6 +140,7 @@ public class SyncHelper {
 	 * @param objToDelete
 	 */
 	private void deleteObject(RuntimeExceptionDao<DeletedObject, Integer> deletedObjectDao, DeletedObject objToDelete) {
+		
 		BeeCommand command = new DeleteCommand(DeletedObject.class.getName(), gson.toJson(objToDelete, DeletedObject.class));
 		BeeCommandResult commandResult = BeeServerHttpClient.executeCommand(command);
 		Log.d(LOG_TAG, "commandResult "+ commandResult.toString());
@@ -179,21 +174,15 @@ public class SyncHelper {
 	private void syncronizeObject(Class objectClass,
 			RuntimeExceptionDao<? super BeeObjectInterface, Integer> objectClassDao, BeeObjectInterface objToSync) {
 		
-		if(objectClass.getSimpleName().equals("YardObject")){
-		
-			Log.d(LOG_TAG, "syncronizeObject: "+ objToSync.toString());
-			//objToSync.refresh(db);
-			BeeObjectInterface ssObjToSync = objToSync.getServerSideObject(db);
-			//TODO: use this one in commands!
-			Log.d(LOG_TAG, "refreshed syncronizeObject: "+ objToSync.toString());
-			Log.d(LOG_TAG, "ssObjToSync: "+ ssObjToSync.toString());
-			Log.d(LOG_TAG, "+++++++++");
-		}
+		Log.d(LOG_TAG, "syncronizeObject: "+ objToSync.toString());
+		BeeObjectInterface serverSideObjToSync = objToSync.getServerSideObject(db);
+		Log.d(LOG_TAG, "serverSideObjToSync: "+ serverSideObjToSync.toString());
+		Log.d(LOG_TAG, "+++++++++");
 		
 		if(objToSync.getServerSideID()==0){
 			
 			//object needs to be added to server DB
-			BeeCommand command = new CreateCommand(objectClass.getName(), gson.toJson(objToSync,objectClass));
+			BeeCommand command = new CreateCommand(objectClass.getName(), gson.toJson(serverSideObjToSync,objectClass));
 			BeeCommandResult commandResult = BeeServerHttpClient.executeCommand(command);
 			//Log.d(LOG_TAG, "createResult"+ commandResult.toString());
 			
@@ -215,7 +204,7 @@ public class SyncHelper {
 		}
 		else{
 			//object needs to be updated to server DB
-			BeeCommand command = new UpdateCommand(objectClass.getName(), gson.toJson(objToSync,objectClass));
+			BeeCommand command = new UpdateCommand(objectClass.getName(), gson.toJson(serverSideObjToSync,objectClass));
 			BeeCommandResult commandResult = BeeServerHttpClient.executeCommand(command);
 			//Log.d(LOG_TAG, "commandResult"+ commandResult.toString());
 			

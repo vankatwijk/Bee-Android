@@ -74,9 +74,7 @@ public class DBCommandExecuter {
 	 * Executes the UpdateCommand<br>
 	 * ATTENTION: 
 	 * Command contains object of BeeObjectInterface that needs to be updated.
-	 * The id of this object is local id from the client. 
-	 * In order to find the object in the server database, object.serverSideID should be used.
-	 * To simplify the update and not loop through all the fields object.id is set to object.serverSideId and the update is executed.<br>
+	 * The id of this object is the server side id, no further processing needed.
 	 * @param command
 	 * @return
 	 */
@@ -93,7 +91,7 @@ public class DBCommandExecuter {
 			// instantiate the dao
 			Dao<? super Object, Integer> objectClassDao = DaoManager.createDao(ConnectionProvider.getConnectionSource(), objectClass);
 			
-			BeeObjectInterface objectInDb = (BeeObjectInterface) objectClassDao.queryForId(object.getServerSideID());
+			BeeObjectInterface objectInDb = (BeeObjectInterface) objectClassDao.queryForId(object.getId());
 			
 			if(objectInDb==null){
 				//object not found in DB
@@ -101,8 +99,8 @@ public class DBCommandExecuter {
 			}
 			else{
 				//update the object in DB
-				//To simplify the update and not loop through all the fields object.id is set to object.serverSideId
-				object.setId(object.getServerSideID());
+				System.out.println("object to be updated: " + object);
+				
 				int nUpdatedRows = objectClassDao.update(object);			
 				if(nUpdatedRows==1){
 					String objectJson = gson.toJson(object, BeeObjectInterface.class);
@@ -232,9 +230,11 @@ public class DBCommandExecuter {
 			 * Marking the objects as deleted - set deleted=true and update
 			 * */
 			for(BeeObjectInterface objToMarkDeleted : childrenToMarkDeleted){
-				objToMarkDeleted.setDeleted(true);
-				int nUpdateChildren = cascadeMarkAsDeleted(objToMarkDeleted); //cascade deletion through the child objects of the child
-				int nUpdatedRows = childObjectClassDao.update(objToMarkDeleted);
+				//have to update the object fetched from DB by id, otherwise some fields get set to default values
+				BeeObjectInterface objToMarkInDB = (BeeObjectInterface) childObjectClassDao.queryForId(objToMarkDeleted.getId());
+				objToMarkInDB.setDeleted(true);
+				int nUpdateChildren = cascadeMarkAsDeleted(objToMarkInDB); //cascade deletion through the child objects of the child
+				int nUpdatedRows = childObjectClassDao.update(objToMarkInDB);
 				nrAffected += nUpdatedRows + nUpdateChildren;
 			}
 		}

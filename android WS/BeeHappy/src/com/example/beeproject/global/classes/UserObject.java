@@ -50,6 +50,13 @@ public class UserObject implements BeeObjectInterface{
 		this.password = password;
 	}
 	
+	public UserObject(int id, String username, String password, boolean synced, int serverSideID){
+		this.id = id;
+		this.username = username;
+		this.password = password;
+		this.synced = synced;
+		this.serverSideID = serverSideID;
+	}
 	
 	public int getId() {
 		return id;
@@ -112,8 +119,9 @@ public class UserObject implements BeeObjectInterface{
 
 	@Override
 	public BeeObjectInterface getServerSideObject(DatabaseHelper db) {
-		// TODO Auto-generated method stub
-		return null;
+		UserObject serverSideObject = new UserObject(id, username, password, synced, serverSideID);
+		serverSideObject.setId(serverSideID); 
+		return serverSideObject;
 	}
 
 	
