@@ -15,8 +15,8 @@ public class BeeObjectClasses {
 
 	private static final Class[] classesToSync = {UserObject.class, YardObject.class, HiveObject.class, CheckFormObject.class};
 	
-	private static Map<Class, Class[]> parentChildRelationships = new HashMap<Class, Class[]>(){{
-		put(UserObject.class, new Class[]{YardObject.class});
+	private static Map<Class, Class[]> childParentRelationships = new HashMap<Class, Class[]>(){{
+		put(YardObject.class, new Class[]{UserObject.class});
 	}};
 	
 	
@@ -32,7 +32,13 @@ public class BeeObjectClasses {
 		return classesToSync;
 	}
 	
-	public static Map<Class,Class[]> getParentChildRelationships(){
-		return parentChildRelationships;
+	public static Map<Class,Class[]> getChildParentRelationships(){
+		return childParentRelationships;
+	}
+	
+	public static Class[] getParentRelationships(Class child){
+		Class[] parents;
+		parents = childParentRelationships.get(child);
+		return parents;
 	}
 }

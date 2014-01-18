@@ -35,6 +35,10 @@ public class UserObject implements BeeObjectInterface{
 	public UserObject(){
 	}
 	
+	public UserObject(int id) {
+		this.id = id;
+    }
+	
 	public UserObject(String username, String password){
 		this.username = username;
 		this.password = password;
@@ -49,6 +53,10 @@ public class UserObject implements BeeObjectInterface{
 	
 	public int getId() {
 		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	public String getUsername(){
@@ -94,6 +102,18 @@ public class UserObject implements BeeObjectInterface{
 
 	public void setServerSideID(int serverSideID) {
 		this.serverSideID = serverSideID;
+	}
+
+	@Override
+	public int refresh(DatabaseHelper db) {
+		// no foreign objects, nothing to refresh
+		return 0;
+	}
+
+	@Override
+	public BeeObjectInterface getServerSideObject(DatabaseHelper db) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	

@@ -1,5 +1,8 @@
 package com.example.beeproject.syncing;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
@@ -8,7 +11,6 @@ import java.util.Map;
 
 import android.app.Activity;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.beeproject.commandexecution.commands.BeeCommand;
 import com.example.beeproject.commandexecution.commands.CreateCommand;
@@ -25,7 +27,7 @@ import com.example.beeproject.global.classes.BeeObjectInterface;
 import com.example.beeproject.global.classes.CheckFormObject;
 import com.example.beeproject.global.classes.DatabaseHelper;
 import com.example.beeproject.global.classes.DatabaseManager;
-import com.example.beeproject.global.classes.DiseaseObject;
+import com.example.beeproject.global.classes.GlobalVar;
 import com.example.beeproject.global.classes.HiveObject;
 import com.example.beeproject.global.classes.UserObject;
 import com.example.beeproject.global.classes.YardObject;
@@ -56,10 +58,10 @@ public class SyncHelper {
 	 */
 	public String syncronizeToServer(){
 		System.out
-				.println(BeeObjectClasses.getParentChildRelationships());
+				.println(BeeObjectClasses.getChildParentRelationships());
 		/* These methods are called to fastly create/update/or delete objects of all syncronised classes
 		 * To test that everything works*/
-		//createSomeStuff();
+		createSomeStuff();
 		//updateSomeStuff();
 		//deleteSomeStuff();
 		
@@ -102,7 +104,7 @@ public class SyncHelper {
 			fieldValues.put("synced", false);
 			List<BeeObjectInterface> notSyncedObjects = (List<BeeObjectInterface>) objectClassDao.queryForFieldValues(fieldValues);
 
-	    	Log.d(LOG_TAG, "notSyncedObjects"+ notSyncedObjects.toString());
+	    	//Log.d(LOG_TAG, "notSyncedObjects"+ notSyncedObjects.toString());
 	    	
 	    	for(BeeObjectInterface objToSync: notSyncedObjects){
 		    	syncronizeObject(objectClass, objectClassDao, objToSync);
@@ -118,7 +120,7 @@ public class SyncHelper {
 			fieldValues.put("objectClassName", objectClass.getName());
 			List<DeletedObject> deletedObjects = deletedObjectDao.queryForFieldValues(fieldValues);
 			
-	    	Log.d(LOG_TAG, "deletedObjects"+ deletedObjects.toString());
+	    	//Log.d(LOG_TAG, "deletedObjects"+ deletedObjects.toString());
 			
 	    	for(DeletedObject objToDelete: deletedObjects){
 		    	deleteObject(deletedObjectDao, objToDelete);
@@ -171,9 +173,18 @@ public class SyncHelper {
 	 */
 	private void syncronizeObject(Class objectClass,
 			RuntimeExceptionDao<? super BeeObjectInterface, Integer> objectClassDao, BeeObjectInterface objToSync) {
-		Log.d(LOG_TAG, "syncronizeObject: "+ objToSync.toString());
-		BeeObjectInterface refreshedObjToSync = refreshObjectForeignRelations(objToSync);
-		Log.d(LOG_TAG, "syncronizeObject: "+ objToSync.toString());
+		
+		if(objectClass.getSimpleName().equals("YardObject")){
+		
+			Log.d(LOG_TAG, "syncronizeObject: "+ objToSync.toString());
+			//objToSync.refresh(db);
+			BeeObjectInterface ssObjToSync = objToSync.getServerSideObject(db);
+			//TODO: use this one in commands!
+			Log.d(LOG_TAG, "refreshed syncronizeObject: "+ objToSync.toString());
+			Log.d(LOG_TAG, "ssObjToSync: "+ ssObjToSync.toString());
+			Log.d(LOG_TAG, "+++++++++");
+		}
+		
 		if(objToSync.getServerSideID()==0){
 			
 			//object needs to be added to server DB
@@ -216,12 +227,7 @@ public class SyncHelper {
 		}
 	}
 	
-	private BeeObjectInterface refreshObjectForeignRelations(
-			BeeObjectInterface objToSync) {
-		Class childObjectClass = null;
-		
-		return null;
-	}
+	
 
 	/**
 	 * Stores the information on the deleted object in the local database. 
@@ -272,10 +278,10 @@ public class SyncHelper {
 		//Create objects to work with
 		BeeObjectInterface object = null;
 		
-		Log.d(LOG_TAG, "Create something("+objectClass.getSimpleName());
+		//Log.d(LOG_TAG, "Create something("+objectClass.getSimpleName());
 		
 		if(objectClass.getSimpleName().equals("YardObject")){
-			object = new YardObject("new yard", "my location", 1, false);
+			object = new YardObject("new yard", "my location", GlobalVar.getInstance().getUserID(), false);
 		}
 		else if(objectClass.getSimpleName().equals("HiveObject")){
 			object = new HiveObject("new hive", 1, false);

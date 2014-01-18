@@ -1,5 +1,6 @@
 package com.example.beeproject.global.classes;
 
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -83,6 +84,10 @@ public class YardObject implements BeeObjectInterface{
 		return id;
 	}
 
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public String getYardName() {
 		return yardName;
 	}
@@ -131,6 +136,28 @@ public class YardObject implements BeeObjectInterface{
 				+ ", location=" + location + ", userID=" + userID + ", synced="
 				+ synced + ", serverSideID="+serverSideID+" ]";
 	}
+
+	@Override
+	public int refresh(DatabaseHelper db) {
+		RuntimeExceptionDao<UserObject, Integer> userDao = db.getUserRunDao();
+		userDao.refresh(this.userID);
+
+		return 0;
+	}
+
+	@Override
+	public BeeObjectInterface getServerSideObject(DatabaseHelper db) {
+		YardObject serverSideObject = new YardObject(yardName, location, userID, synced);
+		serverSideObject.setId(serverSideID); 
+		
+		serverSideObject.refresh(db);
+		System.out.println("refreshed in getServerSideObject: " + serverSideObject);
+		
+		serverSideObject.setUserID(new UserObject(serverSideObject.getUserID().getServerSideID()));
+		
+		return serverSideObject;
+	}
+
 		
 	
 }
