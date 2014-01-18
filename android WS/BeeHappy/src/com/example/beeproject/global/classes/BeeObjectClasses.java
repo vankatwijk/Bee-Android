@@ -10,16 +10,14 @@ import java.util.Map;
  * @author rezolya
  *
  */
+@SuppressWarnings("rawtypes")
 public class BeeObjectClasses {
+
 	private static final Class[] list = {YardObject.class, HiveObject.class, UserObject.class, CheckFormObject.class, DiseaseObject.class};
 
 	private static final Class[] classesToSync = {UserObject.class, YardObject.class, HiveObject.class, CheckFormObject.class};
 	
-	private static Map<Class, Class[]> childParentRelationships = new HashMap<Class, Class[]>(){{
-		put(YardObject.class, new Class[]{UserObject.class});
-	}};
-	
-	
+
 	/**
 	 * @return list of all classes that are being persisted to DB 
 	 */
@@ -31,14 +29,5 @@ public class BeeObjectClasses {
 	public static Class[] getClassesToSyncList(){
 		return classesToSync;
 	}
-	
-	public static Map<Class,Class[]> getChildParentRelationships(){
-		return childParentRelationships;
-	}
-	
-	public static Class[] getParentRelationships(Class child){
-		Class[] parents;
-		parents = childParentRelationships.get(child);
-		return parents;
-	}
+
 }

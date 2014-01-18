@@ -5,6 +5,7 @@
     android:orientation="vertical" >
 
     <ImageView
+        android:contentDescription="@string/icon"
         android:id="@+id/imageView1"
         android:layout_width="fill_parent"
         android:layout_height="150dp"
@@ -12,8 +13,9 @@
 
     <Button
         android:id="@+id/button1"
+        style="@style/buttonStyle"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Change password" />
+        android:text="@string/changePassword" />
 
 </LinearLayout>

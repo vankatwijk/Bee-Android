@@ -28,7 +28,7 @@
 	        android:layout_alignParentLeft="true"
 	        android:layout_below="@id/cityText"
 	        android:layout_centerHorizontal="true"
-	        android:contentDescription="icon" />
+	        android:contentDescription="@string/icon" />
 
 	    <TextView
 	        android:id="@+id/condDescr"

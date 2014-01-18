@@ -1,6 +1,5 @@
 package com.example.beeproject.global.classes;
 
-import com.j256.ormlite.table.DatabaseTable;
 
 /**
  * Interface, which all domain objects must implement in order to:

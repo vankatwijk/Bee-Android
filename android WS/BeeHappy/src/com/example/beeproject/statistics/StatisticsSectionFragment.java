@@ -24,12 +24,10 @@ import com.example.beeproject.global.classes.CheckFormObject;
 import com.example.beeproject.global.classes.DatabaseHelper;
 import com.example.beeproject.global.classes.DatabaseManager;
 import com.example.beeproject.global.classes.HiveObject;
-import com.example.beeproject.global.classes.YardObject;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.Where;
 import com.jjoe64.graphview.BarGraphView;
-import com.jjoe64.graphview.CustomLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries;
@@ -47,6 +45,7 @@ public class StatisticsSectionFragment extends Fragment {
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -124,6 +123,7 @@ public class StatisticsSectionFragment extends Fragment {
 				maxY = 0;
 				for(Object[] yardAndHive : yardsAndHives){
 					if(yardAndHive.length == 2){
+						@SuppressWarnings("unused")
 						String yardName = (String) yardAndHive[0];
 						HiveObject hive = (HiveObject) yardAndHive[1];
 						
@@ -218,6 +218,7 @@ public class StatisticsSectionFragment extends Fragment {
 	    	Log.d(LOG_TAG, "FINISHED");
 		}
 		
+		@SuppressWarnings("unused")
 		public GraphViewSeries getHiveSeries(HiveObject hive){
 			GraphViewSeries result;
 			Double[] seriesData = getBeeData(getArguments().getInt(ARG_SECTION_NUMBER));

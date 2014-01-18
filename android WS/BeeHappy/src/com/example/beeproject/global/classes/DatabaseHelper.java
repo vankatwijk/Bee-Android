@@ -249,6 +249,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @return
 	 * @throws SQLException
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Dao<? super BeeObjectInterface, Integer> getObjectClassDao(Class objectClass) throws SQLException{
 		
 		Dao<? super BeeObjectInterface, Integer> objectClassDao = DaoManager.createDao(getConnectionSource(), objectClass);
@@ -261,6 +262,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @return
 	 * @throws SQLException
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public RuntimeExceptionDao<? super BeeObjectInterface, Integer> getObjectClassRunDao(Class objectClass) throws SQLException{
 		
 		Dao<? super BeeObjectInterface, Integer> objectClassDao = DaoManager.createDao(getConnectionSource(), objectClass);

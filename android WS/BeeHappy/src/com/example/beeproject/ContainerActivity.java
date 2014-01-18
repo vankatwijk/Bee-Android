@@ -9,16 +9,14 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.beeproject.calendar.FragmentCalender;
-import com.example.beeproject.diseases.FragmentDiseases;
 import com.example.beeproject.global.classes.GlobalVar;
 import com.example.beeproject.login.LoginActivity;
 import com.example.beeproject.profile.FragmentProfileInfo;
-import com.example.beeproject.statistics.FragmentStatistics;
 import com.example.beeproject.statistics.Statistics;
 import com.example.beeproject.syncing.SyncTask;
 import com.example.beeproject.syncing.SyncTaskCallback;
 import com.example.beeproject.weather.WeatherActivity;
-import com.example.beeproject.yards.FragmentYardList;
+import com.example.beeproject.yards.FragmentYard;
 
 /**
  * An activity representing a single Item detail screen. This activity is only
@@ -42,7 +40,7 @@ public class ContainerActivity extends Methods{
 
 			
 			if(MainActivity.status == "1"){			
-				FragmentYardList fragment = new FragmentYardList();
+				FragmentYard fragment = new FragmentYard();
 				getSupportFragmentManager().beginTransaction().replace(R.id.item_detail_container, fragment).commit();
 				
 			}else if(MainActivity.status == "2"){
@@ -70,11 +68,6 @@ public class ContainerActivity extends Methods{
 				Intent intent = new Intent(getApplicationContext(), Statistics.class);
 				startActivity(intent);	
 		        
-			}else if(MainActivity.status == "6"){
-
-				FragmentDiseases fragment = new FragmentDiseases();				
-				getSupportFragmentManager().beginTransaction().replace(R.id.item_detail_container, fragment).commit();	
-					 
 			}
 		}
 	}

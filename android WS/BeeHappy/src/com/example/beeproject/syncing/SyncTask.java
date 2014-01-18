@@ -2,7 +2,6 @@ package com.example.beeproject.syncing;
 
 import android.app.Activity;
 import android.os.AsyncTask;
-import android.util.Log;
 
 public class SyncTask  extends AsyncTask<String, Void, String> {
 	private SyncTaskCallback callback;

@@ -27,7 +27,10 @@ import com.example.beeproject.global.classes.BeeObjectInterface;
 import com.example.beeproject.global.classes.CheckFormObject;
 import com.example.beeproject.global.classes.DatabaseHelper;
 import com.example.beeproject.global.classes.DatabaseManager;
+<<<<<<< HEAD
 import com.example.beeproject.global.classes.GlobalVar;
+=======
+>>>>>>> master
 import com.example.beeproject.global.classes.HiveObject;
 import com.example.beeproject.global.classes.UserObject;
 import com.example.beeproject.global.classes.YardObject;
@@ -35,6 +38,7 @@ import com.example.beeproject.gsonconvertion.GsonProvider;
 import com.google.gson.Gson;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
+@SuppressWarnings("rawtypes")
 public class SyncHelper {
 	public final String LOG_TAG ="SyncHelper";
 	
@@ -57,8 +61,6 @@ public class SyncHelper {
 	 * @return
 	 */
 	public String syncronizeToServer(){
-		System.out
-				.println(BeeObjectClasses.getChildParentRelationships());
 		/* These methods are called to fastly create/update/or delete objects of all syncronised classes
 		 * To test that everything works*/
 		createSomeStuff();
@@ -71,6 +73,7 @@ public class SyncHelper {
     	//Log.d(LOG_TAG, pingResult.toString());
 		if(pingResult != null && pingResult.getCommandResultType() == BeeCommandResultType.SUCCESS){
 
+			
 			Class[] classesToSync = BeeObjectClasses.getClassesToSyncList();
 			
 			for (Class objectClass : classesToSync){
@@ -93,6 +96,7 @@ public class SyncHelper {
 	 * @param objectClass
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public int syncronizeClass(Class objectClass){
 		try {
 			/* Syncronise created or updated objects.
@@ -171,6 +175,7 @@ public class SyncHelper {
 	 * @param objectClassDao
 	 * @param objToSync
 	 */
+	@SuppressWarnings("unused")
 	private void syncronizeObject(Class objectClass,
 			RuntimeExceptionDao<? super BeeObjectInterface, Integer> objectClassDao, BeeObjectInterface objToSync) {
 		
@@ -227,8 +232,6 @@ public class SyncHelper {
 		}
 	}
 	
-	
-
 	/**
 	 * Stores the information on the deleted object in the local database. 
 	 * <p>This method must be called every time an object that is synced to server is deleted

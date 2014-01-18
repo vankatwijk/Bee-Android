@@ -1,11 +1,7 @@
 package com.example.beeproject.syncing;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URL;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -15,8 +11,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
-
-import android.util.Log;
 
 import com.example.beeproject.commandexecution.commands.BeeCommand;
 import com.example.beeproject.commandexecution.results.BeeCommandResult;
@@ -28,7 +22,8 @@ public class BeeServerHttpClient {
 
     private static String BASE_URL = "http://10.0.2.2:8089/BeeHappyServer/CommandExecuteServlet"; //TODO: take the url from settings file
     
-    public static BeeCommandResult executeCommand(BeeCommand command) {
+    @SuppressWarnings("null")
+	public static BeeCommandResult executeCommand(BeeCommand command) {
         HttpURLConnection con = null ;
         InputStream is = null;
             

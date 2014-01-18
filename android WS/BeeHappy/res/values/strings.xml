@@ -59,6 +59,10 @@
     <string name="title_section2des">statistics for Pupae</string>
     <string name="title_section3des">statistics for Mites</string>
     <string name="title_activity_statistics">Statistics</string>
+    <string name="icon">icon</string>
+    <string name="changePassword">Change Password</string>
+    <string name="logout">Logout</string>
+    <string name="synchronize">Synchronize</string>
     
     
     

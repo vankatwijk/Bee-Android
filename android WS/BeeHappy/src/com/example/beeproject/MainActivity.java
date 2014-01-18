@@ -3,24 +3,19 @@ package com.example.beeproject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.beeproject.calendar.FragmentCalender;
-import com.example.beeproject.diseases.FragmentDiseases;
 import com.example.beeproject.global.classes.GlobalVar;
-import com.example.beeproject.login.FragmentLogin;
 import com.example.beeproject.login.LoginActivity;
 import com.example.beeproject.profile.FragmentProfileInfo;
-import com.example.beeproject.statistics.FragmentStatistics;
 import com.example.beeproject.statistics.Statistics;
 import com.example.beeproject.syncing.SyncTask;
 import com.example.beeproject.syncing.SyncTaskCallback;
 import com.example.beeproject.weather.WeatherActivity;
-import com.example.beeproject.yards.FragmentYardList;
+import com.example.beeproject.yards.FragmentYard;
 
 
 public class MainActivity extends FragmentActivity implements
@@ -72,7 +67,7 @@ public class MainActivity extends FragmentActivity implements
 		status = id;
 		if (mTwoPane) {
 			if(id == "1"){			
-				FragmentYardList fragment = new FragmentYardList();
+				FragmentYard fragment = new FragmentYard();
 				getSupportFragmentManager().beginTransaction().replace(R.id.item_detail_container, fragment).commit();
 				
 			}else if(id == "2"){
@@ -100,11 +95,6 @@ public class MainActivity extends FragmentActivity implements
 				Intent intent = new Intent(getApplicationContext(), Statistics.class);
 				startActivity(intent);	
 		        
-			}else if(id == "6"){
-
-				FragmentDiseases fragment = new FragmentDiseases();				
-				getSupportFragmentManager().beginTransaction().replace(R.id.item_detail_container, fragment).commit();	
-					 
 			}
 
 		} else {

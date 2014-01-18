@@ -4,8 +4,7 @@ package com.example.beeproject.weather;
 import org.json.JSONException;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -28,7 +27,7 @@ public class YardWeatherActivity extends FragmentActivity {
     private TextView windDeg;
     
     private TextView hum;
-    private ImageView imgView;
+
     
     private ViewPager pager;
     
@@ -52,7 +51,6 @@ public class YardWeatherActivity extends FragmentActivity {
             press = (TextView) findViewById(R.id.press);
             windSpeed = (TextView) findViewById(R.id.windSpeed);
             windDeg = (TextView) findViewById(R.id.windDeg);
-            imgView = (ImageView) findViewById(R.id.condIcon);
             pager = (ViewPager) findViewById(R.id.pager);
                    
             JSONWeatherTask task = new JSONWeatherTask();         
@@ -72,9 +70,7 @@ public class YardWeatherActivity extends FragmentActivity {
                     System.out.println(data);
                     try {
                             weather = JSONWeatherParser.getWeather(data);
-                            
-                            // Let's retrieve the icon
-                            weather.iconData = ( (new WeatherHttpClient()).getImage(weather.currentCondition.getIcon()));
+                           
                             
                     } catch (JSONException e) {                                
                             e.printStackTrace();
@@ -90,9 +86,75 @@ public class YardWeatherActivity extends FragmentActivity {
             protected void onPostExecute(Weather weather) {                        
                     super.onPostExecute(weather);
                     
-                    if (weather.iconData != null && weather.iconData.length > 0) {
-                            Bitmap img = BitmapFactory.decodeByteArray(weather.iconData, 0, weather.iconData.length); 
-                            imgView.setImageBitmap(img);
+                    int id = weather.currentCondition.getWeatherId();
+                    System.out.println(weather.currentCondition.getWeatherId());
+                    
+                    if(id == 200 || id == 201 || id == 202 || id == 210 || id == 211 || id == 212 || id == 221 || id == 230 || id == 231 || id == 232){
+                    	int imageResource = R.drawable.thunderstorm;
+
+                        ImageView imageView = (ImageView) findViewById(R.id.condIcon);
+                        Drawable image = getResources().getDrawable(imageResource);
+                        imageView.setImageDrawable(image);
+                    }else if(id == 300 || id == 301 || id == 302 || id == 310 || id == 311 || id == 312 || id == 321){
+                    	int imageResource = R.drawable.rainy;
+
+                        ImageView imageView = (ImageView) findViewById(R.id.condIcon);
+                        Drawable image = getResources().getDrawable(imageResource);
+                        imageView.setImageDrawable(image);
+                    }else if(id == 500 || id == 501 || id == 502 || id == 503 || id == 504){
+                    	int imageResource = R.drawable.rainy_with_sun;
+
+                        ImageView imageView = (ImageView) findViewById(R.id.condIcon);
+                        Drawable image = getResources().getDrawable(imageResource);
+                        imageView.setImageDrawable(image);
+                    }else if(id == 511){
+                    	int imageResource = R.drawable.snow;
+
+                        ImageView imageView = (ImageView) findViewById(R.id.condIcon);
+                        Drawable image = getResources().getDrawable(imageResource);
+                        imageView.setImageDrawable(image);
+                    }else if(id == 520 || id == 521 || id == 522){
+                    	int imageResource = R.drawable.rainy;
+
+                        ImageView imageView = (ImageView) findViewById(R.id.condIcon);
+                        Drawable image = getResources().getDrawable(imageResource);
+                        imageView.setImageDrawable(image);
+                    }else if(id == 600 || id == 601 || id == 602 || id == 611 || id == 621){
+                    	int imageResource = R.drawable.snow;
+
+                        ImageView imageView = (ImageView) findViewById(R.id.condIcon);
+                        Drawable image = getResources().getDrawable(imageResource);
+                        imageView.setImageDrawable(image);
+                    }else if(id == 701 || id == 711 || id == 721 || id == 731 || id == 741){
+                    	int imageResource = R.drawable.myst;
+
+                        ImageView imageView = (ImageView) findViewById(R.id.condIcon);
+                        Drawable image = getResources().getDrawable(imageResource);
+                        imageView.setImageDrawable(image);
+                    }else if(id == 800){
+                    	int imageResource = R.drawable.sunny;
+
+                        ImageView imageView = (ImageView) findViewById(R.id.condIcon);
+                        Drawable image = getResources().getDrawable(imageResource);
+                        imageView.setImageDrawable(image);
+                    }else if(id == 801){
+                    	int imageResource = R.drawable.sunny_with_clouds;
+
+                        ImageView imageView = (ImageView) findViewById(R.id.condIcon);
+                        Drawable image = getResources().getDrawable(imageResource);
+                        imageView.setImageDrawable(image);
+                    }else if(id == 802){
+                    	int imageResource = R.drawable.cloudy;
+
+                        ImageView imageView = (ImageView) findViewById(R.id.condIcon);
+                        Drawable image = getResources().getDrawable(imageResource);
+                        imageView.setImageDrawable(image);
+                    }else if(id == 803 || id == 804){
+                    	int imageResource = R.drawable.dark_clouds;
+
+                        ImageView imageView = (ImageView) findViewById(R.id.condIcon);
+                        Drawable image = getResources().getDrawable(imageResource);
+                        imageView.setImageDrawable(image);
                     }
                     
                     cityText.setText(weather.location.getCity() + "," + weather.location.getCountry());
@@ -117,7 +179,7 @@ public class YardWeatherActivity extends FragmentActivity {
                 try {
                         forecast = JSONWeatherParser.getForecastWeather(data);
                         // Let's retrieve the icon
-                        //weather.iconData = ( (new WeatherHttpClient()).getImage(weather.currentCondition.getIcon()));
+                        
                         
                 } catch (JSONException e) {                                
                         e.printStackTrace();

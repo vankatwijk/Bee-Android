@@ -124,9 +124,9 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/nrOfFramesTV"
         android:layout_alignLeft="@+id/qRace"
+        android:background="@drawable/rect_edit_text"
         android:ems="10"
-        android:inputType="numberDecimal|text"
-        android:background="@drawable/rect_edit_text" />
+        android:inputType="numberDecimal|text" />
 
     <EditText
         android:id="@+id/ocupiedFrames"
@@ -214,16 +214,6 @@
         android:textColor="#000" />
 
     <TextView
-        android:id="@+id/nrOfLayersTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ocupiedFramesTV"
-        android:layout_marginBottom="10dp"
-        android:layout_toLeftOf="@+id/qWingsClippedCheck"
-        android:text="@string/nrOfLayersString"
-        android:textColor="#000" />
-
-    <TextView
         android:id="@+id/eggsTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -239,9 +229,9 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/nrOfLayersTV"
         android:layout_toRightOf="@+id/ocupiedFramesTV"
+        android:background="@drawable/rect_edit_text"
         android:ems="10"
-        android:inputType="text"
-        android:background="@drawable/rect_edit_text" >
+        android:inputType="numberDecimal|text" >
 
         <requestFocus />
     </EditText>
@@ -262,9 +252,9 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/honeyCombsTV"
         android:layout_alignLeft="@+id/nrOfLayersET"
+        android:background="@drawable/rect_edit_text"
         android:ems="10"
-        android:inputType="text"
-        android:background="@drawable/rect_edit_text" />
+        android:inputType="numberDecimal|text" />
 
     <TextView
         android:id="@+id/commentsTV"
@@ -364,6 +354,16 @@
         android:background="@drawable/rect_edit_text"
         android:ems="10"
         android:inputType="text" />
+
+    <TextView
+        android:id="@+id/nrOfLayersTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/eggsTV"
+        android:layout_below="@+id/ocupiedFramesTV"
+        android:layout_marginBottom="10dp"
+        android:text="@string/nrOfLayersString"
+        android:textColor="#000" />
 
 </RelativeLayout>
 </ScrollView>
