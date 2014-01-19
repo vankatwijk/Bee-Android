@@ -1,6 +1,7 @@
 package com.example.beeproject.global.classes;
 
-import com.j256.ormlite.table.DatabaseTable;
+import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Interface, which all domain objects must implement in order to:
@@ -54,4 +55,19 @@ public interface BeeObjectInterface {
 	 * @param id of this object stored in the server side
 	 */
 	public void setServerSideID(int serverSideID);
+	
+	/**
+	 * Helper method to get a list of all the related child objects.
+	 * <p>F.e. HiveObject class has a field  YardObject yardID, 
+	 * therefore HiveObject is a child of YardObjed. 
+	 * This means that if a YardObject is marked as deleted, 
+	 * HiveObjects, related to it must be marked as deleted too.
+	 * <p>In case of YardObject, this method must return 
+	 * list of HiveObjects, referencing YardObject in question in their yardID
+	 * @return list of objects, related to the object
+	 * @throws SQLException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 */
+	public List<BeeObjectInterface> listChildRelations() throws SQLException, InstantiationException, IllegalAccessException;
 }

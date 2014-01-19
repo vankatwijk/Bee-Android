@@ -15,7 +15,11 @@ public class BeeObjectClasses {
 
 	private static final Class[] list = {YardObject.class, HiveObject.class, UserObject.class, CheckFormObject.class, DiseaseObject.class};
 
-	private static final Class[] classesToSync = {UserObject.class, YardObject.class, HiveObject.class, CheckFormObject.class};
+	/**
+	 * List of classes, objects of which will be synchronized to the server.
+	 */
+	private static final Class[] classesToSync = {UserObject.class, YardObject.class, HiveObject.class, 
+		CheckFormObject.class, OutbrakeObject.class, DiseaseNotesObject.class};
 	
 
 	/**

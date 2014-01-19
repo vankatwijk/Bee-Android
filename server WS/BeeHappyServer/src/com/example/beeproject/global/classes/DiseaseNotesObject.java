@@ -1,5 +1,15 @@
 package com.example.beeproject.global.classes;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.example.beeproject.db.ConnectionProvider;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -23,8 +33,8 @@ public class DiseaseNotesObject implements BeeObjectInterface{
 	
 	@DatabaseField(canBeNull = false)
 	private String description;
-	
-	@DatabaseField(canBeNull = false)
+
+    //NOT A DATABASE FIELD, only database field on the client side
 	private boolean synced;
 	
     @DatabaseField(canBeNull = true) 
@@ -114,5 +124,10 @@ public class DiseaseNotesObject implements BeeObjectInterface{
 		this.serverSideID = serverSideID;
 	}
 	
-	
+	@Override
+	public List<BeeObjectInterface> listChildRelations() throws SQLException {
+		List<BeeObjectInterface> result = new ArrayList<BeeObjectInterface>();
+		
+		return result;
+	}
 }

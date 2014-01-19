@@ -200,36 +200,15 @@ public class DBCommandExecuter {
 		int nrAffected = 0;
 		System.out.println("cascadeMarkAsDeleted: " + parentObject);
 		
-		Class childObjectClass = null;
-		String queryString = "";
-		switch(parentObject.getClass().getSimpleName()){
-		case "UserObject":
-			UserObject userParentObject = (UserObject) parentObject;
-			childObjectClass = YardObject.class;
-			queryString = "SELECT * FROM " + YardObject.getDBTableNameStatic() + " WHERE " + "(\"userID_id\" = " + userParentObject.getId() + ")";
-			break;
-		case "YardObject":
-			YardObject yardParentObject = (YardObject) parentObject;
-			childObjectClass = HiveObject.class;
-			queryString = "SELECT * FROM " + HiveObject.getDBTableNameStatic() + " WHERE " + "(\"yardID_id\" = " + yardParentObject.getId() + ")";
-			break;
-		case "HiveObject":
-			HiveObject hiveParentObject = (HiveObject) parentObject;
-			childObjectClass = CheckFormObject.class;
-			queryString = "SELECT * FROM " + CheckFormObject.getDBTableNameStatic() + " WHERE " + "(\"hiveID_id\" = " + hiveParentObject.getId() + ")";
-			break;
-		}
-		
-		if(childObjectClass!=null && !queryString.equals("")){
-			Dao<? super BeeObjectInterface, Integer> childObjectClassDao = DaoManager.createDao(ConnectionProvider.getConnectionSource(), childObjectClass);
-			GenericRawResults<? super BeeObjectInterface> selectedResult = childObjectClassDao.queryRaw(queryString, childObjectClassDao.getRawRowMapper());
-			List<BeeObjectInterface> childrenToMarkDeleted = (List<BeeObjectInterface>) selectedResult.getResults();
-			
+		List<BeeObjectInterface> childrenToMarkDeleted;
+		try {
+			childrenToMarkDeleted = parentObject.listChildRelations();
 			System.out.println("To mark deleted: \n" + childrenToMarkDeleted);
 			/* 
 			 * Marking the objects as deleted - set deleted=true and update
 			 * */
 			for(BeeObjectInterface objToMarkDeleted : childrenToMarkDeleted){
+				Dao<? super BeeObjectInterface, Integer> childObjectClassDao = (Dao<? super BeeObjectInterface, Integer>) DaoManager.createDao(ConnectionProvider.getConnectionSource(), objToMarkDeleted.getClass());
 				//have to update the object fetched from DB by id, otherwise some fields get set to default values
 				BeeObjectInterface objToMarkInDB = (BeeObjectInterface) childObjectClassDao.queryForId(objToMarkDeleted.getId());
 				objToMarkInDB.setDeleted(true);
@@ -237,13 +216,13 @@ public class DBCommandExecuter {
 				int nUpdatedRows = childObjectClassDao.update(objToMarkInDB);
 				nrAffected += nUpdatedRows + nUpdateChildren;
 			}
-		}
-		else{
-			System.out.println("Unknown childObjectClass or queryString for "
-					+ parentObject.getClass().getSimpleName());
+			
+			System.out.println("finished cascadeMarkAsDeleted: " + parentObject + "\n   nrAffected="+nrAffected);
+		} catch (InstantiationException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
-		System.out.println("finished cascadeMarkAsDeleted: " + parentObject + "\n   nrAffected="+nrAffected);
 		return nrAffected;
 	}
 
