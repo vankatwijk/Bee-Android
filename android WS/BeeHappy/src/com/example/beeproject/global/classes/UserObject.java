@@ -1,5 +1,6 @@
 package com.example.beeproject.global.classes;
 
+import com.google.gson.annotations.Expose;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -18,7 +19,7 @@ public class UserObject implements BeeObjectInterface{
     
     @DatabaseField(canBeNull = false)
     private String username;
-    
+
     @DatabaseField(canBeNull = false)
     private String password;
 
@@ -121,6 +122,7 @@ public class UserObject implements BeeObjectInterface{
 	public BeeObjectInterface getServerSideObject(DatabaseHelper db) {
 		UserObject serverSideObject = new UserObject(id, username, password, synced, serverSideID);
 		serverSideObject.setId(serverSideID); 
+		serverSideObject.setPassword("pas"); // we dont want to send password to server - security!
 		return serverSideObject;
 	}
 
