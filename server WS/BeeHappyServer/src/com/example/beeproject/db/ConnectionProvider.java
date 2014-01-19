@@ -29,7 +29,7 @@ public class ConnectionProvider {
 					connectionSource.setPassword(databasePassword);
 					
 					Dao<UserObject, Integer> dao = DaoManager.createDao(connectionSource, UserObject.class);
-					int result  = dao.executeRawNoArgs("SELECT 1 FROM test;");
+					int result  = dao.executeRawNoArgs("SELECT 1 AS test;");
 				}
 				catch(PSQLException e){
 					//probably, database does not exist
