@@ -3,8 +3,14 @@ package com.example.beeproject.global.classes;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+/**
+ * Class representing disease outbreak object.
+ * <p>Objects of this class can be persisted to a database using ORMLite
+ * <p>THIS VERSION IS ONLY FOR SERVER SIDE. Client must have its own different implementation
+ * @author rezolya
+ */
 @DatabaseTable(tableName = "outbrakes")
-public class OutbrakeObject {
+public class OutbrakeObject implements BeeObjectInterface{
 
 	@DatabaseField(generatedId = true)
 	private int id;
@@ -23,10 +29,13 @@ public class OutbrakeObject {
 	
 	@DatabaseField(canBeNull = false)
 	private boolean synced;
-
-    @DatabaseField(canBeNull = true)
-    private int serverSideID;
 	
+    @DatabaseField(canBeNull = true) 
+	private boolean deleted; // true if object is considered deleted on the server
+	
+    //NOT A DATABASE FIELD, only database field on the client side
+    private int serverSideID;
+    
 	public OutbrakeObject(){
 	}
 
@@ -82,6 +91,41 @@ public class OutbrakeObject {
 
 	public void setSynced(boolean synced) {
 		this.synced = synced;
+	}
+
+	@Override
+	public String getDBTableName() {
+		return "outbrakes";
+	}
+
+	@Override
+	public int getId() {
+		return id;
+	}
+
+	@Override
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	@Override
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	@Override
+	public void setDeleted(boolean deleted) {
+		this.deleted=deleted;
+	}
+
+	@Override
+	public int getServerSideID() {
+		return serverSideID;
+	}
+
+	@Override
+	public void setServerSideID(int serverSideID) {
+		this.serverSideID = serverSideID;
 	}
 	
 	
