@@ -6,9 +6,12 @@ import java.util.GregorianCalendar;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
@@ -26,6 +29,11 @@ public class CalendarActivity extends FragmentActivity {
 	private final String TAG = "CalendarActivity";
 	private Date _CurrentSelectedDate;
 	private int _CurrentSelectedMonth = Calendar.getInstance().get(Calendar.MONTH);
+	// calendar dialog properties
+	private EditText et_title;
+	private EditText et_start;
+	private EditText et_end;
+	private AlertDialog alertDialog;
 	
 	private void setCustomResourceForDates() {
 		if(!BeeHappyCalendarResolver.hasCalendar(getApplicationContext())) {
@@ -178,40 +186,84 @@ public class CalendarActivity extends FragmentActivity {
 	public void openDialog(MenuItem v) {				
 		switch(v.getItemId()) {
 			case R.id.action_edit:
-				EditEventDialog();
+				alertDialog = buildDialog("Edit event", "edit");
 				break;
 			case R.id.action_new:
-				NewEventDialog();
+				alertDialog = buildDialog("New event", "new");
 				break;
 			default:
 				throw new IllegalStateException("Unidentified id" + v.getItemId());
-		}		
-	}
-	
-	private void EditEventDialog() {
-		AlertDialog alert = buildDialog("Edit event", "edit");
-		alert.show();
-	}
-	
-	private void NewEventDialog() {
-		AlertDialog alert = buildDialog("New event", "new");
-		alert.show();
-		java.text.DateFormat _Format = DateFormat.getDateFormat(this);
-		EditText et_start = (EditText) alert.findViewById(R.id.event_start);
-		et_start.setText(_Format.format(_CurrentSelectedDate));
+		}
+		alertDialog.show();
+		alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 		
-		EditText et_end = (EditText) alert.findViewById(R.id.event_end);
-		et_end.setText(_Format.format(_CurrentSelectedDate));
+		// if a date has been selected, fill in start and end dates.
+		if(_CurrentSelectedDate != null) {
+			java.text.DateFormat _Format = DateFormat.getDateFormat(this);
+			EditText et_start = (EditText) alertDialog.findViewById(R.id.event_start);
+			et_start.setText(_Format.format(_CurrentSelectedDate));			
+			EditText et_end = (EditText) alertDialog.findViewById(R.id.event_end);
+			et_end.setText(_Format.format(_CurrentSelectedDate));
+		}
+		
+		setEditTextListeners(alertDialog);
+		setPositiveButtonListener(alertDialog);
 	}
 	
+	/**
+	 * sets listener to save event if pressed positive
+	 * @param alert
+	 */
+	private void setPositiveButtonListener(AlertDialog alert) {
+		alert.getButton(AlertDialog.BUTTON_POSITIVE);
+	}
+	private void setEditTextListeners(AlertDialog alert) {
+		et_title = (EditText) alert.findViewById(R.id.event_title);
+		et_title.addTextChangedListener(hasText());
+		et_start = (EditText) alert.findViewById(R.id.event_start);
+		et_start.addTextChangedListener(hasText());
+		et_end = (EditText) alert.findViewById(R.id.event_end);
+		et_end.addTextChangedListener(hasText());
+	}
+	
+	private TextWatcher hasText() {
+		return new TextWatcher() {
+		      @Override
+		      public void afterTextChanged(Editable arg0) {
+		    	  isNotEmpty();
+		      }
+
+		      @Override
+		      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+		      }
+
+		      @Override
+		      public void onTextChanged(CharSequence s, int start, int before, int count) {
+		      }
+		    };
+	}
+	
+	private void isNotEmpty() {
+		if(!(et_title.getText().toString().matches("") &&
+				et_start.getText().toString().matches("") &&
+				et_start.getText().toString().matches("")))
+		{
+			alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+		}
+	}
+	
+	
+	/**
+	 * dialog builder, needs to be refactor how to choose the positive button
+	 * @param title
+	 * @param positiveButton
+	 * @return
+	 */
 	private AlertDialog buildDialog(String title, String positiveButton) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(title)
 			.setView(getLayoutInflater().inflate(R.layout.dialog_event, null))
-	        .setPositiveButton(positiveButton, new DialogInterface.OnClickListener() {
-	            public void onClick(DialogInterface dialog, int id) {
-	            }
-	        })
+	        .setPositiveButton(positiveButton, positiveClickListener(positiveButton))
 	        .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
 	            public void onClick(DialogInterface dialog, int id) {
 	            	Toast.makeText(getApplicationContext(), "Cancelled", Toast.LENGTH_LONG).show();
@@ -219,4 +271,23 @@ public class CalendarActivity extends FragmentActivity {
 	        });
 		return builder.create();
 	}
+
+	private OnClickListener positiveClickListener(String type) {
+		if(type == "new") { 
+			return new DialogInterface.OnClickListener() {
+			    public void onClick(DialogInterface dialog, int id) {
+			    	Toast.makeText(getApplicationContext(), "new", Toast.LENGTH_LONG).show();
+			    }
+			};
+		}
+		else if (type == "edit") {
+			return new DialogInterface.OnClickListener() {
+			    public void onClick(DialogInterface dialog, int id) {
+			    	Toast.makeText(getApplicationContext(), "edit", Toast.LENGTH_LONG).show();
+			    }
+			};
+		}
+		
+		throw new IllegalStateException("unknown type listener found for " + type);
+	}	
 }
