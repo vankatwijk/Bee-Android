@@ -55,21 +55,7 @@ public class CalendarActivity extends FragmentActivity {
 	}
 	
 	private void setSelectedDate(Date date) {
-		// clear current selected date
-		if(_CurrentSelectedDate != null) {
-			_CaldroidFragment.setTextColorForDate(R.color.black, _CurrentSelectedDate);
-			
-			if(sameDay(getTodayDate(), _CurrentSelectedDate)) {
-				_CaldroidFragment.setBackgroundResourceForDate(R.drawable.red_border, _CurrentSelectedDate);
-			}
-			else{
-				_CaldroidFragment.setBackgroundResourceForDate(R.color.white, _CurrentSelectedDate);
-				
-				if(!sameMonth(_CurrentSelectedDate, _CurrentSelectedMonth)) {
-					_CaldroidFragment.setTextColorForDate(R.color.caldroid_gray, _CurrentSelectedDate);
-				}
-			}
-		}
+		resetSelectedDate(_CurrentSelectedDate, _CurrentSelectedMonth);
 		_CurrentSelectedDate = date;
 				
 		// set new current selected date
@@ -78,6 +64,30 @@ public class CalendarActivity extends FragmentActivity {
 			_CaldroidFragment.setTextColorForDate(R.color.white, date);
 			_CaldroidFragment.refreshView();
 		}
+	}
+	/** clear current selected date
+	 * 
+	 * @param date
+	 * @param month
+	 */
+	private void resetSelectedDate(Date date, int month) {
+		if (date == null) {
+			return;
+		}
+		
+		_CaldroidFragment.setTextColorForDate(R.color.black, date);
+		
+		if(sameDay(getTodayDate(), date)) {
+			_CaldroidFragment.setBackgroundResourceForDate(R.drawable.red_border, date);
+		}
+		else{
+			_CaldroidFragment.setBackgroundResourceForDate(R.color.white, date);
+			
+			if(!sameMonth(date, month)) {
+				_CaldroidFragment.setTextColorForDate(R.color.caldroid_gray, date);
+			}
+		}
+		
 	}
 	
 	private boolean sameDay(Date date1, Date date2) {
