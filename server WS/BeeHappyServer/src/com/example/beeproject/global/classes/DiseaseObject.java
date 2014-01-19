@@ -18,10 +18,10 @@ public class DiseaseObject implements BeeObjectInterface{
 	@DatabaseField(canBeNull = false)
     private String diseaseName;
 	
-	@DatabaseField(canBeNull = false)
+	@DatabaseField(canBeNull = false, width = 1000)
     private String description;
 	
-	@DatabaseField(canBeNull = false)
+	@DatabaseField(canBeNull = false, width = 1000)
     private String treatment;
 	
 	@DatabaseField(canBeNull = false)
