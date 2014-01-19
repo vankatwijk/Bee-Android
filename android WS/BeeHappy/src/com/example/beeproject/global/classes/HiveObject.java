@@ -1,5 +1,6 @@
 package com.example.beeproject.global.classes;
 
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -39,6 +40,13 @@ public class HiveObject implements BeeObjectInterface{
 		this.hiveName = hiveName;
 		this.yardID = yardId;
 		this.synced = synced;
+	}
+
+	public HiveObject(String hiveName, YardObject yardId, boolean synced, int serverSideID){
+		this.hiveName = hiveName;
+		this.yardID = yardId;
+		this.synced = synced;
+		this.serverSideID = serverSideID;
 	}
 	
 	public HiveObject(String hiveName, int yardId, boolean synced){
@@ -105,6 +113,25 @@ public class HiveObject implements BeeObjectInterface{
 	@Override
 	public void setServerSideID(int serverSideID) {
 		this.serverSideID = serverSideID;
+	}
+
+	@Override
+	public int refresh(DatabaseHelper db) {
+		RuntimeExceptionDao<YardObject, Integer> yardDao = db.getYardRunDao();
+		yardDao.refresh(this.yardID);
+
+		return 0;
+	}
+
+	@Override
+	public BeeObjectInterface getServerSideObject(DatabaseHelper db) {
+		HiveObject serverSideObject = new HiveObject(hiveName, yardID, synced);
+		serverSideObject.setId(serverSideID); 
+		
+		serverSideObject.refresh(db);
+		serverSideObject.setYardId(new YardObject(serverSideObject.getYardId().getServerSideID()));
+		
+		return serverSideObject;
 	}
 
 

@@ -1,14 +1,23 @@
 package com.example.beeproject.global.classes;
 
-import com.j256.ormlite.dao.RuntimeExceptionDao;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.example.beeproject.db.ConnectionProvider;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 /**
- * Class representing notes on the disease outbreak object.
+ * Class representing notes for disease outbreak object.
  * <p>Objects of this class can be persisted to a database using ORMLite
- * <p>THIS VERSION IS ONLY FOR CLIENT SIDE. Server must have its own different implementation
- *
+ * <p>THIS VERSION IS ONLY FOR SERVER SIDE. Client must have its own different implementation
+ * @author rezolya
  */
 @DatabaseTable(tableName = "diseasenotes")
 public class DiseaseNotesObject implements BeeObjectInterface{
@@ -24,13 +33,17 @@ public class DiseaseNotesObject implements BeeObjectInterface{
 	
 	@DatabaseField(canBeNull = false)
 	private String description;
-	
-	@DatabaseField(canBeNull = false)
-	private boolean synced;
 
-    @DatabaseField(canBeNull = true)
+    //NOT A DATABASE FIELD, only database field on the client side
+	private boolean synced;
+	
+    @DatabaseField(canBeNull = true) 
+	private boolean deleted; // true if object is considered deleted on the server
+	
+    //NOT A DATABASE FIELD, only database field on the client side
     private int serverSideID;
-    
+   
+	
 	public DiseaseNotesObject(){
 	}
 
@@ -40,16 +53,6 @@ public class DiseaseNotesObject implements BeeObjectInterface{
 		this.outbrakeID = outbrakeID;
 		this.date = date;
 		this.description = description;
-	}
-	
-	public DiseaseNotesObject(OutbrakeObject outbrakeID, String date,
-			String description, boolean synced, int serverSideID) {
-		super();
-		this.outbrakeID = outbrakeID;
-		this.date = date;
-		this.description = description;
-		this.synced = synced;
-		this.serverSideID = serverSideID;
 	}
 
 	public OutbrakeObject getOutbrakeID() {
@@ -88,7 +91,7 @@ public class DiseaseNotesObject implements BeeObjectInterface{
 
 	@Override
 	public void setId(int id) {
-		this.id = id;
+		this.id=id;
 	}
 
 	@Override
@@ -102,6 +105,16 @@ public class DiseaseNotesObject implements BeeObjectInterface{
 	}
 
 	@Override
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	@Override
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	@Override
 	public int getServerSideID() {
 		return serverSideID;
 	}
@@ -110,24 +123,11 @@ public class DiseaseNotesObject implements BeeObjectInterface{
 	public void setServerSideID(int serverSideID) {
 		this.serverSideID = serverSideID;
 	}
-
-	@Override
-	public int refresh(DatabaseHelper db) {
-		RuntimeExceptionDao<OutbrakeObject, Integer> outbrakeDao = db.getOutbrakeRunDao();
-		outbrakeDao.refresh(this.outbrakeID);
-		return 0;
-	}
-
-	@Override
-	public BeeObjectInterface getServerSideObject(DatabaseHelper db) {
-		DiseaseNotesObject serverSideObject = new DiseaseNotesObject(outbrakeID, date, description, synced, serverSideID);
-		serverSideObject.setId(serverSideID); 
-		
-		serverSideObject.refresh(db);
-		serverSideObject.setOutbrakeID(new OutbrakeObject(serverSideObject.getOutbrakeID().getServerSideID()));
-		
-		return serverSideObject;
-	}
 	
-	
+	@Override
+	public List<BeeObjectInterface> listChildRelations() throws SQLException {
+		List<BeeObjectInterface> result = new ArrayList<BeeObjectInterface>();
+		
+		return result;
+	}
 }

@@ -34,6 +34,10 @@ public class DiseaseObject {
 		this.contagious = contagious;
 	}
 
+	public DiseaseObject(int id) {
+		this.id = id;
+	}
+
 	public int getId() {
 		return id;
 	}

@@ -8,7 +8,13 @@ package com.example.beeproject.global.classes;
  *
  */
 public class BeeObjectClasses {
-	private static final Class[] list = {YardObject.class, HiveObject.class, UserObject.class, CheckFormObject.class, DiseaseObject.class};
+	
+	/**
+	 * List of classes, that implement this interface
+	 * Tables for storing objects of this classes will be created in the database when DBCreateServlet is run
+	 */
+	private static final Class[] list = { UserObject.class, YardObject.class, HiveObject.class, 
+			CheckFormObject.class, DiseaseObject.class, OutbrakeObject.class, DiseaseNotesObject.class};
 	public static Class[] getClassesList(){
 		return list;
 	}

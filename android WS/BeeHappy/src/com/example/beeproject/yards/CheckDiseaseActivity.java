@@ -83,6 +83,7 @@ public class CheckDiseaseActivity extends Activity {
 						try {
 							UpdateBuilder<OutbrakeObject, Integer> updateBuilder = outbrakeDao.updateBuilder();
 							updateBuilder.updateColumnValue("endDate", diseaseEndDate.getText().toString());
+							updateBuilder.updateColumnValue("synced", false);
 							updateBuilder.where().eq("id", outbrake.get(0).getID());
 							updateBuilder.update();
 						} catch (SQLException e) {

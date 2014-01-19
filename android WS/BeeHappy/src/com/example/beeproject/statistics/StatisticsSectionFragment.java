@@ -193,7 +193,8 @@ public class StatisticsSectionFragment extends Fragment {
 		        
 		        for(int i=0; i<yardsAndHives.size(); i++){
 		        	Object[] yardAndHive = yardsAndHives.get(i);
-					if(yardAndHive.length == 2){
+			        GraphViewSeries graphSeries = result.get(i);
+					if(yardAndHive.length == 2 && graphSeries!=null){
 						String yardName = (String) yardAndHive[0];
 						HiveObject hive = (HiveObject) yardAndHive[1];
 						String graphTitle = yardName + " - " + hive.getHiveName();
@@ -206,13 +207,9 @@ public class StatisticsSectionFragment extends Fragment {
 				        graphView.setLayoutParams(graphLayoutParams);
 				        graphView.setPadding(0, 10, 0, 10);
 				        graphView.setManualYAxisBounds(maxY, 0);
-						
-				        GraphViewSeries graphSeries = result.get(i);
-				        
-				        if(graphSeries!=null){
-				        	graphView.setCustomLabelFormatter(new DateLabelFormatter());
-				        	graphView.addSeries(graphSeries); 
-				        }
+			        	graphView.setCustomLabelFormatter(new DateLabelFormatter());
+			        	
+			        	graphView.addSeries(graphSeries); 
 				        graphsGrid.addView(graphView);
 					}
 		        }

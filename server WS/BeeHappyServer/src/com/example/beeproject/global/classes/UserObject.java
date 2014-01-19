@@ -1,5 +1,15 @@
 package com.example.beeproject.global.classes;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.example.beeproject.db.ConnectionProvider;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -106,6 +116,34 @@ public class UserObject implements BeeObjectInterface{
 	public String toString() {
 		return "UserObject [id=" + id + ", username=" + username
 				+ ", password=" + password + ", serverSideID="+serverSideID+"]";
+	}
+
+	@Override
+	public List<BeeObjectInterface> listChildRelations() throws SQLException {
+		List<BeeObjectInterface> result = new ArrayList<BeeObjectInterface>();
+		
+		Class[] listChildObjectClasses = new Class[] { YardObject.class };
+		@SuppressWarnings("serial")
+		Map<String, String> tablenames = new HashMap<String, String>(){{
+			put("YardObject", "yards");
+		}};
+		
+		String fieldName = "\"userID_id\"";
+		
+		for(Class childObjectClass : listChildObjectClasses){
+			String tablename = tablenames.get(childObjectClass.getSimpleName());
+			if(tablename!=null){
+				String queryString = "SELECT * FROM " + tablename + " WHERE " + "( " + fieldName + " = " + id + ")";
+				
+				Dao<? super BeeObjectInterface, Integer> childObjectClassDao = DaoManager.createDao(ConnectionProvider.getConnectionSource(), childObjectClass);
+				GenericRawResults<? super BeeObjectInterface> selectedResult = childObjectClassDao.queryRaw(queryString, childObjectClassDao.getRawRowMapper());
+				List<BeeObjectInterface> childrenOfChildObjectClass = (List<BeeObjectInterface>) selectedResult.getResults();
+				
+				result.addAll(childrenOfChildObjectClass);
+			}
+		}
+		
+		return result;
 	}
 	
 	

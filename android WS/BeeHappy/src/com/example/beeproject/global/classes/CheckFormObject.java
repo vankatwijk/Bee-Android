@@ -1,5 +1,6 @@
 package com.example.beeproject.global.classes;
 
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -314,6 +315,27 @@ public class CheckFormObject implements BeeObjectInterface{
 
 	public void setServerSideID(int serverSideID) {
 		this.serverSideID = serverSideID;
+	}
+
+	@Override
+	public int refresh(DatabaseHelper db) {
+		RuntimeExceptionDao<HiveObject, Integer> hiveDao = db.getHiveRunDao();
+		hiveDao.refresh(this.hiveID);
+		
+		return 0;
+	}
+
+	@Override
+	public BeeObjectInterface getServerSideObject(DatabaseHelper db) {
+		CheckFormObject serverSideObject = new CheckFormObject(hiveID, timestamp, hasQueen, qDateBorn, 
+				qWingsCliped, qRace, nrOfFrames, occupiedFrames, nrOfLayers, eggs, 
+				larve, pupae, nrOfMites, honeyCombs, comments, synced);
+		serverSideObject.setId(serverSideID); 
+		
+		serverSideObject.refresh(db);
+		serverSideObject.setHiveID(new HiveObject(serverSideObject.getHiveID().getServerSideID()));
+		
+		return serverSideObject;
 	}
 
 	
