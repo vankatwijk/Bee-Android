@@ -1,13 +1,18 @@
 package com.example.beeproject.calendar;
 
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
+import android.provider.CalendarContract.Calendars;
+import android.provider.CalendarContract.Events;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
@@ -17,6 +22,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -29,18 +35,20 @@ public class CalendarActivity extends FragmentActivity {
 	private final String TAG = "CalendarActivity";
 	private Date _CurrentSelectedDate;
 	private int _CurrentSelectedMonth = Calendar.getInstance().get(Calendar.MONTH);
+	private long _CalendarId;
 	// calendar dialog properties
 	private EditText et_title;
 	private EditText et_start;
 	private EditText et_end;
 	private AlertDialog alertDialog;
-	
+	private java.text.DateFormat _DateFormat;
 	private void setCustomResourceForDates() {
 		if(!BeeHappyCalendarResolver.hasCalendar(getApplicationContext())) {
 			Log.i(TAG, "Create Calendar");
-			BeeHappyCalendarResolver.createCalendar(getApplicationContext());
+			_CalendarId = BeeHappyCalendarResolver.createCalendar(getApplicationContext());
 		}
 		else {
+			_CalendarId = BeeHappyCalendarResolver.getCalendar(getApplicationContext());
 			Log.i(TAG, "Calendar Exist");
 		}				
 	}
@@ -59,6 +67,8 @@ public class CalendarActivity extends FragmentActivity {
 			_CaldroidFragment.setTextColorForDate(R.color.white, date);
 			_CaldroidFragment.refreshView();
 		}
+		
+		// TODO count events and display in scroll view beneath calendar
 	}
 	/** clear current selected date
 	 * 
@@ -107,7 +117,7 @@ public class CalendarActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		DateFormat.getDateFormat(this);
+		_DateFormat = DateFormat.getDateFormat(this);
 		setContentView(R.layout.activity_calendar);		
 
 		_CaldroidFragment = new CaldroidFragment();
@@ -169,7 +179,7 @@ public class CalendarActivity extends FragmentActivity {
 	}
 	
 	private boolean dateHasEvent() {
-		// TODO Auto-generated method stub
+		// TODO check if it has events
 		return true;
 	}
 
@@ -180,6 +190,7 @@ public class CalendarActivity extends FragmentActivity {
 	}
 	
 	public void toBeImplemented(MenuItem v) {
+		// TODO remove this method when all is implemented
 		Toast.makeText(getApplicationContext(), "to be implemented", Toast.LENGTH_SHORT).show();
 	}
 	
@@ -215,8 +226,44 @@ public class CalendarActivity extends FragmentActivity {
 	 * @param alert
 	 */
 	private void setPositiveButtonListener(AlertDialog alert) {
-		alert.getButton(AlertDialog.BUTTON_POSITIVE);
+		Button positive = alert.getButton(AlertDialog.BUTTON_POSITIVE);
+		positive.setOnClickListener(savePositiveClickListener());
 	}
+	
+	private View.OnClickListener savePositiveClickListener() {
+		return new View.OnClickListener() {
+		    public void onClick(View view) {
+		    	View root =  view.getRootView();
+		    	EditText title = (EditText) root.findViewById(R.id.event_title);
+		    	EditText start = (EditText) root.findViewById(R.id.event_start);
+		    	EditText end = (EditText) root.findViewById(R.id.event_end);
+		    	EditText notes = (EditText) root.findViewById(R.id.event_notes);
+		    	
+		    	String event_title = title.getText().toString();
+		    	long event_start;
+		    	long event_end;
+				try {
+					event_start = _DateFormat.parse(start.getText().toString()).getTime();
+					event_end = _DateFormat.parse(end.getText().toString()).getTime();
+				} catch (ParseException e) {
+					e.printStackTrace();
+					throw new IllegalStateException("couldn't parse text");
+				}
+				
+		    	String event_notes = notes.getText().toString();
+		    	ContentValues cv = new ContentValues();
+		    	cv.put(Events.CALENDAR_ID, _CalendarId);
+		    	cv.put(Events.TITLE, event_title);
+		    	cv.put(Events.DTSTART, event_start);
+		    	cv.put(Events.DTEND, event_end);
+		    	cv.put(Events.DESCRIPTION, event_notes);
+		    	cv.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());		    	
+		    	BeeHappyCalendarResolver.addEvent(getApplicationContext(), cv);
+		    	alertDialog.dismiss();
+		    }
+		};
+	}
+		
 	private void setEditTextListeners(AlertDialog alert) {
 		et_title = (EditText) alert.findViewById(R.id.event_title);
 		et_title.addTextChangedListener(hasText());
