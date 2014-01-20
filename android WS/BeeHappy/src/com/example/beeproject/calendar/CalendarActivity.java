@@ -1,6 +1,7 @@
 package com.example.beeproject.calendar;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -11,7 +12,6 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
-import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -66,6 +66,8 @@ public class CalendarActivity extends FragmentActivity {
 			_CaldroidFragment.setBackgroundResourceForDate(R.color.blue, date);
 			_CaldroidFragment.setTextColorForDate(R.color.white, date);
 			_CaldroidFragment.refreshView();
+			int count = BeeHappyCalendarResolver.getDateEvents(getApplicationContext(), _CurrentSelectedDate);
+			Toast.makeText(getApplicationContext(), String.valueOf(count), Toast.LENGTH_LONG).show();			
 		}
 		
 		// TODO count events and display in scroll view beneath calendar
@@ -179,7 +181,7 @@ public class CalendarActivity extends FragmentActivity {
 	}
 	
 	private boolean dateHasEvent() {
-		// TODO check if it has events
+		// TODO check date events;
 		return true;
 	}
 
