@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.beeproject.calendar.CalendarActivity;
-import com.example.beeproject.diseases.FragmentDiseases;
 import com.example.beeproject.global.classes.GlobalVar;
 import com.example.beeproject.login.LoginActivity;
 import com.example.beeproject.profile.FragmentProfileInfo;
@@ -50,9 +49,9 @@ public class ContainerActivity extends Methods{
 				startActivity(intent);					
 		        
 			}else if(MainActivity.status == "3"){
-
-				FragmentCalender fragment = new FragmentCalender();				
-				getSupportFragmentManager().beginTransaction().replace(R.id.item_detail_container, fragment).commit();	
+								
+				Intent intent = new Intent(getApplicationContext(), CalendarActivity.class);
+				startActivity(intent);	
 					
 		        
 			}else if(MainActivity.status == "4"){
