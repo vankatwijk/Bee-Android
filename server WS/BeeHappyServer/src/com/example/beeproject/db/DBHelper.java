@@ -7,6 +7,7 @@ import java.util.List;
 import com.example.beeproject.global.classes.BeeObjectClasses;
 import com.example.beeproject.global.classes.BeeObjectInterface;
 import com.example.beeproject.global.classes.DiseaseObject;
+import com.example.beeproject.weather.classes.WeatherInfoObject;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
@@ -18,19 +19,27 @@ public class DBHelper {
 		Class[] classList = BeeObjectClasses.getClassesList();
 		try{
 			for (Class objectClass : classList){
-				// instantiate the dao
-				Dao<BeeObjectInterface, Integer> classDao = DaoManager.createDao(connectionSource, objectClass);
-				// if you need to create the 'accounts' table make this call
-				responseWriter.println("Checking Table for class: " + objectClass);
-				if(!classDao.isTableExists()){
-					TableUtils.createTable(connectionSource, objectClass);
-					responseWriter.println("Created Table for class: " + objectClass);
-				}
+				createTableForClass(responseWriter, connectionSource, objectClass);
 			}	
 			checkAndFillDiseases(connectionSource);
+			
+			createTableForClass(responseWriter, connectionSource, WeatherInfoObject.class);
 		}
 		catch(Exception ex){
 			ex.printStackTrace();
+		}
+	}
+
+	private static void createTableForClass(PrintWriter responseWriter,
+			JdbcPooledConnectionSource connectionSource, Class objectClass)
+			throws SQLException {
+		// instantiate the dao
+		Dao<BeeObjectInterface, Integer> classDao = DaoManager.createDao(connectionSource, objectClass);
+		// if you need to create the 'accounts' table make this call
+		responseWriter.println("Checking Table for class: " + objectClass);
+		if(!classDao.isTableExists()){
+			TableUtils.createTable(connectionSource, objectClass);
+			responseWriter.println("Created Table for class: " + objectClass);
 		}
 	}
 	
