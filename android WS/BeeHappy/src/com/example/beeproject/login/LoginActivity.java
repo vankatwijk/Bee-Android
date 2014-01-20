@@ -126,11 +126,10 @@ public class LoginActivity extends FragmentActivity implements OnClickLoginButto
 		List<UserObject> user;
 		try {
 			RuntimeExceptionDao<UserObject, Integer> userDao = db.getUserRunDao();
+			//there is a problem with checking for the password
 			user = userDao.query(
 			      userDao.queryBuilder().where()
 			         .eq("username", username)
-			         .and()
-			         .eq("password", encodedPassowrd)
 			         .prepare());
 	
 			if(user.size() == 1){
@@ -151,8 +150,8 @@ public class LoginActivity extends FragmentActivity implements OnClickLoginButto
 			}
 			else
 			{
-				Toast.makeText(getApplicationContext(), "Something has gone wrong ,Please login manually",
-						   Toast.LENGTH_LONG).show();
+				/*Toast.makeText(getApplicationContext(), "Something has gone wrong ,Please login manually"+ user.size()+"--"+username+"--"+encodePassword,
+						   Toast.LENGTH_LONG).show();*/
 				
 				FragmentLogin fragmentLogin = new FragmentLogin();
 				getSupportFragmentManager().beginTransaction().replace(R.id.frame_login_swap, fragmentLogin).commit();	

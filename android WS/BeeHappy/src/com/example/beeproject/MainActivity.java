@@ -98,8 +98,21 @@ public class MainActivity extends FragmentActivity implements
 			}
 
 		} else {
-			Intent detailIntent = new Intent(this, ContainerActivity.class);
-			startActivity(detailIntent);
+			//this will fix the double back button problem
+			if(MainActivity.status == "2"){
+
+				Intent intent = new Intent(getApplicationContext(), WeatherActivity.class);
+				startActivity(intent);					
+		        
+			}else if(MainActivity.status == "5"){
+
+				Intent intent = new Intent(getApplicationContext(), Statistics.class);
+				startActivity(intent);	
+		        
+			}else{			
+				Intent detailIntent = new Intent(this, ContainerActivity.class);
+				startActivity(detailIntent);
+			}
 		}
 	}
 
