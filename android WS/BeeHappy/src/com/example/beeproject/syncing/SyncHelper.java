@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.example.beeproject.commandexecution.commands.BeeCommand;
@@ -62,27 +65,35 @@ public class SyncHelper {
 		//deleteSomeStuff();
 		
 		String result = "";
-		BeeCommand pingCommand = new PingCommand();
-		BeeCommandResult pingResult = BeeServerHttpClient.executeCommand(pingCommand);
-    	//Log.d(LOG_TAG, pingResult.toString());
-		if(pingResult != null && pingResult.getCommandResultType() == BeeCommandResultType.SUCCESS){
-
-			
-			Class[] classesToSync = BeeObjectClasses.getClassesToSyncList();
-			
-			for (Class objectClass : classesToSync){
-		    	//Log.d(LOG_TAG, objectClass.toString());
-		    	syncronizeClass(objectClass);
+		
+		if(isNetworkAvailable()){
+			BeeCommand pingCommand = new PingCommand();
+			BeeCommandResult pingResult = BeeServerHttpClient.executeCommand(pingCommand);
+	    	//Log.d(LOG_TAG, pingResult.toString());
+			if(pingResult != null && pingResult.getCommandResultType() == BeeCommandResultType.SUCCESS){
+	
+				
+				Class[] classesToSync = BeeObjectClasses.getClassesToSyncList();
+				
+				for (Class objectClass : classesToSync){
+			    	//Log.d(LOG_TAG, objectClass.toString());
+			    	syncronizeClass(objectClass);
+				}
+				
+				result = "Synchronisation to BeeHappy server has finished.";
 			}
-			
-			result = "Synchronisation to BeeHappy server has finished.";
+			else{
+				result = "Cannot connect to BeeHappy server.";
+			}
 		}
 		else{
-			result = "Cannot connect to BeeHappy server.";
+			result = "Internet connection is required in order to synchronise.";
 		}
-
+		
 		return result;
 	}
+	
+	
 	
 	/**
 	 * Helper method to syncronise all unsincronised objects of the given class 
@@ -423,4 +434,15 @@ public class SyncHelper {
 		}
 	}
 	
+	/**
+	 * Helper method to check if internet connection is available
+	 * @return
+	 */
+	private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager 
+              = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+    
 }
