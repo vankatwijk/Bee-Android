@@ -11,13 +11,14 @@ import android.net.Uri;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
+import android.util.Log;
 
 import com.example.beeproject.global.classes.GlobalVar;
 
 /**
  * Implemented version of 
  * http://www.derekbekoe.co.uk/blog/item/16-using-the-android-4-0-calendar-api
- *
+ * TODO refactor this in two seperate classes. One calendar resolver and one bee happy version. 
  */
 public class BeeHappyCalendarResolver {
 	private static final String TAG = "CalendarResolver";
@@ -68,13 +69,13 @@ public class BeeHappyCalendarResolver {
 	
 	/**
 	 * adds an event to a calendar
-	 * required entries in CV and example
- * 		    	cv.put(Events.CALENDAR_ID, _CalendarId);
-		    	cv.put(Events.TITLE, event_title);
-		    	cv.put(Events.DTSTART, event_start);
-		    	cv.put(Events.DTEND, event_end);
-		    	cv.put(Events.DESCRIPTION, event_notes);
-		    	cv.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());		 
+	 * required entries in CV and example: <BR> 
+	cv.put(Events.CALENDAR_ID, _CalendarId); <BR>
+	cv.put(Events.TITLE, event_title); <BR>
+	cv.put(Events.DTSTART, event_start); <BR>
+	cv.put(Events.DTEND, event_end); <BR>
+	cv.put(Events.DESCRIPTION, event_notes); <BR>
+	cv.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().getID()); <BR>		 
 	 * @param ctx (activity context)
 	 * @param cv, ContentValues. Must contain a Calendar_ID
 	 * @return URI of the event
@@ -105,14 +106,29 @@ public class BeeHappyCalendarResolver {
 		return cursor;
 	}
 	
-	public static int getTodayEvents(Context ctx, Date date) {
-		
+	public static int getDateEvents(Context ctx, Date date) {		
+		ContentResolver cr = ctx.getContentResolver();
 		Calendar c = Calendar.getInstance();
-		c.add(Calendar.DATE, 1);
-		String selection = "("+Events.DTSTART+" > ? && "+Events.DTSTART+ "< " + String.valueOf(c.getTimeInMillis()) + ")";
-		String[] selectionArgs = new String[] {String.valueOf(Events._ID)};
-		Cursor cursor = getEvent(ctx, selection, selectionArgs);
-		// TODO count elements in cursor
+		Calendar c1 = Calendar.getInstance();
+		c.setTime(date);
+		c1.setTime(date);
+		// add one day
+		c1.add(Calendar.DATE, 1);
+		String beginTime = String.valueOf(c.getTimeInMillis());
+		String endTime = String.valueOf(c1.getTimeInMillis());
+		Log.i(TAG, beginTime + endTime);
+		
+		String[] projection = new String[] { Events.CALENDAR_ID, Events.TITLE, Events.DESCRIPTION, Events.DTSTART, Events.DTEND};
+		String selection = Events.DTSTART + " BETWEEN ? AND ?";
+		String[] selectionArgs = new String[] {beginTime, endTime};
+		Cursor cursor = cr.query(EVENT_URI, projection, selection, selectionArgs, null);
+		cursor.moveToFirst();
+		return cursor.getCount();
+	}
+	
+	public static int getAllEvents(Context ctx) {
+		ContentResolver cr = ctx.getContentResolver();
+		//cr.query(EVENT_URI, projection, selection, selectionArgs, sortOrder)
 		return 0;
 	}
 	
