@@ -1,5 +1,8 @@
 package com.example.beeproject.calendar;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -35,6 +38,19 @@ public class BeeHappyCalendarResolver {
 		return cur.getCount() > 0;
 	}
 	
+	public static long getCalendar(Context ctx) {
+		final String[] CALENDARS_PROPS_PROJECTION = { Calendars._ID, Calendars.NAME, Calendars.CALENDAR_DISPLAY_NAME, 
+				Calendars.CALENDAR_TIME_ZONE, Calendars.DELETED };
+		ContentResolver cr = ctx.getContentResolver();
+		Cursor cur = cr.query(buildCalUri(), CALENDARS_PROPS_PROJECTION, Calendars.NAME + " = ?", new String[] { CALENDAR_NAME }, null);
+		if(cur.moveToFirst())
+		{
+			String calendarId = cur.getString(0);
+			return Long.parseLong(calendarId);
+		}
+		throw new IllegalStateException("Couldn't move to first");
+	}
+	
 	/**
 	 * creates a calendar
 	 * @param ctx (activity context)
@@ -52,6 +68,13 @@ public class BeeHappyCalendarResolver {
 	
 	/**
 	 * adds an event to a calendar
+	 * required entries in CV and example
+ * 		    	cv.put(Events.CALENDAR_ID, _CalendarId);
+		    	cv.put(Events.TITLE, event_title);
+		    	cv.put(Events.DTSTART, event_start);
+		    	cv.put(Events.DTEND, event_end);
+		    	cv.put(Events.DESCRIPTION, event_notes);
+		    	cv.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());		 
 	 * @param ctx (activity context)
 	 * @param cv, ContentValues. Must contain a Calendar_ID
 	 * @return URI of the event
@@ -75,11 +98,22 @@ public class BeeHappyCalendarResolver {
 		return cr.delete(EVENT_URI, selection, selectionArgs);
 	}
 	
-	public static long getEvent(Context ctx, String selection, String[] selectionArgs) {			 
+	public static Cursor getEvent(Context ctx, String selection, String[] selectionArgs) {			 
 		ContentResolver cr = ctx.getContentResolver();
 		final String[] PROJECTION = new String[] { Events._ID };
 		Cursor cursor = cr.query(buildEventUri(), PROJECTION, selection, selectionArgs, null);
-		return cursor.getLong(0);
+		return cursor;
+	}
+	
+	public static int getTodayEvents(Context ctx, Date date) {
+		
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.DATE, 1);
+		String selection = "("+Events.DTSTART+" > ? && "+Events.DTSTART+ "< " + String.valueOf(c.getTimeInMillis()) + ")";
+		String[] selectionArgs = new String[] {String.valueOf(Events._ID)};
+		Cursor cursor = getEvent(ctx, selection, selectionArgs);
+		// TODO count elements in cursor
+		return 0;
 	}
 	
 	private static ContentValues buildNewCalContentValues() {
