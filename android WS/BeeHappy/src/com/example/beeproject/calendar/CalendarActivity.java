@@ -1,7 +1,6 @@
 package com.example.beeproject.calendar;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -15,18 +14,20 @@ import android.os.Bundle;
 import android.provider.CalendarContract.Events;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.beeproject.R;
+import com.example.beeproject.global.classes.GlobalVar;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
@@ -36,6 +37,7 @@ public class CalendarActivity extends FragmentActivity {
 	private Date _CurrentSelectedDate;
 	private int _CurrentSelectedMonth = Calendar.getInstance().get(Calendar.MONTH);
 	private long _CalendarId;
+	private BeeHappyCalendarResolver _CalendarResolver;
 	// calendar dialog properties
 	private EditText et_title;
 	private EditText et_start;
@@ -43,14 +45,8 @@ public class CalendarActivity extends FragmentActivity {
 	private AlertDialog alertDialog;
 	private java.text.DateFormat _DateFormat;
 	private void setCustomResourceForDates() {
-		if(!BeeHappyCalendarResolver.hasCalendar(getApplicationContext())) {
-			Log.i(TAG, "Create Calendar");
-			_CalendarId = BeeHappyCalendarResolver.createCalendar(getApplicationContext());
-		}
-		else {
-			_CalendarId = BeeHappyCalendarResolver.getCalendar(getApplicationContext());
-			Log.i(TAG, "Calendar Exist");
-		}				
+		_CalendarResolver = new BeeHappyCalendarResolver(getApplicationContext(), GlobalVar.getInstance().getUserID());
+		_CalendarId = _CalendarResolver.getCalendarId();
 	}
 	
 	private Date getTodayDate() {
@@ -66,7 +62,7 @@ public class CalendarActivity extends FragmentActivity {
 			_CaldroidFragment.setBackgroundResourceForDate(R.color.blue, date);
 			_CaldroidFragment.setTextColorForDate(R.color.white, date);
 			_CaldroidFragment.refreshView();
-			int count = BeeHappyCalendarResolver.getDateEvents(getApplicationContext(), _CurrentSelectedDate);
+			int count = _CalendarResolver.getDateEvents(_CurrentSelectedDate).getCount();
 			Toast.makeText(getApplicationContext(), String.valueOf(count), Toast.LENGTH_LONG).show();			
 		}
 		
@@ -165,7 +161,19 @@ public class CalendarActivity extends FragmentActivity {
 			}
 		};
 
-		_CaldroidFragment.setCaldroidListener(listener);		
+		_CaldroidFragment.setCaldroidListener(listener);
+		
+		@SuppressWarnings("deprecation")
+		SimpleCursorAdapter adapter = new SimpleCursorAdapter(
+				this, 
+				android.R.layout.simple_list_item_1,
+				_CalendarResolver.getDateEvents(getTodayDate()),
+				new String[] {Events.TITLE},
+				new int[] { android.R.id.text1 }
+			);		
+		
+		ListView lv = (ListView) findViewById(R.id.list_event);		
+		lv.setAdapter(adapter);
 	}	
 	
 	@Override
@@ -260,7 +268,7 @@ public class CalendarActivity extends FragmentActivity {
 		    	cv.put(Events.DTEND, event_end);
 		    	cv.put(Events.DESCRIPTION, event_notes);
 		    	cv.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());		    	
-		    	BeeHappyCalendarResolver.addEvent(getApplicationContext(), cv);
+		    	_CalendarResolver.createEvent(cv);
 		    	alertDialog.dismiss();
 		    }
 		};

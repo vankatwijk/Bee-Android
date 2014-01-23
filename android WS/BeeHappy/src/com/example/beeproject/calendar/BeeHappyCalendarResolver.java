@@ -13,155 +13,140 @@ import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
 import android.util.Log;
 
-import com.example.beeproject.global.classes.GlobalVar;
-
 /**
- * Implemented version of 
- * http://www.derekbekoe.co.uk/blog/item/16-using-the-android-4-0-calendar-api
- * TODO refactor this in two seperate classes. One calendar resolver and one bee happy version. 
+ * class that manages the content resolver of the calendar Android API 14
+ * @author Harold
+ *
  */
 public class BeeHappyCalendarResolver {
-	private static final String TAG = "CalendarResolver";
-	private static final String CALENDAR_NAME = "BeeHappy";
+	private String TAG = "BeeHappyCalendarResolver";
 	
-	private static final Uri CAL_URI = CalendarContract.Calendars.CONTENT_URI;
+	private ContentResolver _ContentResolver;
+	private long _CalendarId;
+	private int _UserId;
+	
+	private String _CalendarName; 
+	private static final Uri CALENDAR_URI = CalendarContract.Calendars.CONTENT_URI;
 	private static final Uri EVENT_URI = CalendarContract.Events.CONTENT_URI;
 	
-	public static String getUserId() {
-		return Integer.toString(GlobalVar.getInstance().getUserID());
+	private final String[] DEFAULT_PROJECTION = new String[] 
+			{ Events.CALENDAR_ID, Events._ID, Events.TITLE, Events.DTSTART, Events.DTEND, Events.DESCRIPTION};	
+
+	public BeeHappyCalendarResolver(Context ctx, int userId) {
+		_ContentResolver = ctx.getContentResolver();
+		_UserId = userId;
+		_CalendarName = "BeeHappy" + userId;
+		_CalendarId = getCalendar();
+		Log.i(TAG, "new Resolver with " +_CalendarName + " - " + _CalendarId);
 	}
 	
-	public static boolean hasCalendar(Context ctx)	{
-		final String[] CALENDARS_PROPS_PROJECTION = { Calendars._ID, Calendars.NAME, Calendars.CALENDAR_DISPLAY_NAME, 
-				Calendars.CALENDAR_TIME_ZONE, Calendars.DELETED };
-		ContentResolver cr = ctx.getContentResolver();
-		Cursor cur = cr.query(buildCalUri(), CALENDARS_PROPS_PROJECTION, Calendars.NAME + " = ?", new String[] { CALENDAR_NAME }, null);			
-		return cur.getCount() > 0;
+	public long getCalendarId() {
+		return _CalendarId;
 	}
-	
-	public static long getCalendar(Context ctx) {
-		final String[] CALENDARS_PROPS_PROJECTION = { Calendars._ID, Calendars.NAME, Calendars.CALENDAR_DISPLAY_NAME, 
+	/**
+	 * gets a calendar, if it doesn't exist it will create a new one.
+	 * @return
+	 */
+	private long getCalendar() {
+		String[] calendarProjection = { Calendars._ID, Calendars.NAME, Calendars.CALENDAR_DISPLAY_NAME, 
 				Calendars.CALENDAR_TIME_ZONE, Calendars.DELETED };
-		ContentResolver cr = ctx.getContentResolver();
-		Cursor cur = cr.query(buildCalUri(), CALENDARS_PROPS_PROJECTION, Calendars.NAME + " = ?", new String[] { CALENDAR_NAME }, null);
-		if(cur.moveToFirst())
-		{
-			String calendarId = cur.getString(0);
-			return Long.parseLong(calendarId);
+		String selection = Calendars.NAME + " = ?";
+		String[] selectionArgs = new String[] { _CalendarName };
+		Cursor cursor = _ContentResolver.query(CALENDAR_URI, calendarProjection, selection, selectionArgs, null);
+		long calendarId;
+		try {
+			cursor.moveToFirst();			
+			switch (cursor.getCount()) {
+			case 0:
+				Log.i(TAG, "Create new Calendar");
+				calendarId = createCalendar();
+				break;
+			case 1:
+				Log.i(TAG, "Retrieving Calendar");
+				calendarId = cursor.getLong(cursor.getColumnIndex(Calendars._ID));
+				break;
+			default:
+				throw new IllegalStateException("more than one beehappy calendar, action required");
+			}
 		}
-		throw new IllegalStateException("Couldn't move to first");
+		finally {
+			cursor.close();
+		}
+		return calendarId;		
+	}
+	
+	public long createEvent(ContentValues cv) {
+		Uri newEvent = _ContentResolver.insert(buildEventUri(), cv);
+		Log.i(TAG, "New event : " + newEvent.getLastPathSegment());
+		return Long.parseLong(newEvent.getLastPathSegment());
 	}
 	
 	/**
-	 * creates a calendar
-	 * @param ctx (activity context)
-	 * @return Calendar_ID
+	 * get the events of a set date
+	 * @param date
+	 * @return
 	 */
-	public static long createCalendar(Context ctx) {
-		ContentResolver cr = ctx.getContentResolver();
-		final ContentValues cv = buildNewCalContentValues();
-		Uri calUri = buildCalUri();
-		//insert the calendar into the database
-		cr.insert(calUri, cv);
-		Uri newUri = cr.insert(buildCalUri(), cv);
-		return Long.parseLong(newUri.getLastPathSegment());
-	}
-	
-	/**
-	 * adds an event to a calendar
-	 * required entries in CV and example: <BR> 
-	cv.put(Events.CALENDAR_ID, _CalendarId); <BR>
-	cv.put(Events.TITLE, event_title); <BR>
-	cv.put(Events.DTSTART, event_start); <BR>
-	cv.put(Events.DTEND, event_end); <BR>
-	cv.put(Events.DESCRIPTION, event_notes); <BR>
-	cv.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().getID()); <BR>		 
-	 * @param ctx (activity context)
-	 * @param cv, ContentValues. Must contain a Calendar_ID
-	 * @return URI of the event
-	 */
-	public static Uri addEvent(Context ctx, ContentValues cv) {
-		ContentResolver cr = ctx.getContentResolver();				
-		return cr.insert(buildEventUri(), cv);
-	}
-	
-	public static int updateEvent(Context ctx, Long eventId, ContentValues cv) {
-		ContentResolver cr = ctx.getContentResolver();
-		String selection = "("+Events._ID+" = ?)";
-		String[] selectionArgs = new String[] {String.valueOf(eventId)};
-		return cr.update(buildEventUri(), cv, selection, selectionArgs);
-	}
-	
-	public static int deleteEvent(Context ctx, Long eventId) {
-		ContentResolver cr = ctx.getContentResolver();
-		String selection = "("+Events._ID+" = ?)";
-		String[] selectionArgs = new String[] {String.valueOf(eventId)};
-		return cr.delete(EVENT_URI, selection, selectionArgs);
-	}
-	
-	public static Cursor getEvent(Context ctx, String selection, String[] selectionArgs) {			 
-		ContentResolver cr = ctx.getContentResolver();
-		final String[] PROJECTION = new String[] { Events._ID };
-		Cursor cursor = cr.query(buildEventUri(), PROJECTION, selection, selectionArgs, null);
-		return cursor;
-	}
-	
-	public static int getDateEvents(Context ctx, Date date) {		
-		ContentResolver cr = ctx.getContentResolver();
+	public Cursor getDateEvents(Date date) {
 		Calendar c = Calendar.getInstance();
 		Calendar c1 = Calendar.getInstance();
 		c.setTime(date);
 		c1.setTime(date);
 		// add one day
 		c1.add(Calendar.DATE, 1);
+		String calendarId = String.valueOf(_CalendarId);
 		String beginTime = String.valueOf(c.getTimeInMillis());
 		String endTime = String.valueOf(c1.getTimeInMillis());
-		Log.i(TAG, beginTime + endTime);
+		Log.i(TAG, "Retrieve events between "+ beginTime + " and " + endTime);		
 		
-		String[] projection = new String[] { Events.CALENDAR_ID, Events.TITLE, Events.DESCRIPTION, Events.DTSTART, Events.DTEND};
-		String selection = Events.DTSTART + " BETWEEN ? AND ?";
+		String selection = Events.DTSTART + " >= ? AND "
+				+ Events.DTSTART + " <= ?";
 		String[] selectionArgs = new String[] {beginTime, endTime};
-		Cursor cursor = cr.query(EVENT_URI, projection, selection, selectionArgs, null);
-		cursor.moveToFirst();
-		return cursor.getCount();
+		return _ContentResolver.query(EVENT_URI, DEFAULT_PROJECTION, selection, selectionArgs, null);
 	}
 	
-	public static int getAllEvents(Context ctx) {
-		ContentResolver cr = ctx.getContentResolver();
-		//cr.query(EVENT_URI, projection, selection, selectionArgs, sortOrder)
-		return 0;
-	}
+	private long createCalendar() {
+		Uri newCalendarUri = _ContentResolver.insert(buildCalendarUri(), NewCalendarContentValues());
+		return Long.parseLong(newCalendarUri.getLastPathSegment());
+	}	
 	
-	private static ContentValues buildNewCalContentValues() {
+	private ContentValues NewCalendarContentValues() {
 		final ContentValues cv = new ContentValues();
-		cv.put(Calendars.ACCOUNT_NAME, getUserId());
+		cv.put(Calendars.ACCOUNT_NAME, _UserId);
 		cv.put(Calendars.ACCOUNT_TYPE, CalendarContract.ACCOUNT_TYPE_LOCAL);
-		cv.put(Calendars.NAME, CALENDAR_NAME);
-		cv.put(Calendars.CALENDAR_DISPLAY_NAME, CALENDAR_NAME);
+		cv.put(Calendars.NAME, _CalendarName);
+		cv.put(Calendars.CALENDAR_DISPLAY_NAME, _CalendarName);
 		cv.put(Calendars.CALENDAR_COLOR, 0xEA8561);
 		//user can only read the calendar
 		cv.put(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_NONE);
-		cv.put(Calendars.OWNER_ACCOUNT, getUserId());
+		cv.put(Calendars.OWNER_ACCOUNT, _UserId);
 		cv.put(Calendars.VISIBLE, 0);
 		cv.put(Calendars.SYNC_EVENTS, 0);
 		return cv;
 	}
 	
-	private static Uri buildCalUri() {
-		return CAL_URI
+	/**
+	 * builds an uri to add a new calendar
+	 * @return
+	 */
+	private Uri buildCalendarUri() {
+		return CALENDAR_URI
 				.buildUpon()
 				.appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
-				.appendQueryParameter(Calendars.ACCOUNT_NAME, getUserId())
+				.appendQueryParameter(Calendars.ACCOUNT_NAME, String.valueOf(_UserId))
 				.appendQueryParameter(Calendars.ACCOUNT_TYPE,
 						CalendarContract.ACCOUNT_TYPE_LOCAL)
 				.build();
 	}
 	
-	private static Uri buildEventUri() {
+	/**
+	 * builds an uri to add a new event
+	 * @return
+	 */
+	private Uri buildEventUri() {
 		return EVENT_URI
 				.buildUpon()
 				.appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
-				.appendQueryParameter(Calendars.ACCOUNT_NAME, getUserId())
+				.appendQueryParameter(Calendars.ACCOUNT_NAME, String.valueOf(_UserId))
 				.appendQueryParameter(Calendars.ACCOUNT_TYPE,
 						CalendarContract.ACCOUNT_TYPE_LOCAL)
 				.build();

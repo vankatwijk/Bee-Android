@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+ 
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical">
+ 
+    <TextView android:id="@+id/tv_person_name"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="Sample Data"
+              android:textSize="20sp"
+              android:paddingBottom="5dp" />
+ 
+    <TextView android:id="@+id/tv_person_pin"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="Sample Data 2"
+              android:textSize="15sp"
+              android:paddingBottom="5dp" />
+ 
+</LinearLayout>
