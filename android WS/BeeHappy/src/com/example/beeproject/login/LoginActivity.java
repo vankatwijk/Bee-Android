@@ -98,6 +98,7 @@ public class LoginActivity extends FragmentActivity implements OnClickLoginButto
 				Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 				startActivity(intent);
 				
+				finish();
 				
 			}
 			else
@@ -117,7 +118,6 @@ public class LoginActivity extends FragmentActivity implements OnClickLoginButto
 	//in the database--if true login the user
 	public void loginToAppWithSharedPref(String username, String encodePassword) {
 		
-		String encodedPassowrd = encodePassword;
 		
 		DatabaseManager dbManager = new DatabaseManager();
 		DatabaseHelper db = dbManager.getHelper(getApplicationContext());
