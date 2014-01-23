@@ -25,14 +25,16 @@
         <activity
             android:name="com.example.beeproject.ContainerActivity"
             android:label="@string/title_item_detail"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
         <activity
             android:name="com.example.beeproject.login.LoginActivity"
-            android:label="@string/title_item_detail" >
+            android:label="@string/title_item_detail"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
