@@ -21,6 +21,7 @@ import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -35,6 +36,7 @@ public class CalendarActivity extends FragmentActivity {
 	private CaldroidFragment _CaldroidFragment;
 	private final String TAG = "CalendarActivity";
 	private Date _CurrentSelectedDate;
+	private boolean _HasEvent;
 	private int _CurrentSelectedMonth = Calendar.getInstance().get(Calendar.MONTH);
 	private long _CalendarId;
 	private BeeHappyCalendarResolver _CalendarResolver;
@@ -62,12 +64,42 @@ public class CalendarActivity extends FragmentActivity {
 			_CaldroidFragment.setBackgroundResourceForDate(R.color.blue, date);
 			_CaldroidFragment.setTextColorForDate(R.color.white, date);
 			_CaldroidFragment.refreshView();
-			int count = _CalendarResolver.getDateEvents(_CurrentSelectedDate).getCount();
-			Toast.makeText(getApplicationContext(), String.valueOf(count), Toast.LENGTH_LONG).show();			
+			_HasEvent = (_CalendarResolver.getDateEvents(_CurrentSelectedDate).getCount() > 0);
+			if(_HasEvent) {
+				setEventList(date);
+			}
+			else {
+				ListView lv = (ListView) findViewById(R.id.list_event);
+				lv.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new String[] { "No events for " + _DateFormat.format(date)} ));
+			}			
 		}
 		
 		// TODO count events and display in scroll view beneath calendar
 	}
+	
+	/**
+	 * displays the events
+	 * @param date
+	 */
+	private void setEventList(Date date) {
+		@SuppressWarnings("deprecation")
+		SimpleCursorAdapter adapter = new SimpleCursorAdapter(
+				this, 
+				android.R.layout.simple_list_item_2,
+				_CalendarResolver.getDateEvents(date),
+				new String[] {Events.TITLE, Events.DESCRIPTION},
+				new int[] { android.R.id.text1, android.R.id.text2 }
+			);	
+		
+		ListView lv = (ListView) findViewById(R.id.list_event);
+		lv.setAdapter(adapter);					
+	}
+	
+	private void unsetEventList() {
+		ListView lv = (ListView) findViewById(R.id.list_event);
+		lv.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new String[] { "No date selected"} ));
+	}
+	
 	/** clear current selected date
 	 * 
 	 * @param date
@@ -152,6 +184,7 @@ public class CalendarActivity extends FragmentActivity {
 			@Override
 			public void onChangeMonth(int month, int year) {
 				setSelectedDate(null);
+				unsetEventList();
 				_CurrentSelectedMonth = month;
 			}
 
@@ -162,35 +195,19 @@ public class CalendarActivity extends FragmentActivity {
 		};
 
 		_CaldroidFragment.setCaldroidListener(listener);
-		
-		@SuppressWarnings("deprecation")
-		SimpleCursorAdapter adapter = new SimpleCursorAdapter(
-				this, 
-				android.R.layout.simple_list_item_1,
-				_CalendarResolver.getDateEvents(getTodayDate()),
-				new String[] {Events.TITLE},
-				new int[] { android.R.id.text1 }
-			);		
-		
-		ListView lv = (ListView) findViewById(R.id.list_event);		
-		lv.setAdapter(adapter);
+		unsetEventList();
 	}	
 	
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		menu.clear();
-		if(dateHasEvent()) {
+		if(_HasEvent) {
 			getMenuInflater().inflate(R.menu.date_with_event, menu);
 		}
 		else {
 			getMenuInflater().inflate(R.menu.date_no_event, menu);
 		}			
 		return super.onPrepareOptionsMenu(menu);
-	}
-	
-	private boolean dateHasEvent() {
-		// TODO check date events;
-		return true;
 	}
 
 	public void goToToday(MenuItem v) {
