@@ -1,33 +1,31 @@
 package com.example.beeproject.calendar;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.content.ContentValues;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.CalendarContract.Events;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NavUtils;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.Editable;
-import android.text.Layout;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -35,13 +33,18 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.beeproject.MainActivity;
 import com.example.beeproject.R;
 import com.example.beeproject.global.classes.GlobalVar;
-import com.example.beeproject.syncing.SyncTask;
-import com.example.beeproject.syncing.SyncTaskCallback;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
+/**
+ * Creates a calendar activity
+ * bugs known: when a date has no events, a new event is added, the view has to be refreshed
+ * @author Harold
+ *
+ */
 public class CalendarActivity extends FragmentActivity {
 	private CaldroidFragment _CaldroidFragment;
 	private final String TAG = "CalendarActivity";
@@ -76,18 +79,16 @@ public class CalendarActivity extends FragmentActivity {
 			_CaldroidFragment.setBackgroundResourceForDate(R.color.blue, date);
 			_CaldroidFragment.setTextColorForDate(R.color.white, date);
 			_CaldroidFragment.refreshView();
-			boolean _DateHasEvent = (_CalendarResolver.getDateEvents(_CurrentSelectedDate).getCount() > 0);
-			invalidateOptionsMenu();
+			boolean _DateHasEvent = _CalendarResolver.hasDateEvents(_CurrentSelectedDate);
 			if(_DateHasEvent) {
 				setEventList(date);				
 			}
 			else {
+				updateEventSelectedSettings(false, -1);
 				ListView lv = (ListView) findViewById(R.id.list_event);
 				lv.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new String[] { "No events for " + _DateFormat.format(date)} ));
 			}			
 		}
-		
-		// TODO count events and display in scroll view beneath calendar
 	}
 	
 	/**
@@ -98,7 +99,7 @@ public class CalendarActivity extends FragmentActivity {
 		@SuppressWarnings("deprecation")
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(
 				this, 
-				android.R.layout.simple_list_item_2,
+				android.R.layout.simple_list_item_activated_1,
 				_CalendarResolver.getDateEvents(date),
 				new String[] {Events.TITLE, Events.DESCRIPTION},
 				new int[] { android.R.id.text1, android.R.id.text2 }
@@ -106,26 +107,28 @@ public class CalendarActivity extends FragmentActivity {
 		
 		ListView lv = (ListView) findViewById(R.id.list_event);
 		lv.setAdapter(adapter);
-		lv.setOnItemSelectedListener(new OnItemSelectedListener() {
+		lv.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		lv.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1,
-					int arg2, long arg3) {
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
 				String message = String.valueOf(arg0.getCount()) + " " + String.valueOf(arg2) + " " +  String.valueOf(arg3);
-				_HasEventSelected = true;
-				_EventId = arg3;
-				Log.i(TAG, message);				
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-				_HasEventSelected = false;				
+				Log.i(TAG, "button clicked : " + message);
+				updateEventSelectedSettings(true, arg3);
 			}			
-		});
+		});		
 	}
 	
 	private void unsetEventList() {
 		ListView lv = (ListView) findViewById(R.id.list_event);
 		lv.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new String[] { "No date selected"} ));
+		updateEventSelectedSettings(false, -1);
+	}
+	
+	private void updateEventSelectedSettings(boolean selected, long eventId) {
+		_HasEventSelected = selected;
+		invalidateOptionsMenu();
+		_EventId = eventId;
 	}
 	
 	/** clear current selected date
@@ -176,7 +179,8 @@ public class CalendarActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		_DateFormat = DateFormat.getDateFormat(this);
-		setContentView(R.layout.activity_calendar);		
+		setContentView(R.layout.activity_calendar);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		_CaldroidFragment = new CaldroidFragment();
 
@@ -227,6 +231,17 @@ public class CalendarActivity extends FragmentActivity {
 	}	
 	
 	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			NavUtils.navigateUpTo(this,
+					new Intent(this, MainActivity.class));
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		menu.clear();
 		if(_HasEventSelected) {
@@ -244,37 +259,58 @@ public class CalendarActivity extends FragmentActivity {
 		setSelectedDate(date);		
 	}
 	
-	public void toBeImplemented(MenuItem v) {
-		// TODO remove this method when all is implemented
-		Toast.makeText(getApplicationContext(), "to be implemented", Toast.LENGTH_SHORT).show();
+	public void toBeImplemented(MenuItem v) {		
+		_CalendarResolver.deleteEvent(_EventId);
+		Toast.makeText(getApplicationContext(), "event deleted", Toast.LENGTH_SHORT).show();
 	}
 	
 	public void openDialog(MenuItem v) {				
+		String title;
 		switch(v.getItemId()) {
 			case R.id.action_edit:
 				alertDialog = buildDialog("Edit event", "edit");
+				title = "edit";
 				break;
 			case R.id.action_new:
 				alertDialog = buildDialog("New event", "new");
+				title = "new";
 				break;
 			default:
 				throw new IllegalStateException("Unidentified id" + v.getItemId());
 		}
-		alertDialog.show();
-		alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 		
-		// if a date has been selected, fill in start and end dates.
-		if(_CurrentSelectedDate != null) {
-			java.text.DateFormat _Format = DateFormat.getDateFormat(this);
-			EditText et_start = (EditText) alertDialog.findViewById(R.id.event_start);
-			et_start.setText(_Format.format(_CurrentSelectedDate));			
-			EditText et_end = (EditText) alertDialog.findViewById(R.id.event_end);
-			et_end.setText(_Format.format(_CurrentSelectedDate));
+		alertDialog.show();
+		
+		EditText et_title = (EditText) alertDialog.findViewById(R.id.event_title);
+		EditText et_start = (EditText) alertDialog.findViewById(R.id.event_start);
+		EditText et_end = (EditText) alertDialog.findViewById(R.id.event_end);
+		EditText et_notes = (EditText) alertDialog.findViewById(R.id.event_notes);
+		
+		if(title == "new") {
+			// if a date has been selected, fill in start and end dates.
+			if(_CurrentSelectedDate != null) {
+				java.text.DateFormat _Format = DateFormat.getDateFormat(this);
+				et_start.setText(_Format.format(_CurrentSelectedDate));			
+				et_end.setText(_Format.format(_CurrentSelectedDate));
+			}
+		}
+		else if(title == "edit") {
+			ContentValues cv = _CalendarResolver.getEvent(_CalendarId, _EventId);
+			String eventTitle = cv.getAsString(Events.TITLE);
+			Long start = Long.parseLong(cv.getAsString(Events.DTSTART));
+			Long end = Long.parseLong(cv.getAsString(Events.DTEND));
+			String notes = cv.getAsString(Events.DESCRIPTION);
+			
+			et_title.setText(eventTitle);
+			et_start.setText(_DateFormat.format(new Date(start)));
+			et_end.setText(_DateFormat.format(new Date(end)));
+			et_notes.setText(notes);
 		}
 		
+		alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+		
 		setEditTextListeners(alertDialog);
-		setPositiveButtonListener(alertDialog);		
-		setSelectedDate(_CurrentSelectedDate);
+		setPositiveButtonListener(alertDialog);
 	}
 	
 	/**
@@ -293,9 +329,10 @@ public class CalendarActivity extends FragmentActivity {
 		    	EditText title = (EditText) root.findViewById(R.id.event_title);
 		    	EditText start = (EditText) root.findViewById(R.id.event_start);
 		    	EditText end = (EditText) root.findViewById(R.id.event_end);
-		    	EditText notes = (EditText) root.findViewById(R.id.event_notes);
-		    	
+		    	EditText notes = (EditText) root.findViewById(R.id.event_notes);		    	
 		    	String event_title = title.getText().toString();
+		    	String event_notes = notes.getText().toString();	    	
+		    	
 		    	long event_start;
 		    	long event_end;
 				try {
@@ -306,16 +343,23 @@ public class CalendarActivity extends FragmentActivity {
 					return;
 				}
 				
-		    	String event_notes = notes.getText().toString();
 		    	ContentValues cv = new ContentValues();
 		    	cv.put(Events.CALENDAR_ID, _CalendarId);
 		    	cv.put(Events.TITLE, event_title);
 		    	cv.put(Events.DTSTART, event_start);
 		    	cv.put(Events.DTEND, event_end);
 		    	cv.put(Events.DESCRIPTION, event_notes);
-		    	cv.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());		    	
-		    	_CalendarResolver.createEvent(cv);
-		    	alertDialog.dismiss();		    	
+		    	cv.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());	
+		    	
+		    	// TODO refactor this for a more secure to check!
+				if(_EventId != -1){
+					_CalendarResolver.deleteEvent(_EventId);
+					_CalendarResolver.createEvent(cv);
+				}
+				else{			    	
+			    	_CalendarResolver.createEvent(cv);
+		    	}
+		    	alertDialog.dismiss();
 		    }
 		};
 	}
@@ -366,33 +410,16 @@ public class CalendarActivity extends FragmentActivity {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(title)
 			.setView(getLayoutInflater().inflate(R.layout.dialog_event, null))
-	        .setPositiveButton(positiveButton, positiveClickListener(positiveButton))
+	        .setPositiveButton(positiveButton, null)
 	        .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
 	            public void onClick(DialogInterface dialog, int id) {
 	            	Toast.makeText(getApplicationContext(), "Cancelled", Toast.LENGTH_LONG).show();
 	            }
 	        });
-		return builder.create();
-	}
-
-	private OnClickListener positiveClickListener(String type) {
-		if(type == "new") { 
-			return new DialogInterface.OnClickListener() {
-			    public void onClick(DialogInterface dialog, int id) {
-			    	Toast.makeText(getApplicationContext(), "new", Toast.LENGTH_LONG).show();
-			    }
-			};
-		}
-		else if (type == "edit") {
-			return new DialogInterface.OnClickListener() {
-			    public void onClick(DialogInterface dialog, int id) {
-			    	Toast.makeText(getApplicationContext(), "edit", Toast.LENGTH_LONG).show();
-			    }
-			};
-		}
+		alertDialog = builder.create();
 		
-		throw new IllegalStateException("unknown type listener found for " + type);
-	}	
+		return alertDialog;
+	}
 	
 	public void showDatePicker(View v){
 		
@@ -405,14 +432,12 @@ public class CalendarActivity extends FragmentActivity {
 		
 	    DialogFragment newFragment = new DatePickerFragment() {
 			
-			@SuppressLint("SimpleDateFormat")
 			@Override
 			public void onDateSet(DatePicker view, int year, int monthOfYear,
 					int dayOfMonth) {
-				@SuppressWarnings("deprecation")
-				Date date = new Date(year, monthOfYear, dayOfMonth);
-				SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy");
-				String dateString = df.format(date);
+				GregorianCalendar date = new GregorianCalendar(year, monthOfYear, dayOfMonth);
+				Log.i(TAG, "new date selected " + date.getTime());
+				String dateString = _DateFormat.format(date.getTime());
 				et_toEditAfterDatePicker.setText(dateString);          
 	                				
 			}
