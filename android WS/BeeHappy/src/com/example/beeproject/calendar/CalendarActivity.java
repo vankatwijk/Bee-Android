@@ -18,9 +18,13 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,9 +40,10 @@ public class CalendarActivity extends FragmentActivity {
 	private CaldroidFragment _CaldroidFragment;
 	private final String TAG = "CalendarActivity";
 	private Date _CurrentSelectedDate;
-	private boolean _HasEvent;
+	private boolean _HasEventSelected;
 	private int _CurrentSelectedMonth = Calendar.getInstance().get(Calendar.MONTH);
 	private long _CalendarId;
+	private long _EventId;
 	private BeeHappyCalendarResolver _CalendarResolver;
 	// calendar dialog properties
 	private EditText et_title;
@@ -64,9 +69,10 @@ public class CalendarActivity extends FragmentActivity {
 			_CaldroidFragment.setBackgroundResourceForDate(R.color.blue, date);
 			_CaldroidFragment.setTextColorForDate(R.color.white, date);
 			_CaldroidFragment.refreshView();
-			_HasEvent = (_CalendarResolver.getDateEvents(_CurrentSelectedDate).getCount() > 0);
-			if(_HasEvent) {
-				setEventList(date);
+			boolean _DateHasEvent = (_CalendarResolver.getDateEvents(_CurrentSelectedDate).getCount() > 0);
+			invalidateOptionsMenu();
+			if(_DateHasEvent) {
+				setEventList(date);				
 			}
 			else {
 				ListView lv = (ListView) findViewById(R.id.list_event);
@@ -78,7 +84,7 @@ public class CalendarActivity extends FragmentActivity {
 	}
 	
 	/**
-	 * displays the events
+	 * displays the events on the view
 	 * @param date
 	 */
 	private void setEventList(Date date) {
@@ -92,7 +98,22 @@ public class CalendarActivity extends FragmentActivity {
 			);	
 		
 		ListView lv = (ListView) findViewById(R.id.list_event);
-		lv.setAdapter(adapter);					
+		lv.setAdapter(adapter);
+		lv.setOnItemSelectedListener(new OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1,
+					int arg2, long arg3) {
+				String message = String.valueOf(arg0.getCount()) + " " + String.valueOf(arg2) + " " +  String.valueOf(arg3);
+				_HasEventSelected = true;
+				_EventId = arg3;
+				Log.i(TAG, message);				
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				_HasEventSelected = false;				
+			}			
+		});
 	}
 	
 	private void unsetEventList() {
@@ -201,8 +222,8 @@ public class CalendarActivity extends FragmentActivity {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		menu.clear();
-		if(_HasEvent) {
-			getMenuInflater().inflate(R.menu.date_with_event, menu);
+		if(_HasEventSelected) {
+			getMenuInflater().inflate(R.menu.date_with_event_selected, menu);
 		}
 		else {
 			getMenuInflater().inflate(R.menu.date_no_event, menu);
@@ -245,7 +266,8 @@ public class CalendarActivity extends FragmentActivity {
 		}
 		
 		setEditTextListeners(alertDialog);
-		setPositiveButtonListener(alertDialog);
+		setPositiveButtonListener(alertDialog);		
+		setSelectedDate(_CurrentSelectedDate);
 	}
 	
 	/**
@@ -273,8 +295,8 @@ public class CalendarActivity extends FragmentActivity {
 					event_start = _DateFormat.parse(start.getText().toString()).getTime();
 					event_end = _DateFormat.parse(end.getText().toString()).getTime();
 				} catch (ParseException e) {
-					e.printStackTrace();
-					throw new IllegalStateException("couldn't parse text");
+					Toast.makeText(getApplicationContext(), "event date has incorrect format.", Toast.LENGTH_LONG).show();;
+					return;
 				}
 				
 		    	String event_notes = notes.getText().toString();
@@ -286,7 +308,7 @@ public class CalendarActivity extends FragmentActivity {
 		    	cv.put(Events.DESCRIPTION, event_notes);
 		    	cv.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());		    	
 		    	_CalendarResolver.createEvent(cv);
-		    	alertDialog.dismiss();
+		    	alertDialog.dismiss();		    	
 		    }
 		};
 	}

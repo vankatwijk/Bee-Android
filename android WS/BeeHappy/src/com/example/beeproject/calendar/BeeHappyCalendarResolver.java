@@ -2,6 +2,8 @@ package com.example.beeproject.calendar;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -75,20 +77,32 @@ public class BeeHappyCalendarResolver {
 		return calendarId;		
 	}
 	
+	/**
+	 * creates an event.
+	 * content values (cv) should contain the following keys : <BR>
+	 * Events.CALENDAR_ID, Events.TITLE, Events.DTSTART, Events.DTEND, Events.DESCRIPTION, Events.EVENT_TIMEZONE 
+	 * @param cv
+	 * @return
+	 */
 	public long createEvent(ContentValues cv) {
+		String title = cv.getAsString(Events.TITLE);
+		String event_start = String.valueOf(cv.getAsLong(Events.DTSTART));
+		String event_end = String.valueOf(cv.getAsLong(Events.DTEND));
+		String notes = String.valueOf(cv.getAsLong(Events.DESCRIPTION));
+		String timezone = String.valueOf(cv.getAsString(Events.EVENT_TIMEZONE));
 		Uri newEvent = _ContentResolver.insert(buildEventUri(), cv);
-		Log.i(TAG, "New event : " + newEvent.getLastPathSegment());
+		Log.i(TAG, "New event : " + title + " - " + event_start + " - " + event_end + " - " + notes + " - " + timezone);
 		return Long.parseLong(newEvent.getLastPathSegment());
 	}
 	
 	/**
-	 * get the events of a set date
+	 * get the events of a set date with default locale
 	 * @param date
 	 * @return
 	 */
 	public Cursor getDateEvents(Date date) {
-		Calendar c = Calendar.getInstance();
-		Calendar c1 = Calendar.getInstance();
+		Calendar c = GregorianCalendar.getInstance();
+		Calendar c1 = GregorianCalendar.getInstance();
 		c.setTime(date);
 		c1.setTime(date);
 		// add one day
@@ -96,19 +110,32 @@ public class BeeHappyCalendarResolver {
 		String calendarId = String.valueOf(_CalendarId);
 		String beginTime = String.valueOf(c.getTimeInMillis());
 		String endTime = String.valueOf(c1.getTimeInMillis());
-		Log.i(TAG, "Retrieve events between "+ beginTime + " and " + endTime);		
-		
-		String selection = Events.CALENDAR_ID + "= ? AND " + Events.DTSTART + " >= ? AND "
-				+ Events.DTSTART + " <= ?";
-		String[] selectionArgs = new String[] {calendarId, beginTime, endTime};
+		Log.i(TAG, "Retrieve events between "+ beginTime + " and " + endTime);
+		// Event should be in the calendar and the event should occur start or end in the date specified
+		String selection = Events.CALENDAR_ID + "= ? AND " + Events.DTSTART + " >= ? AND "	+ Events.DTSTART + " < ? OR " + 
+		Events.DTEND + ">= ? AND " + Events.DTEND + " < ?" ;
+		String[] selectionArgs = new String[] {calendarId, beginTime, endTime, beginTime, endTime};
 		return _ContentResolver.query(EVENT_URI, DEFAULT_PROJECTION, selection, selectionArgs, null);
+	}
+	
+	/**
+	 * deletes an event.
+	 * @param eventId
+	 */
+	public void deleteEvent(long eventId) {
+		String where = Events._ID + " = ?";
+		String[] selectionArgs = new String[] {String.valueOf(eventId)};
+		_ContentResolver.delete(EVENT_URI, where, selectionArgs);
 	}
 	
 	private long createCalendar() {
 		Uri newCalendarUri = _ContentResolver.insert(buildCalendarUri(), NewCalendarContentValues());
 		return Long.parseLong(newCalendarUri.getLastPathSegment());
 	}	
-	
+	/**
+	 * content values for a new calendar
+	 * @return
+	 */
 	private ContentValues NewCalendarContentValues() {
 		final ContentValues cv = new ContentValues();
 		cv.put(Calendars.ACCOUNT_NAME, _UserId);
