@@ -411,7 +411,7 @@ public class CalendarActivity extends FragmentActivity {
 					int dayOfMonth) {
 				@SuppressWarnings("deprecation")
 				Date date = new Date(year, monthOfYear, dayOfMonth);
-				SimpleDateFormat df = new SimpleDateFormat("dd.MM.yy");
+				SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy");
 				String dateString = df.format(date);
 				et_toEditAfterDatePicker.setText(dateString);          
 	                				
