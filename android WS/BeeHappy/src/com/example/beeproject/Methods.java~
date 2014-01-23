@@ -129,7 +129,7 @@ public class Methods extends FragmentActivity{
 
 	    	    int nrRowsUpdated = userClassDao.update(user);
 	    	    if(nrRowsUpdated == 1){
-					Toast.makeText(getApplicationContext(), "Your password has been changed!",
+					Toast.makeText(getApplicationContext(), "Your password has been changed!="+input.getText().toString(),
 							   Toast.LENGTH_LONG).show();
 	    	    }
 	    	    else

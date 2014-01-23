@@ -10,12 +10,17 @@
         android:layout_width="fill_parent"
         android:layout_height="150dp"
         android:src="@drawable/ic_launcher" />
-
+    <TextView
+        android:id="@+id/UsernameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
     <Button
         android:id="@+id/button1"
         style="@style/buttonStyle"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:onClick="changepass"
         android:text="@string/changePassword" />
 
 </LinearLayout>
