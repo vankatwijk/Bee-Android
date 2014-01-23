@@ -98,9 +98,9 @@ public class BeeHappyCalendarResolver {
 		String endTime = String.valueOf(c1.getTimeInMillis());
 		Log.i(TAG, "Retrieve events between "+ beginTime + " and " + endTime);		
 		
-		String selection = Events.DTSTART + " >= ? AND "
+		String selection = Events.CALENDAR_ID + "= ? AND " + Events.DTSTART + " >= ? AND "
 				+ Events.DTSTART + " <= ?";
-		String[] selectionArgs = new String[] {beginTime, endTime};
+		String[] selectionArgs = new String[] {calendarId, beginTime, endTime};
 		return _ContentResolver.query(EVENT_URI, DEFAULT_PROJECTION, selection, selectionArgs, null);
 	}
 	
