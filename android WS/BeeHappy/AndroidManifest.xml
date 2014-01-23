@@ -45,7 +45,8 @@
         </activity>
         <activity
             android:name="com.example.beeproject.calendar.CalendarActivity"
-            android:label="@string/title_item_detail" >
+            android:label="@string/title_item_detail"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.example.beeproject.weather.WeatherActivity"
