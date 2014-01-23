@@ -147,6 +147,7 @@ public class LoginActivity extends FragmentActivity implements OnClickLoginButto
 				Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 				startActivity(intent);
 					
+				finish();
 			}
 			else
 			{
