@@ -27,7 +27,7 @@ public class DummyContent {
 		// Add 3 sample items.
 		addItem(new DummyItem("1", "Yard"));
 		addItem(new DummyItem("2", "Weather"));
-		addItem(new DummyItem("3", "Calender"));
+		addItem(new DummyItem("3", "Calendar"));
 		addItem(new DummyItem("4", "Profile Info"));
 		addItem(new DummyItem("5", "Statistics"));
 	}
