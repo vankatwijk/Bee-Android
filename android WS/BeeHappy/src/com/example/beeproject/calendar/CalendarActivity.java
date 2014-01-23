@@ -1,12 +1,15 @@
 package com.example.beeproject.calendar;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -16,23 +19,26 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.Editable;
+import android.text.Layout;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.beeproject.R;
 import com.example.beeproject.global.classes.GlobalVar;
+import com.example.beeproject.syncing.SyncTask;
+import com.example.beeproject.syncing.SyncTaskCallback;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
@@ -49,6 +55,7 @@ public class CalendarActivity extends FragmentActivity {
 	private EditText et_title;
 	private EditText et_start;
 	private EditText et_end;
+	private EditText et_toEditAfterDatePicker;
 	private AlertDialog alertDialog;
 	private java.text.DateFormat _DateFormat;
 	private void setCustomResourceForDates() {
@@ -386,4 +393,33 @@ public class CalendarActivity extends FragmentActivity {
 		
 		throw new IllegalStateException("unknown type listener found for " + type);
 	}	
+	
+	public void showDatePicker(View v){
+		
+		if(v.getId() == R.id.button_datePickerFrom){
+			et_toEditAfterDatePicker = et_start;
+		}
+		else{
+			et_toEditAfterDatePicker = et_end;
+		}
+		
+	    DialogFragment newFragment = new DatePickerFragment() {
+			
+			@SuppressLint("SimpleDateFormat")
+			@Override
+			public void onDateSet(DatePicker view, int year, int monthOfYear,
+					int dayOfMonth) {
+				@SuppressWarnings("deprecation")
+				Date date = new Date(year, monthOfYear, dayOfMonth);
+				SimpleDateFormat df = new SimpleDateFormat("dd.MM.yy");
+				String dateString = df.format(date);
+				et_toEditAfterDatePicker.setText(dateString);          
+	                				
+			}
+		};
+		
+	    newFragment.show(getFragmentManager(), "datePicker");
+	    
+    }
+	
 }
