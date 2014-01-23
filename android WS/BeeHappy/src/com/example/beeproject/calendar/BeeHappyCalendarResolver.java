@@ -3,7 +3,6 @@ package com.example.beeproject.calendar;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.TimeZone;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -116,6 +115,37 @@ public class BeeHappyCalendarResolver {
 		Events.DTEND + ">= ? AND " + Events.DTEND + " < ?" ;
 		String[] selectionArgs = new String[] {calendarId, beginTime, endTime, beginTime, endTime};
 		return _ContentResolver.query(EVENT_URI, DEFAULT_PROJECTION, selection, selectionArgs, null);
+	}
+	
+	/**
+	 * @param date
+	 * @return
+	 */
+	public boolean hasDateEvents(Date date) {
+		Cursor cursor = getDateEvents(date);
+		int count = cursor.getCount();
+		cursor.close();
+		return count > 0;		
+	}
+	
+	public ContentValues getEvent(long calendarId, long eventId) {
+		
+		String selection = Events.CALENDAR_ID + " = ? AND " + Events._ID + " = ?";
+		String[] selectionArgs = new String[] {String.valueOf(calendarId), String.valueOf(eventId)};
+		Cursor cursor = _ContentResolver.query(EVENT_URI, DEFAULT_PROJECTION, selection, selectionArgs, null);
+		cursor.moveToFirst();
+		ContentValues cv = new ContentValues();
+		try{
+			for(int i = 0; i < cursor.getColumnCount(); i++) {
+				String key = DEFAULT_PROJECTION[i];
+				int columnIndex = cursor.getColumnIndex(key);
+				cv.put(key, cursor.getString(columnIndex));
+			}
+		}
+		finally {
+			cursor.close();
+		}
+		return cv;		
 	}
 	
 	/**
