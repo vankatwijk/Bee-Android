@@ -10,4 +10,9 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
     </LinearLayout>
+    <ListView android:id="@+id/list_event"
+              android:layout_height="0dip"
+              android:layout_width="match_parent"
+              android:layout_weight="1"/>
+    
 </LinearLayout>
