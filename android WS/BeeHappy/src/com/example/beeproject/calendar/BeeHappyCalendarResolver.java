@@ -111,8 +111,8 @@ public class BeeHappyCalendarResolver {
 		String endTime = String.valueOf(c1.getTimeInMillis());
 		Log.i(TAG, "Retrieve events between "+ beginTime + " and " + endTime);
 		// Event should be in the calendar and the event should occur start or end in the date specified
-		String selection = Events.CALENDAR_ID + "= ? AND " + Events.DTSTART + " >= ? AND "	+ Events.DTSTART + " < ? OR " + 
-		Events.DTEND + ">= ? AND " + Events.DTEND + " < ?" ;
+		String selection = Events.CALENDAR_ID + "= ? AND (" + Events.DTSTART + " >= ? AND "+ Events.DTSTART + " < ? OR " + 
+		Events.DTEND + ">= ? AND " + Events.DTEND + " < ?)" ;
 		String[] selectionArgs = new String[] {calendarId, beginTime, endTime, beginTime, endTime};
 		return _ContentResolver.query(EVENT_URI, DEFAULT_PROJECTION, selection, selectionArgs, null);
 	}
